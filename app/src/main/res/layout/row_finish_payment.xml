@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:layout_marginRight="@dimen/dp10"
+    android:layout_marginLeft="@dimen/dp10"
+    android:layout_marginBottom="@dimen/dp10"
+    android:background="@drawable/edit_text_background"
+    android:weightSum="10"
+    android:orientation="horizontal"
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="110dp">
+    <LinearLayout
+        android:layout_marginLeft="@dimen/dp10"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:layout_weight="3"
+        android:layout_width="0dp"
+        android:layout_height="match_parent">
+        <ImageView
+            android:scaleType="fitXY"
+            android:background="@drawable/edit_text_background"
+            android:id="@+id/image_view_product_payment"
+            android:src="@mipmap/ic_launcher"
+            android:layout_width="75dp"
+            android:layout_height="75dp">
+        </ImageView>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_marginLeft="@dimen/dp30"
+        android:orientation="vertical"
+        android:layout_weight="7"
+        android:layout_width="0dp"
+        android:layout_height="match_parent">
+        <TextView
+            android:id="@+id/txt_name_product_payment"
+            android:textColor="@color/color_black"
+            android:textStyle="bold"
+            android:layout_marginTop="@dimen/dp10"
+            android:text="KÍnh"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp30">
+
+        </TextView>
+        <LinearLayout
+            android:weightSum="10"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:id="@+id/txt_price_payment"
+                android:textColor="@color/color_black"
+                android:textStyle="bold"
+                android:gravity="left"
+                android:layout_weight="4.5"
+                android:text="300.000 VND"
+                android:layout_width="0dp"
+                android:layout_height="match_parent">
+
+            </TextView>
+            <TextView
+                android:textStyle="bold"
+                android:textColor="@color/color_black"
+                android:layout_weight="1"
+                android:text="x"
+                android:layout_width="0dp"
+                android:layout_height="match_parent">
+
+            </TextView>
+            <TextView
+                android:id="@+id/txt_quantity_payment"
+                android:textColor="@color/color_black"
+                android:textStyle="bold"
+                android:layout_weight="4.5"
+                android:text="1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent">
+
+            </TextView>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>
