@@ -78,7 +78,7 @@ public class DetailProductActivity extends BaseActivity implements View.OnClickL
     }
 
     public void payment(){
-        Intent intent = new Intent(this, PaymentActivity.class);
+        Intent intent = new Intent(this, AugmentedFacesActivity.class);
         startActivity(intent);
     }
 

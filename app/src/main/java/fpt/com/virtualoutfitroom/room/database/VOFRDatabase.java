@@ -5,11 +5,12 @@ import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 
+import fpt.com.virtualoutfitroom.room.AccountItemEntities;
 import fpt.com.virtualoutfitroom.room.OrderItemEntities;
 import fpt.com.virtualoutfitroom.room.dao.AccountDAO;
 import fpt.com.virtualoutfitroom.room.dao.OrderDAO;
 
-@Database(entities = OrderItemEntities.class,exportSchema = false,version = VOFRDatabase.DATABASE_VERSION)
+@Database(entities = {OrderItemEntities.class, AccountItemEntities.class},exportSchema = false,version = VOFRDatabase.DATABASE_VERSION)
 public abstract class VOFRDatabase extends RoomDatabase {
     public static final int DATABASE_VERSION = 1;
     public static final String DATABASE_NAME = "unideli-database";
