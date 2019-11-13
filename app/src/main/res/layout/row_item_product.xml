@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:id="@+id/lnl_row_product"
+    android:layout_marginRight="@dimen/dp10"
+    >
+        <android.support.v7.widget.CardView
+            android:id="@+id/card_view"
+            android:layout_width="270dp"
+            android:layout_height="140dp"
+            android:layout_gravity="left"
+            android:layout_margin="5dp"
+            android:elevation="3dp"
+            app:cardCornerRadius="@dimen/dp10"
+            >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:weightSum="2"
+            android:background="@color/color_card">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_marginTop="@dimen/dp20"
+                android:layout_marginLeft="@dimen/dp20">
+                <TextView
+                    android:id="@+id/txt_product_name"
+                    android:layout_width="90dp"
+                    android:layout_height="wrap_content"
+                    android:text="Quan Dui"
+                    android:textSize="15sp"
+                    android:textColor="@color/color_black"
+                    />
+                <TextView
+                    android:id="@+id/txt_product_price"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="300.000 Đ"/>
+            </LinearLayout>
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_weight="1"
+                >
+                <ImageView
+                    android:layout_width="150dp"
+                    android:layout_height="110dp"
+                    android:src="@drawable/vector6"
+                    android:layout_gravity="right"
+
+                    />
+                <ImageView
+                    android:id="@+id/img_product_image"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:src="@mipmap/glasses"
+                    android:layout_gravity="bottom|right"
+                    android:layout_marginRight="@dimen/dp25"
+                    />
+            </FrameLayout>
+
+        </LinearLayout>
+        </android.support.v7.widget.CardView>
+</LinearLayout>

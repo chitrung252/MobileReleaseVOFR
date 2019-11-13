@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.AddressFragment">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <TextView
+            android:layout_marginTop="@dimen/dp10"
+            android:layout_marginRight="@dimen/dp10"
+            android:layout_marginLeft="@dimen/dp10"
+            android:textSize="15sp"
+            android:textColor="@color/color_cus_light_gray"
+            android:text="Địa chỉ thanh toán"
+            android:textStyle="bold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </TextView>
+        <LinearLayout
+            android:layout_marginTop="@dimen/dp10"
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:weightSum="10"
+                android:layout_marginTop="@dimen/dp5"
+                android:layout_marginBottom="@dimen/dp5"
+                android:layout_height="90dp">
+                <TextView
+                    android:textSize="@dimen/sp16"
+                    android:text="Họ và tên :"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:layout_weight="4"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent">
+
+                </TextView>
+                <LinearLayout
+                    android:background="@drawable/edit_text_background"
+                    android:layout_weight="6"
+                    android:weightSum="10"
+                    android:orientation="horizontal"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent">
+                    <EditText
+
+                        android:cursorVisible="false"
+                        android:enabled="false"
+                        android:focusableInTouchMode="false"
+                        android:id="@+id/edt_name_payment"
+                        android:textStyle="bold"
+                        android:gravity="center|center_horizontal"
+                        android:textColor="@color/color_black"
+                        android:text="Nguyễn Đình Chí Trung"
+                        android:textSize="15sp"
+                        android:layout_weight="8"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent">
+                    </EditText>
+                    <LinearLayout
+                        android:id="@+id/lnl_button_name"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:layout_weight="2"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent">
+                        <ImageView
+                            android:scaleType="fitXY"
+                            android:src="@mipmap/ic_launcher"
+                            android:layout_width="@dimen/dp15"
+                            android:layout_height="@dimen/dp15">
+                        </ImageView>
+                    </LinearLayout>
+                </LinearLayout>
+
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:weightSum="10"
+                android:layout_marginTop="@dimen/dp5"
+                android:layout_marginBottom="@dimen/dp5"
+                android:layout_height="90dp">
+                <TextView
+                    android:textSize="@dimen/sp16"
+                    android:text="Email:"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:layout_weight="4"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent">
+
+                </TextView>
+                <LinearLayout
+                    android:background="@drawable/edit_text_background"
+                    android:layout_weight="6"
+                    android:weightSum="10"
+                    android:orientation="horizontal"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent">
+                    <EditText
+
+                        android:cursorVisible="false"
+                        android:enabled="false"
+                        android:focusableInTouchMode="false"
+                        android:id="@+id/edt_email_payment"
+                        android:textStyle="bold"
+                        android:gravity="center|center_horizontal"
+                        android:textColor="@color/color_black"
+                        android:text="trungndcse1234@fp.edu.v"
+                        android:textSize="15sp"
+                        android:layout_weight="8"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent">
+                    </EditText>
+                    <LinearLayout
+                        android:id="@+id/lnl_button_email"
+
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:layout_weight="2"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent">
+                        <ImageView
+                            android:scaleType="fitXY"
+                            android:src="@mipmap/ic_launcher"
+                            android:layout_width="@dimen/dp15"
+                            android:layout_height="@dimen/dp15">
+                        </ImageView>
+                    </LinearLayout>
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:weightSum="10"
+                android:layout_marginTop="@dimen/dp5"
+                android:layout_marginBottom="@dimen/dp5"
+                android:layout_height="90dp">
+                <TextView
+                    android:textSize="@dimen/sp16"
+                    android:text="Số điện   :"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:layout_weight="4"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent">
+
+                </TextView>
+                <LinearLayout
+                    android:background="@drawable/edit_text_background"
+                    android:layout_weight="6"
+                    android:weightSum="10"
+                    android:orientation="horizontal"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent">
+                    <EditText
+                        android:id="@+id/edt_phone_payment"
+
+                        android:cursorVisible="false"
+                        android:enabled="false"
+                        android:focusableInTouchMode="false"
+                        android:textStyle="bold"
+                        android:gravity="center|center_horizontal"
+                        android:textColor="@color/color_black"
+                        android:text="012345678"
+                        android:textSize="15sp"
+                        android:layout_weight="8"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent">
+                    </EditText>
+                    <LinearLayout
+                        android:id="@+id/lnl_button_phone"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:layout_weight="2"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent">
+                        <ImageView
+                            android:scaleType="fitXY"
+                            android:src="@mipmap/ic_launcher"
+                            android:layout_width="@dimen/dp15"
+                            android:layout_height="@dimen/dp15">
+                        </ImageView>
+                    </LinearLayout>
+                </LinearLayout>
+
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:weightSum="10"
+                android:layout_marginTop="@dimen/dp5"
+                android:layout_marginBottom="@dimen/dp5"
+                android:layout_height="90dp">
+                <TextView
+                    android:textSize="@dimen/sp16"
+                    android:text="Địa chỉ :"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:layout_weight="4"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent">
+                </TextView>
+                <LinearLayout
+                    android:background="@drawable/edit_text_background"
+                    android:layout_weight="6"
+                    android:weightSum="10"
+                    android:orientation="horizontal"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent">
+                    <EditText
+
+                        android:cursorVisible="false"
+                        android:enabled="false"
+                        android:focusableInTouchMode="false"
+                        android:id="@+id/edt_address_payment"
+                        android:textStyle="bold"
+                        android:gravity="center|center_horizontal"
+                        android:textColor="@color/color_black"
+                        android:text="496/18 Lê Xuân Oai,Phường Long Thành,Quận 9,Thành Phố Hồ Chí Minh"
+                        android:textSize="15sp"
+                        android:layout_weight="8"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent">
+                    </EditText>
+                    <LinearLayout
+                        android:id="@+id/lnl_button_address"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:layout_weight="2"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent">
+                        <ImageView
+                            android:scaleType="fitXY"
+                            android:src="@mipmap/ic_launcher"
+                            android:layout_width="@dimen/dp15"
+                            android:layout_height="@dimen/dp15">
+                        </ImageView>
+                    </LinearLayout>
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+    </LinearLayout>
+
+</android.support.v4.widget.NestedScrollView>

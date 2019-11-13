@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    >
+    <TextView
+        android:layout_marginRight="25dp"
+        android:layout_marginBottom="@dimen/dp5"
+        android:layout_marginTop="@dimen/dp15"
+        android:layout_marginLeft="@dimen/dp15"
+        android:textStyle="bold"
+        android:text="Hình thức đăng ký"
+        android:textSize="15sp"
+        android:textColor="@color/color_cus_light_gray"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+    </TextView>
+
+    <LinearLayout
+        android:layout_marginBottom="@dimen/dp20"
+        android:layout_marginLeft="@dimen/dp15"
+        android:layout_marginRight="25dp"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:weightSum="10"
+        android:layout_height="@dimen/dp40">
+        <LinearLayout
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_weight="2"
+            android:layout_width="0dp"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:layout_width="@dimen/dp20"
+                android:layout_height="@dimen/dp20"
+                android:scaleType="fitXY"
+                android:src="@mipmap/ic_launcher"></ImageView>
+        </LinearLayout>
+        <LinearLayout
+            android:background="@drawable/edit_text_background"
+            android:layout_weight="8"
+            android:weightSum="10"
+            android:orientation="horizontal"
+            android:layout_width="0dp"
+            android:layout_height="match_parent">
+            <TextView
+                android:textStyle="bold"
+                android:gravity="center|center_horizontal"
+                android:textColor="@color/color_black"
+                android:text="Thanh toán khi nhận hàng"
+                android:textSize="15sp"
+                android:layout_weight="10"
+                android:layout_width="0dp"
+                android:layout_height="match_parent">
+            </TextView>
+        </LinearLayout>
+
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_marginBottom="@dimen/dp20"
+        android:layout_marginLeft="@dimen/dp15"
+        android:layout_marginRight="25dp"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:weightSum="10"
+        android:layout_height="@dimen/dp40">
+        <LinearLayout
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_weight="2"
+            android:layout_width="0dp"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:layout_width="@dimen/dp20"
+                android:layout_height="@dimen/dp20"
+                android:scaleType="fitXY"
+                android:src="@mipmap/ic_launcher"></ImageView>
+        </LinearLayout>
+        <LinearLayout
+            android:background="@drawable/edit_text_background"
+            android:layout_weight="8"
+            android:weightSum="10"
+            android:orientation="horizontal"
+            android:layout_width="0dp"
+            android:layout_height="match_parent">
+            <TextView
+                android:textStyle="bold"
+                android:gravity="center|center_horizontal"
+                android:textColor="@color/color_black"
+                android:text="Thanh toán bằng thẻ ngân hàng"
+                android:textSize="15sp"
+                android:layout_weight="10"
+                android:layout_width="0dp"
+                android:layout_height="match_parent">
+            </TextView>
+        </LinearLayout>
+
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_marginBottom="@dimen/dp20"
+        android:layout_marginLeft="@dimen/dp15"
+        android:layout_marginRight="25dp"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:weightSum="10"
+        android:layout_height="@dimen/dp40">
+        <LinearLayout
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_weight="2"
+            android:layout_width="0dp"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:layout_width="@dimen/dp20"
+                android:layout_height="@dimen/dp20"
+                android:scaleType="fitXY"
+                android:src="@mipmap/ic_launcher"></ImageView>
+        </LinearLayout>
+        <LinearLayout
+            android:background="@drawable/edit_text_background"
+            android:layout_weight="8"
+            android:weightSum="10"
+            android:orientation="horizontal"
+            android:layout_width="0dp"
+            android:layout_height="match_parent">
+            <TextView
+                android:textStyle="bold"
+                android:id="@+id/txt_address_name"
+                android:gravity="center|center_horizontal"
+                android:textColor="@color/color_black"
+                android:text="Thanh toán  bằng Paypal"
+                android:textSize="15sp"
+                android:layout_weight="10"
+                android:layout_width="0dp"
+                android:layout_height="match_parent">
+            </TextView>
+        </LinearLayout>
+
+
+    </LinearLayout>
+</LinearLayout>
