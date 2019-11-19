@@ -21,11 +21,11 @@ public class IntroActivity extends BaseActivity {
         lnlLayout.setBackgroundColor(getResources().getColor(R.color.color_white));
         animation = AnimationUtils.loadAnimation(this, R.anim.introtransition);
         lnlLayout.startAnimation(animation);
-        int SplashDuration = 4000;
+        int SplashDuration = 3000;
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent i = new Intent(IntroActivity.this, LoginActivity.class);
+                Intent i = new Intent(IntroActivity.this, HomeActivity.class);
                 startActivity(i);
                 finish();
             }

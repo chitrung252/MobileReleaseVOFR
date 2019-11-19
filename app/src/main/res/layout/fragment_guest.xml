@@ -3,14 +3,50 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
     android:orientation="vertical">
-    <Button
-        android:id="@+id/btn_login_first"
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Đăng Nhập"
-        android:textColor="@color/color_white"
-        android:background="@color/color_black">
-    </Button>
+        android:orientation="vertical">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="500dp"
+            android:src="@drawable/vector12"
+           />
+        
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Bạn vẫn chưa đăng nhập?"
+        android:textColor="@color/color_cus_blue"
+        android:textSize="@dimen/dp25"
+        android:gravity="center"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/sp16"
+        android:text="Đăng nhập để mua sắm nào"
+        android:gravity="center"
+        android:layout_marginTop="-10dp"/>
+    <LinearLayout
+        android:layout_marginBottom="@dimen/dp10"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+        <ImageView
+            android:id="@+id/img_login_first"
+            android:layout_width="370dp"
+            android:layout_height="50dp"
+            android:src="@drawable/button_guest"
+            android:layout_marginTop="@dimen/dp10"
+            />
+    </LinearLayout>
+    </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+
 </LinearLayout>

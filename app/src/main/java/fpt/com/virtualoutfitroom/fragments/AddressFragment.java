@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,21 +22,32 @@ import fpt.com.virtualoutfitroom.R;
 import fpt.com.virtualoutfitroom.adapter.AddressPaymentAdapter;
 import fpt.com.virtualoutfitroom.model.Account;
 import fpt.com.virtualoutfitroom.presenter.accounts.InformationAccountPresenter;
+import fpt.com.virtualoutfitroom.room.AccountItemEntities;
+import fpt.com.virtualoutfitroom.utils.FragmentSentData;
 import fpt.com.virtualoutfitroom.views.GetInforAccountView;
 public class AddressFragment extends Fragment implements View.OnClickListener, GetInforAccountView {
     private View mView;
     private EditText mEdtName,mEdtPhone,mEdtEmail,mEdtAddress;
     private LinearLayout mlnlName,mLnlEmail,mLnlPhone,mLnlAddress;
+    private TextView mTxtName,mTxtPhone,mTxtEmail,mTxtAddress;
     private boolean isClickName = false,isClickEmail = false,isClickPhone = false,isClickAddress = false;
+    private Account mAccount;
+    private String name,email,phone,address;
     private InformationAccountPresenter informationAccountPresenter;
+    private FirstFragmentListener mFragmentSentData;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_address, container, false);
-        initialView();
-        initialData();
         return mView;
     }
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        initialView();
+        initialData();
+    }
+
     public AddressFragment() {
     }
     public static Fragment newInstance(){
@@ -53,80 +65,137 @@ public class AddressFragment extends Fragment implements View.OnClickListener, G
         mLnlEmail = mView.findViewById(R.id.lnl_button_email);
         mLnlPhone = mView.findViewById(R.id.lnl_button_phone);
         mLnlAddress = mView.findViewById(R.id.lnl_button_address);
+        mTxtName = mView.findViewById(R.id.txt_name_payment);
+        mTxtEmail = mView.findViewById(R.id.txt_email_payment);
+        mTxtPhone = mView.findViewById(R.id.txt_phone_payment);
+        mTxtAddress = mView.findViewById(R.id.txt_address_payment);
     }
     public  void initialData(){
-        mlnlName.setOnClickListener(this);
-        mLnlEmail.setOnClickListener(this);
-        mLnlPhone.setOnClickListener(this);
-        mLnlAddress.setOnClickListener(this);
+         mlnlName.setOnClickListener(this::onClick);
+         mLnlEmail.setOnClickListener(this::onClick);
+         mLnlPhone.setOnClickListener(this::onClick);
+         mLnlAddress.setOnClickListener(this::onClick);
         informationAccountPresenter = new InformationAccountPresenter(getActivity().getApplication(),this);
         informationAccountPresenter.getAccountFromRoom();
+
     }
     @Override
     public void onClick(View view) {
             int id = view.getId();
             switch (id){
               case   R.id.lnl_button_name:
-                  if(isClickName  == false){
-                      setTouchModeEditText(mEdtName,true);
-                      isClickName = true;
-                  }else {
-                      setTouchModeEditText(mEdtName,false);
-                      isClickName = false;
-                  }
+                  setEditTextNamẹ̣();
                   break;
                 case R.id.lnl_button_email:
-                    if(isClickEmail == false){
-                        setTouchModeEditText(mEdtEmail,true);
-                        isClickEmail = true;
-                    }else {
-                        setTouchModeEditText(mEdtEmail,false);
-                        isClickEmail = false;
-                    }
+                    setEditTextNEmaiḷ̣();
                     break;
                 case R.id.lnl_button_phone:
-                    if(isClickPhone  == false){
-                        setTouchModeEditText(mEdtPhone,true);
-                        isClickPhone = true;
-                    }else {
-                        setTouchModeEditText(mEdtPhone,false);
-                        isClickPhone = false;
-                    }
+                    setEditTextPhonẹ();
                     break;
                 case R.id.lnl_button_address:
-                    if(isClickAddress  == false){
-                        setTouchModeEditText(mEdtAddress,true);
-                        isClickAddress = true;
-                    }else {
-                        setTouchModeEditText(mEdtAddress,false);
-                        isClickAddress = false;
-                    }
+                    setEditTextAddress();
                     break;
             }
     }
-    public  void setTouchModeEditText(EditText mEdtext, boolean ischeck){
-        if(ischeck == true){
-            mEdtext.setEnabled(true);
-            mEdtext.setFocusableInTouchMode(true);
-            mEdtext.setCursorVisible(true);
+    public void setEditTextNamẹ̣(){
+        if(isClickName == true){
+            name =  mEdtName.getText().toString()+"";
+            mTxtName.setText(name);
+            sendData(name,email,phone,address);
+            mEdtName.setVisibility(View.GONE);
+            mTxtName.setVisibility(View.VISIBLE);
+            isClickName = false;
         }
-        else {
-            mEdtext.setEnabled(false);
-            mEdtext.setFocusableInTouchMode(false);
-            mEdtext.setCursorVisible(false);
+        else{
+            isClickName = true;
+            mEdtName.setText(mTxtName.getText().toString()+"");
+            mTxtName.setVisibility(View.GONE);
+            mEdtName.setVisibility(View.VISIBLE);
         }
+    }
 
-
+    public void setEditTextNEmaiḷ̣(){
+        if(isClickEmail == true){
+            email = mEdtEmail.getText().toString()+"";
+            mTxtEmail.setText(email);
+            sendData(name,email,phone,address);
+            mEdtEmail.setVisibility(View.GONE);
+            mTxtEmail.setVisibility(View.VISIBLE);
+            isClickEmail = false;
+        }
+        else{
+            isClickEmail = true;
+            mEdtEmail.setText(mTxtEmail.getText().toString()+"");
+            mTxtEmail.setVisibility(View.GONE);
+            mEdtEmail.setVisibility(View.VISIBLE);
+        }
+    }
+    public void setEditTextPhonẹ(){
+        if(isClickPhone == true){
+            phone = mEdtPhone.getText().toString()+"";
+            mTxtPhone.setText(phone);
+            sendData(name,email,phone,address);
+            mEdtPhone.setVisibility(View.GONE);
+            mTxtPhone.setVisibility(View.VISIBLE);
+            isClickPhone = false;
+        }
+        else{
+            isClickPhone = true;
+            mEdtPhone.setText(mTxtPhone.getText().toString()+"");
+            mTxtPhone.setVisibility(View.GONE);
+            mEdtPhone.setVisibility(View.VISIBLE);
+        }
+    }
+    public void setEditTextAddress(){
+        if(isClickAddress == true){
+            address = mEdtAddress.getText().toString()+"";
+            mTxtAddress.setText(address);
+            sendData(name,email,phone,address);
+            mEdtAddress.setVisibility(View.GONE);
+            mTxtAddress.setVisibility(View.VISIBLE);
+            isClickAddress = false;
+        }
+        else{
+            isClickAddress = true;
+            mEdtAddress.setText(mTxtAddress.getText().toString()+"");
+            mTxtAddress.setVisibility(View.GONE);
+            mEdtAddress.setVisibility(View.VISIBLE);
+        }
     }
     @Override
     public void getInforSuccess(Account account) {
-        mEdtName.setText(account.getFirstName() + " " + account.getLastName());
-        mEdtEmail.setText(account.getEmail());
-        mEdtPhone.setText(account.getPhoneNumber());
-        mEdtAddress.setText(account.getAddress());
+
     }
     @Override
     public void getInforFail(String message) {
 
     }
+
+    @Override
+    public void getAccountFromRoom(AccountItemEntities accountItemEntities) {
+        mAccount = accountItemEntities.getAccount();
+        mTxtName.setText(mAccount.getFirstName() + " " + mAccount.getLastName());
+        mTxtEmail.setText(mAccount.getEmail());
+        mTxtPhone.setText(mAccount.getPhoneNumber());
+        mTxtAddress.setText(mAccount.getAddress());
+    }
+
+    private  void sendData(String name,String email,String phone,String address){
+       mFragmentSentData.sendData(name,email,phone,address);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            mFragmentSentData = (FirstFragmentListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " You must implement FirstFragmentListener");
+        }
+    }
+    public interface FirstFragmentListener {
+        void sendData(String name,String email,String phone,String address);
+    }
 }
+

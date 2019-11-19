@@ -15,20 +15,25 @@ import fpt.com.virtualoutfitroom.R;
 import fpt.com.virtualoutfitroom.fragments.AddressFragment;
 import fpt.com.virtualoutfitroom.fragments.FinishFragment;
 import fpt.com.virtualoutfitroom.fragments.MethodFragment;
+import fpt.com.virtualoutfitroom.model.Account;
 
 public class PaymentCustomTab implements SmartTabLayout.TabProvider {
     private Context mContext;
+    public static Account account;
 
-    public PaymentCustomTab(Context mContext) {
+    public PaymentCustomTab(Context mContext, Account account) {
         this.mContext = mContext;
+        this.account = account;
     }
     public enum PaymentActivityPages {
         TAB_1(0,  R.drawable.ic_location, AddressFragment.newInstance()),
         TAB_2(1,  R.drawable.ic_method, MethodFragment.newInstance()),
-        TAB_3(2,  R.drawable.ic_finish, FinishFragment.newInstance());
+        TAB_3(2,  R.drawable.ic_finish, FinishFragment.newInstance("Chí Trung","fsfsd",
+                "fssd","fsdf"));
         public int index;
         public int resourceId;
         public Fragment fragment;
+
         PaymentActivityPages(int index,int resourceId, Fragment fragment) {
             this.index = index;
             this.resourceId = resourceId;

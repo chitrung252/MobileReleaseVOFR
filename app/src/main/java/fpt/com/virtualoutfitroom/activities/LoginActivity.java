@@ -15,20 +15,25 @@ import fpt.com.virtualoutfitroom.R;
 import fpt.com.virtualoutfitroom.model.Account;
 import fpt.com.virtualoutfitroom.presenter.HomePresenter;
 import fpt.com.virtualoutfitroom.presenter.accounts.AddAccountToRoomPresenter;
+import fpt.com.virtualoutfitroom.presenter.accounts.InformationAccountPresenter;
 import fpt.com.virtualoutfitroom.presenter.accounts.LoginPresenter;
 import fpt.com.virtualoutfitroom.room.AccountItemEntities;
 import fpt.com.virtualoutfitroom.utils.BundleString;
 import fpt.com.virtualoutfitroom.utils.SharePreferenceUtils;
 import fpt.com.virtualoutfitroom.views.AccountView;
 import fpt.com.virtualoutfitroom.views.AddToRoomView;
+import fpt.com.virtualoutfitroom.views.GetInforAccountView;
 
-public class LoginActivity extends BaseActivity implements View.OnClickListener, AccountView{
+public class LoginActivity extends BaseActivity implements View.OnClickListener, AccountView, GetInforAccountView,AddToRoomView{
     private LinearLayout lnlLayout;
     private TextView mTxtRegister;
     private TextView mTxtForgetPass;
     private EditText mEdtUsername;
     private EditText mEdtPassword;
     private Button mLogin;
+    private AddAccountToRoomPresenter mAddAccountToRoomPresenter;
+    private InformationAccountPresenter mInformationAccountPresenter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,11 +82,40 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     public void loginSuccess(Account account) {
         SharePreferenceUtils.saveStringSharedPreference(LoginActivity.this, BundleString.TOKEN,account.getAccessToken());
         SharePreferenceUtils.saveStringSharedPreference(LoginActivity.this, BundleString.USERID,account.getAccountId());
-        Intent intent  = new Intent(LoginActivity.this,HomeActivity.class);
-        startActivity(intent);
+        mInformationAccountPresenter = new InformationAccountPresenter(LoginActivity.this,this);
+        mInformationAccountPresenter.getInforAccount(account.getAccountId());
+    }
+    @Override
+    public void showError(String message) {
+    }
+    @Override
+    public void getInforSuccess(Account account) {
+            if(account!=null){
+                addToRoom(account);
+            }
+    }
+    @Override
+    public void getInforFail(String message) {
+
     }
 
     @Override
-    public void showError(String message) {
+    public void getAccountFromRoom(AccountItemEntities accountItemEntities) {
+
+    }
+
+    @Override
+    public void AddToRoomSuccess() {
+        Intent intent = new Intent(LoginActivity.this,HomeActivity.class);
+        finish();
+        startActivity(intent);
+    }
+    private void addToRoom(Account account){
+        AccountItemEntities accountItemEntities= new AccountItemEntities();
+        String accountId = UUID.randomUUID().toString();
+        accountItemEntities.setAccountId(accountId);
+        accountItemEntities.setAccount(account);
+        mAddAccountToRoomPresenter = new AddAccountToRoomPresenter(LoginActivity.this,getApplication(),this);
+        mAddAccountToRoomPresenter.addAccountToRooṃ(accountItemEntities);
     }
 }
