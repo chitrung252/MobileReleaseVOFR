@@ -11,5 +11,6 @@ public class ConfigApi {
        String PRODUCTIMG= "product-image/get-list-img";
        String UPDATEAVATAR="account/update-image-user";
        String GETINFORACCOUNT ="account";
+       String UPDATEINFO = "account/update-account";
     }
 }

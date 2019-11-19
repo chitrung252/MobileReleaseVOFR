@@ -23,18 +23,17 @@
         <meta-data android:name="com.google.ar.core" android:value="required" />
         <activity android:name=".activities.ProductCategoryActivity">
         </activity>
-        <activity android:name=".activities.EditAccountActivity" />
+        <activity android:name=".activities.EditAccountActivity"
+            android:windowSoftInputMode="stateHidden"
+            ></activity>
         <activity android:name=".activities.ShopCartActivity" />
         <activity android:name=".activities.PaymentActivity" />
         <activity android:name=".activities.DetailProductActivity" />
         <activity
             android:name=".activities.HomeActivity"
-            android:theme="@style/MyMaterial">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+            android:theme="@style/MyMaterial"
+            android:windowSoftInputMode="stateHidden">
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"
@@ -42,7 +41,13 @@
         <activity android:name=".activities.ForgetActivity" />
         <activity android:name=".activities.RegisterActivity" />
         <activity android:name=".activities.LoginActivity" />
-        <activity android:name=".activities.IntroActivity" />
+        <activity android:name=".activities.IntroActivity" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".MainActivity"
             android:theme="@style/AppTheme" />

@@ -34,13 +34,9 @@ import fpt.com.virtualoutfitroom.utils.InternetHelper;
 import fpt.com.virtualoutfitroom.views.HomeView;
 
 public class HomeFragment extends Fragment implements HomeView, View.OnClickListener {
-    private RecyclerView mRrvEaring;
-    private RecyclerView mRrvGlasses;
-    private RecyclerView mRrvHat;
-    private List<Product> mListGlasses, mListHat, mListEaring;
-    private RecyclerViewApdapter mRrvAdapterGlasses;
-    private RecyclerViewApdapter mRrvAdapterHat;
-    private RecyclerViewApdapter mRrvAdapterEaring;
+    private RecyclerView mRrvEaring, mRrvGlasses, mRrvHat, mRrvShoes ;
+    private List<Product> mListGlasses, mListHat, mListEaring, mListShoes;
+    private RecyclerViewApdapter mRrvAdapterGlasses, mRrvAdapterHat, mRrvAdapterEaring, mRrvAdapterShoes;
     private HomePresenter mPresenter;
     private ImageView mImgShopCart;
     private CarouselView mCarouselView;
@@ -60,6 +56,12 @@ public class HomeFragment extends Fragment implements HomeView, View.OnClickList
         setLayout(rootView);
         return rootView;
     }
+    public static Fragment newInstance(){
+        HomeFragment fragment = new HomeFragment();
+        Bundle args = new Bundle();
+        fragment.setArguments(args);
+        return fragment;
+    }
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -78,6 +80,7 @@ public class HomeFragment extends Fragment implements HomeView, View.OnClickList
         mRrvGlasses = rootView.findViewById(R.id.rcv_list_glasses);
         mRrvHat = rootView.findViewById(R.id.rcv_list_hat);
         mRrvEaring = rootView.findViewById(R.id.rcv_list_earing);
+        mRrvShoes = rootView.findViewById(R.id.rcv_list_shoes);
         mCarouselView = rootView.findViewById(R.id.carouselView);
         final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL,false);
         //layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
@@ -85,12 +88,15 @@ public class HomeFragment extends Fragment implements HomeView, View.OnClickList
         //layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         final LinearLayoutManager layoutManager3 = new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL,false);
         //layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        final LinearLayoutManager layoutManager4 = new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL,false);
         mRrvGlasses.setLayoutManager(layoutManager);
         mRrvHat.setLayoutManager(layoutManager2);
         mRrvEaring.setLayoutManager(layoutManager3);
+        mRrvShoes.setLayoutManager(layoutManager4);
         mListGlasses = new ArrayList<>();
         mListHat = new ArrayList<>();
         mListEaring = new ArrayList<>();
+        mListShoes = new ArrayList<>();
         mImgShopCart = rootView.findViewById(R.id.img_shop_cart);
         mImgShopCart.setOnClickListener(this);
     }
@@ -140,6 +146,21 @@ public class HomeFragment extends Fragment implements HomeView, View.OnClickList
             }
         });
     }
+    public void updateUIShoes() {
+        mRrvAdapterShoes = new RecyclerViewApdapter(getActivity(), mListShoes);
+        // Inflate the layout for this fragment
+        mRrvShoes.setAdapter(mRrvAdapterShoes);
+        mRrvAdapterShoes.setOnItemClickedListener(new RecyclerViewApdapter.OnItemClickedListener() {
+            @Override
+            public void onItemClicked(int position) {
+                Intent intent = new Intent(getActivity(), DetailProductActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("PRODUCT", mListShoes.get(position));
+                intent.putExtra("BUNDLE", bundle);
+                startActivity(intent);
+            }
+        });
+    }
     @Override
     public void showListProduct(List<Product> productList) {
         for (Product product : productList) {
@@ -154,6 +175,10 @@ public class HomeFragment extends Fragment implements HomeView, View.OnClickList
             if (product.getMasterCategoryId() == 3 && product.isActived() == true) {
                 mListEaring.add(product);
                 updateUIEaring();
+            }
+            if(product.getMasterCategoryId() == 4 && product.isActived() == true){
+                mListShoes.add(product);
+                updateUIShoes();
             }
         }
     }
@@ -192,4 +217,5 @@ public class HomeFragment extends Fragment implements HomeView, View.OnClickList
         });
         mCarouselView.setPageCount(listImageHeader.size());
     }
+
 }

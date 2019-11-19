@@ -69,12 +69,8 @@ dependencies {
     //EasyImage
     implementation 'com.github.jkwiecien:EasyImage:2.0.4'
     implementation 'com.github.yalantis:ucrop:2.2.2-native'
+    // switch tab
+    implementation 'lib.kingja.switchbutton:switchbutton:1.1.8'
 
 }
 
-
-
-sceneform.asset('sampledata/models/glas2.fbx',
-        'default',
-        'sampledata/models/glas2.sfa',
-        'src/main/res/raw/glas2')

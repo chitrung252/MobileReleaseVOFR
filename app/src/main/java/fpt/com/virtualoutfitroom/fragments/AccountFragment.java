@@ -1,90 +1,91 @@
 package fpt.com.virtualoutfitroom.fragments;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
+
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import com.squareup.picasso.Picasso;
-import com.yalantis.ucrop.UCrop;
-
-import java.io.File;
-import java.util.List;
-import java.util.UUID;
+import android.widget.LinearLayout;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import fpt.com.virtualoutfitroom.R;
-import fpt.com.virtualoutfitroom.activities.EditAccountActivity;
+
 import fpt.com.virtualoutfitroom.activities.LoginActivity;
-import fpt.com.virtualoutfitroom.model.Account;
-import fpt.com.virtualoutfitroom.presenter.accounts.AddAccountToRoomPresenter;
-import fpt.com.virtualoutfitroom.presenter.accounts.InformationAccountPresenter;
+import fpt.com.virtualoutfitroom.adapter.SwitchTabAdapter;
+import fpt.com.virtualoutfitroom.dialog.BottomSheetEditAccount;
 import fpt.com.virtualoutfitroom.presenter.accounts.UpdateAvatarPresenter;
-import fpt.com.virtualoutfitroom.room.AccountItemEntities;
 import fpt.com.virtualoutfitroom.utils.BundleString;
 import fpt.com.virtualoutfitroom.utils.SharePreferenceUtils;
-import fpt.com.virtualoutfitroom.views.AddToRoomView;
-import fpt.com.virtualoutfitroom.views.GetInforAccountView;
 import fpt.com.virtualoutfitroom.views.UpdateAvataView;
-public class AccountFragment extends Fragment implements View.OnClickListener, AddToRoomView , UpdateAvataView, GetInforAccountView {
-    private FrameLayout mFrmedit;
-    private View mView;
+
+public class AccountFragment extends Fragment implements UpdateAvataView, View.OnClickListener {
+   private View mView;
+    private TabLayout mTabs;
+    private View mIndicator;
+   private ViewPager mViewPager;
+    private int indicatorWidth;
+    SwitchTabAdapter adapter;
+    private ImageView mImgLoginFirst;
+    private CircleImageView mImageAvata;
+    private Uri resultUri;
+    private UpdateAvatarPresenter mUpdateAvatarPresenter;
+    private LinearLayout mLnlChooseEditAccout;
     private String token;
     private String userId;
-    private TextView mTxtName,mTxtEmail,mTxtPhone,nmTxtAddress;
-    private AddAccountToRoomPresenter mAddAccountToRoomPresenter;
-    private UpdateAvatarPresenter mUpdateAvatarPresenter;
-    private InformationAccountPresenter mInformationAccountPresenter;
-    private Button mBtnLoginFirst;
-    private CircleImageView mImageAvata;
-    private Account mAccount;
-    private Uri resultUri;
     public AccountFragment() {
     }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+    }
+    public static Fragment newInstance(){
+        AccountFragment fragment = new AccountFragment();
+        Bundle args = new Bundle();
+        fragment.setArguments(args);
+        return fragment;
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         token = SharePreferenceUtils.getStringSharedPreference(getContext(), BundleString.TOKEN);
         userId = SharePreferenceUtils.getStringSharedPreference(getContext(), BundleString.USERID);
-        if(token.length() == 0 || token ==null){
-            mView= inflater.inflate(R.layout.fragment_guest, container, false);
+        if (token.length() == 0 || token == null) {
+            mView = inflater.inflate(R.layout.fragment_guest, container, false);
             initialView1();
+        } else {
+            mView = inflater.inflate(R.layout.fragment_account, container, false);
+            initialView();
+
+        }
+
+        return mView;
+    }
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        if(token.length() == 0 ||token == null){
             initialData1();
         }
         else {
-            mView= inflater.inflate(R.layout.fragment_account, container, false);
-            initialView2();
-            initialData2();
+            initialData();
+
         }
-        return mView;
     }
     private void initialView1() {
-        mBtnLoginFirst = mView.findViewById(R.id.btn_login_first);
+        mImgLoginFirst = mView.findViewById(R.id.img_login_first);
     }
     private void initialData1(){
-        mBtnLoginFirst.setOnClickListener(new View.OnClickListener() {
+        mImgLoginFirst.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), LoginActivity.class);
@@ -92,33 +93,85 @@ public class AccountFragment extends Fragment implements View.OnClickListener, A
             }
         });
     }
-    private void initialView2(){
-        mFrmedit = mView.findViewById(R.id.frm_edit);
+    private void initialView() {
+        mTabs = mView.findViewById(R.id.tab);
+        mIndicator = mView.findViewById(R.id.indicator);
+        mViewPager = mView.findViewById(R.id.viewPager);
         mImageAvata = mView.findViewById(R.id.profile_image);
-        mTxtName = mView.findViewById(R.id.txt_name_account);
-        mTxtEmail = mView.findViewById(R.id.txt_email_account);
-        mTxtPhone = mView.findViewById(R.id.txt_phone_account);
-        nmTxtAddress = mView.findViewById(R.id.txt_address_account);
+        mLnlChooseEditAccout = mView.findViewById(R.id.lnl_choose_edit_account);
     }
-    private void initialData2(){
-        mFrmedit.setOnClickListener(this);
-        mImageAvata.setOnClickListener(this);
-        mInformationAccountPresenter = new InformationAccountPresenter(this.getContext(),this);
-        mInformationAccountPresenter.getInforAccount(userId);
+    private void initialData(){
+        SwitchTabAdapter adapter= new SwitchTabAdapter(getChildFragmentManager());
+        adapter.addFragment(new ProfileFragment(), "Thông tin");
+        adapter.addFragment(new HistoryFragment(), "Lịch sử");
+        mViewPager.setAdapter(adapter);
+        mViewPager.setOffscreenPageLimit(2);
+
+        mTabs.setupWithViewPager(mViewPager);
+
+        mTabs.post(new Runnable() {
+            @Override
+            public void run() {
+                indicatorWidth = mTabs.getWidth() / mTabs.getTabCount();
+                FrameLayout.LayoutParams indicatorParams = (FrameLayout.LayoutParams) mIndicator.getLayoutParams();
+                indicatorParams.width = indicatorWidth;
+                mIndicator.setLayoutParams(indicatorParams);
+            }
+        });
+
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+
+            //To move the indicator as the user scroll, we will need the scroll offset values
+            //positionOffset is a value from [0..1] which represents how far the page has been scrolled
+            //see https://developer.android.com/reference/android/support/v4/view/ViewPager.OnPageChangeListener
+            @Override
+            public void onPageScrolled(int i, float positionOffset, int positionOffsetPx) {
+                FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) mIndicator.getLayoutParams();
+
+                //Multiply positionOffset with indicatorWidth to get translation
+                float translationOffset = (positionOffset + i) * indicatorWidth;
+                params.leftMargin = (int) translationOffset;
+                mIndicator.setLayoutParams(params);
+            }
+
+            @Override
+            public void onPageSelected(int i) {
+                mTabs.getTabAt(i).select();
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int i) {
+
+            }
+        });
+        mImageAvata.setOnClickListener(this::onClick);
+      mLnlChooseEditAccout.setOnClickListener(this::onClick);
+
+    }
+
+    @Override
+    public void updateAvatarSuccess(String result) {
+
+    }
+
+    @Override
+    public void updateAvatarFail(String message) {
+
     }
     @Override
     public void onClick(View view) {
         switch (view.getId()){
-            case R.id.frm_edit : moveToEditFragment();
-            break;
             case R.id.profile_image:
                 accessImageLibrary();
                 break;
+            case R.id.lnl_choose_edit_account:
+                showBottomSheetChooseEdit();
+                break;
         }
     }
-    public void moveToEditFragment(){
-        Intent intent = new Intent(getActivity(), EditAccountActivity.class);
-        startActivity(intent);
+    public void showBottomSheetChooseEdit(){
+        BottomSheetEditAccount bottomSheetEditAccount = new BottomSheetEditAccount();
+        bottomSheetEditAccount.show(getFragmentManager(),"BottomSheetEditAccount");
     }
     public void accessImageLibrary() {
         startActivityForResult(new Intent().setAction(Intent.ACTION_GET_CONTENT).setType("image/*"), BundleString.CODEIMGGALLERY);
@@ -137,43 +190,5 @@ public class AccountFragment extends Fragment implements View.OnClickListener, A
                 mUpdateAvatarPresenter.updateAvatarAccount(token,userId,resultUri);
             }
         }
-
-    }
-
-
-    private void addToRoom(Account account){
-        mAccount = account;
-        AccountItemEntities accountItemEntities= new AccountItemEntities();
-        String accountId = UUID.randomUUID().toString();
-        accountItemEntities.setAccountId(accountId);
-        accountItemEntities.setAccount(account);
-        mAddAccountToRoomPresenter = new AddAccountToRoomPresenter(this.getContext(),this.getActivity().getApplication(),this);
-        mAddAccountToRoomPresenter.addAccountToRooṃ(accountItemEntities);
-    }
-    @Override
-    public void AddToRoomSuccess() {
-        mTxtName.setText(mAccount.getFirstName() + " " + mAccount.getLastName());
-        mTxtEmail.setText(mAccount.getEmail());
-        mTxtPhone.setText(mAccount.getPhoneNumber());
-        nmTxtAddress.setText(mAccount.getAddress());
-        Picasso.get().load(mAccount.getImageUser()).into(mImageAvata);
-    }
-
-    @Override
-    public void updateAvatarSuccess(String result) {
-    }
-
-    @Override
-    public void updateAvatarFail(String message) {
-
-    }
-    @Override
-    public void getInforSuccess(Account account) {
-        if(account !=null){
-            addToRoom(account);
-        }
-    }
-    @Override
-    public void getInforFail(String message) {
     }
 }

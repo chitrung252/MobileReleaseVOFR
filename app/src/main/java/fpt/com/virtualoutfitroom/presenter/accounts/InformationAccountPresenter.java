@@ -45,9 +45,8 @@ public class InformationAccountPresenter {
         accountManagement.getAccountItem(new AccountManagement.DataCallBack() {
             @Override
             public void onSuccess(AccountItemEntities account) {
-                mInforAccountView.getInforSuccess(account.getAccount());
+                mInforAccountView.getAccountFromRoom(account);
             }
-
             @Override
             public void onFail(String message) {
                 mInforAccountView.getInforFail(message);

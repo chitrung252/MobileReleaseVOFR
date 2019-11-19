@@ -25,9 +25,9 @@ public class HomeActivity extends BaseActivity {
     }
     private void initialView(Bundle savedInstanceState){
         List<Fragment> fragmentList = new ArrayList<>();
-        fragmentList.add(new HomeFragment());
-        fragmentList.add(new CategoryFragment());
-        fragmentList.add(new AccountFragment());
+        fragmentList.add(HomeFragment.newInstance());
+        fragmentList.add(CategoryFragment.newInstance());
+        fragmentList.add(AccountFragment.newInstance());
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewPagerHome);
         mSpaceTabLayout = (SpaceTabLayout) findViewById(R.id.spaceTabLayout);
         mSpaceTabLayout.initialize(viewPager, getSupportFragmentManager(),

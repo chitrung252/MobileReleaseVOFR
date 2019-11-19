@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItem;
@@ -21,23 +22,30 @@ import fpt.com.virtualoutfitroom.adapter.PaymentCustomTab;
 import fpt.com.virtualoutfitroom.fragments.AddressFragment;
 import fpt.com.virtualoutfitroom.fragments.FinishFragment;
 import fpt.com.virtualoutfitroom.fragments.MethodFragment;
+import fpt.com.virtualoutfitroom.model.Account;
+import fpt.com.virtualoutfitroom.presenter.accounts.InformationAccountPresenter;
+import fpt.com.virtualoutfitroom.room.AccountItemEntities;
+import fpt.com.virtualoutfitroom.utils.FragmentSentData;
+import fpt.com.virtualoutfitroom.views.GetInforAccountView;
 
-public class PaymentActivity extends BaseActivity {
+public class PaymentActivity extends BaseActivity implements GetInforAccountView,AddressFragment.FirstFragmentListener, MethodFragment.SecordFragmentListener {
     private ViewPager mViewPager;
     private SmartTabLayout mSmartTabLayout;
     private FragmentStatePagerItemAdapter mAdapter;
     private LinearLayout mBtnNext;
     private LinearLayout mBtnBack;
     private TextView mTxtNext;
+    private Account mAccount;
+    private int ischeck =-1 ;
+    private InformationAccountPresenter  informationAccountPresenter;
     int PAGE = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payment);
         initialView();
-        initialData();
+        getData();
     }
-
     private void initialView(){
         mViewPager = findViewById(R.id.view_pager_payment);
         mSmartTabLayout = findViewById(R.id.smart_tab_payment);
@@ -46,9 +54,12 @@ public class PaymentActivity extends BaseActivity {
         mTxtNext = findViewById(R.id.text_view_next);
 
     }
-
+    public void getData(){
+        informationAccountPresenter = new InformationAccountPresenter(getApplication(),this);
+        informationAccountPresenter.getAccountFromRoom();
+    }
     private void initialData(){
-        final PaymentCustomTab mPagerAdapter = new PaymentCustomTab(PaymentActivity.this);
+        final PaymentCustomTab mPagerAdapter = new PaymentCustomTab(PaymentActivity.this,mAccount);
         mSmartTabLayout.setCustomTabView(mPagerAdapter);
         FragmentPagerItems pages = new FragmentPagerItems(this);
         pages.add(FragmentPagerItem.of("", AddressFragment.class));
@@ -70,9 +81,7 @@ public class PaymentActivity extends BaseActivity {
         mSmartTabLayout.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
             }
-
             @Override
             public void onPageSelected(int position) {
 //                ImageView icon = mSmartTabLayout.getTabAt(0).findViewById(R.id.activity_payment_tab_icon);
@@ -93,18 +102,17 @@ public class PaymentActivity extends BaseActivity {
 //                }
                 disableTab(position);
             }
-
             @Override
             public void onPageScrollStateChanged(int state) {
             }
         });
-        mBtnNext.setOnClickListener(new View.OnClickListener() {
+            mBtnNext.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mViewPager.setCurrentItem(mViewPager.getCurrentItem() + 1, true);
+                }
+            });
 
-            @Override
-            public void onClick(View view) {
-                mViewPager.setCurrentItem(mViewPager.getCurrentItem()+1, true);
-            }
-        });
         mBtnBack.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -144,5 +152,30 @@ public class PaymentActivity extends BaseActivity {
         ViewGroup vg = (ViewGroup) mSmartTabLayout.getChildAt(0);
         ViewGroup vgTab = (ViewGroup) vg.getChildAt(tabNumber);
         vgTab.setEnabled(false);
+    }
+    @Override
+    public void getInforSuccess(Account account) {
+    }
+    @Override
+    public void getInforFail(String message) {
+        initialData();
+    }
+
+    @Override
+    public void getAccountFromRoom(AccountItemEntities accountItemEntities) {
+        mAccount =  accountItemEntities.getAccount();
+        initialData();
+    }
+
+    @Override
+    public void sendData(String name, String email, String phone, String address) {
+        FinishFragment fragment = (FinishFragment) getSupportFragmentManager().getFragments().get(2);
+        fragment.getData(name,email,phone,address);
+    }
+    @Override
+    public void sendMethodPayment(int index) {
+        ischeck = index;
+        FinishFragment fragment = (FinishFragment) getSupportFragmentManager().getFragments().get(2);
+        fragment.getMethoid(index);
     }
 }

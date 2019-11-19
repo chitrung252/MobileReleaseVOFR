@@ -36,11 +36,15 @@ public class CategoryFragment extends Fragment implements CategoryView {
     private List<Category> mListCate;
     private CategoryAdapter mRcvAdapterCate;
     private CategoryPresenter mCategoryPresenter;
-
     public CategoryFragment() {
         // Required empty public constructor
     }
-
+    public static Fragment newInstance(){
+        CategoryFragment fragment = new CategoryFragment();
+        Bundle args = new Bundle();
+        fragment.setArguments(args);
+        return fragment;
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -49,22 +53,18 @@ public class CategoryFragment extends Fragment implements CategoryView {
         initialView(view);
         return view;
     }
-
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initialData();
     }
-
     public void initialView(View view) {
         mRcvCate = view.findViewById(R.id.rcv_cate);
         final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRcvCate.setLayoutManager(layoutManager);
         mListCate = new ArrayList<>();
-
     }
-
     public void initialData(){
         mCategoryPresenter = new CategoryPresenter(getActivity(),this);
         mCategoryPresenter.getListCategory();

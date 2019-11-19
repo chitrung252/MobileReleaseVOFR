@@ -10,10 +10,12 @@
     <color name="color_cus_blue">#3661EE</color>
     <color name="color_cus_border_color">#DDDFEB</color>
     <color name="color_cus_orange">#FF7324</color>
+    <color name = "color_oragne_white">#FFBB5C</color>
     <color name="color_tranparent">#10000000</color>
     <color name="color_cus_light_blue">#466EF0</color>
     <color name="color_cus_light_hr">#EDEBEB</color>
     <color name="color_card">#F8F8F8</color>
     <color name="color_cus_bg_gray">#F4F4F4</color>
     <color name="color_cus_bg_black">#313131</color>
+    <color name="color_cus_red">#FF584E</color>
 </resources>

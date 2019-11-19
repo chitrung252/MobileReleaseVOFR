@@ -24,7 +24,6 @@ public interface VofrService {
     @POST(ConfigApi.Api.LOGIN)
     @Headers({"Content-Type: application/json"})
     Call<ResponseBody> checkLogin(@Body RequestBody requestBody);
-
     @GET(ConfigApi.Api.PARENTCATEGORY)
     Call<ResponseBody> getListCategory();
 
@@ -43,4 +42,6 @@ public interface VofrService {
     Call<ResponseBody> updateaAvatarInfo(@HeaderMap Map<String, String> header,@Query("id") String accountId ,@Part MultipartBody.Part  image);
     @GET(ConfigApi.Api.GETINFORACCOUNT)
     Call<ResponseBody> getInforAccount(@Query("id") String accountId );
+    @PUT(ConfigApi.Api.UPDATEINFO)
+    Call<ResponseBody> updateaInfoAccount(@HeaderMap Map<String, String> header,@Body RequestBody orderJsonObject);
 }

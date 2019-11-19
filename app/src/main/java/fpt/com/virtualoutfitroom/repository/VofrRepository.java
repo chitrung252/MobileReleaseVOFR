@@ -20,4 +20,5 @@ public interface VofrRepository {
     void getListImage(Context context, int productId, String imageType, CallBackData<List<ProductImage>> callBackData);
     void updateAvatarInfo(Context context,String actoken,String accountId,Uri imageUri,CallBackData<String> callBackData);
     void getInforAccount (Context context,String accountID,CallBackData<Account>callBackData);
+    void updateInforAccount(Context context,String token, Account account,CallBackData<String>callBackData);
 }

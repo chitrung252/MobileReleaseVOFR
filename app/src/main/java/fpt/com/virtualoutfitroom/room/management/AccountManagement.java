@@ -1,6 +1,7 @@
 package fpt.com.virtualoutfitroom.room.management;
 
 import android.app.Application;
+import android.database.sqlite.SQLiteConstraintException;
 import android.os.AsyncTask;
 
 import fpt.com.virtualoutfitroom.room.AccountItemEntities;
@@ -63,10 +64,63 @@ public class AccountManagement {
             }
         }
     }
+    private class DeleteAllAccountAsync extends AsyncTask<AccountItemEntities, Void, Void> {
+        private AccountDAO mDaoAsync;
+
+        public DeleteAllAccountAsync(AccountDAO mDaoAsync) {
+            this.mDaoAsync = mDaoAsync;
+        }
+
+        @Override
+        protected Void doInBackground(AccountItemEntities... accountItemEntities) {
+            try {
+                mDaoAsync.deleleAllAccount();
+            } catch (SQLiteConstraintException e) {
+
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+
+        }
+    }
+
+    private class UpdateCustomerAsyn extends AsyncTask<AccountItemEntities, Void, Void> {
+        private AccountDAO mAccountDaoAsync;
+        public UpdateCustomerAsyn(AccountDAO mAccountDao) {
+            this.mAccountDaoAsync = mAccountDao;
+        }
+
+
+        @Override
+        protected Void doInBackground(AccountItemEntities... accountItemEntities) {
+            try {
+               mAccountDaoAsync.updateAccount(accountItemEntities);
+            } catch (SQLiteConstraintException e) {
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+        }
+    }
+
+    public void updateAccount(AccountItemEntities accountItemEntities) {
+        UpdateCustomerAsyn updateCustomerAsyn = new UpdateCustomerAsyn(accountDAO);
+        updateCustomerAsyn.execute(accountItemEntities);
+    }
+
+    public void deleteAllAccount() {
+        DeleteAllAccountAsync deleteAsync = new DeleteAllAccountAsync(accountDAO);
+        deleteAsync.execute();
+    }
     public void addAccountItem(AccountItemEntities accountItemEntities){
         AddOrderItemAsync addOrderItemAsync = new AddOrderItemAsync(accountDAO);
         addOrderItemAsync.execute(accountItemEntities);
-
     }
     public void getAccountItem(DataCallBack dataCallBack){
         GetAccountItemAsync getAccountItemAsync = new GetAccountItemAsync(accountDAO, dataCallBack);

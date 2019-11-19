@@ -104,7 +104,11 @@ public class PageFragment extends Fragment implements ProductCateView {
     @Override
     public void showListProduct(List<Product> productList) {
         if(productList != null){
-            mListProduct = productList;
+            for (Product product: productList) {
+                if(product.isActived() == true){
+                    mListProduct.add(product);
+                }
+            }
             updateUI();
         }
     }

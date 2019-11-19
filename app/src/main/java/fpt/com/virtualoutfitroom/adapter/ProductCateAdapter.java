@@ -11,10 +11,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
 import fpt.com.virtualoutfitroom.R;
 import fpt.com.virtualoutfitroom.model.Product;
+import fpt.com.virtualoutfitroom.utils.CurrencyManagement;
+import fpt.com.virtualoutfitroom.utils.RefineImage;
 
 public class ProductCateAdapter extends RecyclerView.Adapter<ProductCateAdapter.RecyclerViewHolder> {
     private Context mContext;
@@ -37,8 +41,12 @@ public class ProductCateAdapter extends RecyclerView.Adapter<ProductCateAdapter.
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewHolder holder, final int position) {
         holder.imgProductImage.setImageResource(R.mipmap.glasses);
+        String urlImage = RefineImage.getUrlImage(mListProduct.get(position).getProductImageList(),"img");
+        if(urlImage != null){
+            Picasso.get().load(urlImage).into(holder.imgProductImage);
+        }
         holder.txtName.setText(mListProduct.get(position).getProductName().toString());
-        holder.txtPrice.setText(mListProduct.get(position).getProductPrice().toString());
+        holder.txtPrice.setText(CurrencyManagement.getPrice(mListProduct.get(position).getProductPrice(),"đ"));
         holder.mCVProductCate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

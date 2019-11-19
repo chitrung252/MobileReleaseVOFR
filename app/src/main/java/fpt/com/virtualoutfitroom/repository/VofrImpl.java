@@ -33,7 +33,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class VofrImpl implements VofrRepository {
-
     @Override
     public void getListProduct(Context context,final CallBackData<List<Product>> callBackData) {
         ClientApi clientApi = new ClientApi();
@@ -325,6 +324,52 @@ public class VofrImpl implements VofrRepository {
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                     callBackData.onFail("Lấy thông tin không thành công");
+            }
+        });
+    }
+
+    @Override
+    public void updateInforAccount(Context context, String token,Account account, CallBackData<String> callBackData) {
+        ClientApi clientApi = new ClientApi();
+        String hearder = "Bearer " + token;
+        Map<String, String> map = new HashMap<>();
+        map.put("Authorization", hearder);
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("account_id",account.getAccountId());
+            jsonObject.put("first_name",account.getFirstName());
+            jsonObject.put("last_name",account.getLastName());
+            jsonObject.put("email",account.getEmail());
+            jsonObject.put("address",account.getAddress());
+            jsonObject.put("phone_number",account.getPhoneNumber());
+            jsonObject.put("username",account.getUserName());
+            jsonObject.put("password",account.getPassword());
+        }catch (JSONException ex){
+            ex.printStackTrace();
+        }
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObject.toString());
+        Call<ResponseBody> serviceCall = clientApi.rmapService().updateaInfoAccount(map,body);
+        serviceCall.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if(response != null && response.body() != null){
+                    if(response.code() == 200){
+                        try {
+                            String result = response.body().string();
+                            Type type = new TypeToken<ResponseResult>() {
+                            }.getType();
+                            ResponseResult responseResult =
+                                    new Gson().fromJson(result, type);
+                            callBackData.onSuccess(responseResult.getMessage());
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                callBackData.onFail("Cập nhật thông tin không thành công");
             }
         });
     }

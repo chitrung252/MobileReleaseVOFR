@@ -21,7 +21,6 @@
             android:layout_height="wrap_content">
 
         </TextView>
-
         <LinearLayout
             android:background="@drawable/edit_text_background"
             android:layout_marginTop="@dimen/dp12"
@@ -31,6 +30,7 @@
             android:orientation="horizontal"
             android:layout_height="75dp">
             <TextView
+                android:id="@+id/txt_address_finish"
                 android:textStyle="bold"
                 android:gravity="center|center_horizontal"
                 android:textColor="@color/color_black"
@@ -61,10 +61,11 @@
             android:orientation="horizontal"
             android:layout_height="52dp">
             <TextView
+                android:id="@+id/txt_method_finish"
                 android:textStyle="bold"
                 android:gravity="center|center_horizontal"
                 android:textColor="@color/color_black"
-                android:text="Thanh toán khi nhận hàng"
+                android:text="Thanh toán khi giao hàng"
                 android:textSize="15sp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">

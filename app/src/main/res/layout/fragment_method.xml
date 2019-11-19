@@ -21,6 +21,8 @@
     </TextView>
 
     <LinearLayout
+        android:background="@drawable/radius_white_color"
+        android:id="@+id/lnl_method_1"
         android:layout_marginBottom="@dimen/dp20"
         android:layout_marginLeft="@dimen/dp15"
         android:layout_marginRight="25dp"
@@ -42,7 +44,6 @@
                 android:src="@mipmap/ic_launcher"></ImageView>
         </LinearLayout>
         <LinearLayout
-            android:background="@drawable/edit_text_background"
             android:layout_weight="8"
             android:weightSum="10"
             android:orientation="horizontal"
@@ -63,6 +64,8 @@
 
     </LinearLayout>
     <LinearLayout
+        android:background="@drawable/radius_white_color"
+        android:id="@+id/lnl_method_2"
         android:layout_marginBottom="@dimen/dp20"
         android:layout_marginLeft="@dimen/dp15"
         android:layout_marginRight="25dp"
@@ -84,7 +87,6 @@
                 android:src="@mipmap/ic_launcher"></ImageView>
         </LinearLayout>
         <LinearLayout
-            android:background="@drawable/edit_text_background"
             android:layout_weight="8"
             android:weightSum="10"
             android:orientation="horizontal"
@@ -101,10 +103,10 @@
                 android:layout_height="match_parent">
             </TextView>
         </LinearLayout>
-
-
     </LinearLayout>
     <LinearLayout
+        android:background="@drawable/radius_white_color"
+        android:id="@+id/lnl_method_3"
         android:layout_marginBottom="@dimen/dp20"
         android:layout_marginLeft="@dimen/dp15"
         android:layout_marginRight="25dp"
@@ -126,7 +128,6 @@
                 android:src="@mipmap/ic_launcher"></ImageView>
         </LinearLayout>
         <LinearLayout
-            android:background="@drawable/edit_text_background"
             android:layout_weight="8"
             android:weightSum="10"
             android:orientation="horizontal"
