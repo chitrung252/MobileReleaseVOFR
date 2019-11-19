@@ -1,18 +1,3 @@
-/*
- * Copyright 2019 Google LLC. All Rights Reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package fpt.com.virtualoutfitroom.activities;
 
 import android.app.Activity;
@@ -22,7 +7,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
-import android.os.Bundle;
+import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -30,58 +15,45 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.PixelCopy;
 import android.widget.Toast;
 
-import com.google.ar.core.ArCoreApk;
-import com.google.ar.core.AugmentedFace;
-import com.google.ar.core.TrackingState;
+import com.google.ar.core.Anchor;
+import com.google.ar.core.HitResult;
+import com.google.ar.core.Plane;
+import com.google.ar.sceneform.AnchorNode;
 import com.google.ar.sceneform.ArSceneView;
-import com.google.ar.sceneform.FrameTime;
-import com.google.ar.sceneform.Scene;
 import com.google.ar.sceneform.rendering.ModelRenderable;
-import com.google.ar.sceneform.rendering.Renderable;
-import com.google.ar.sceneform.ux.AugmentedFaceNode;
+import com.google.ar.sceneform.ux.ArFragment;
+import com.google.ar.sceneform.ux.TransformableNode;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.Collection;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 import fpt.com.virtualoutfitroom.R;
-import fpt.com.virtualoutfitroom.fragments.FaceArFragment;
 import fpt.com.virtualoutfitroom.model.Product;
 import fpt.com.virtualoutfitroom.model.ProductImage;
 
-/**
- * This is an example activity that uses the Sceneform UX package to make common Augmented Faces
- * tasks easier.
- */
-public class AugmentedFacesActivity extends AppCompatActivity {
-    private static final String TAG = AugmentedFacesActivity.class.getSimpleName();
-
+public class ARShoeActivity extends AppCompatActivity {
+    private static final String TAG = R.class.getSimpleName();
     private static final double MIN_OPENGL_VERSION = 3.0;
 
-    private FaceArFragment arFragment;
+    private ArFragment arFragment;
+    private ModelRenderable shoeRenderable;
 
-    private ModelRenderable faceRegionsRenderable;
     private Product mProduct;
     private FloatingActionButton btnTakePhoto;
     private String URLSFB = "http://107.150.52.213/api-votf/image/20191104181106376304.sfb";
-
-    private final HashMap<AugmentedFace, AugmentedFaceNode> faceNodeMap = new HashMap<>();
-
     @Override
     @SuppressWarnings({"AndroidApiChecker", "FutureReturnValueIgnored"})
-    // CompletableFuture requires api level 24
-    // FutureReturnValueIgnored is not valid
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -89,62 +61,39 @@ public class AugmentedFacesActivity extends AppCompatActivity {
             return;
         }
 
-        setContentView(R.layout.activity_face_mesh);
+        setContentView(R.layout.activity_arshoe);
+        arFragment = (ArFragment) getSupportFragmentManager().findFragmentById(R.id.shoe_fragment);
         btnTakePhoto = (FloatingActionButton)findViewById(R.id.btn_take_photo);
         btnTakePhoto.setOnClickListener(v -> takePhoto());
-        arFragment = (FaceArFragment) getSupportFragmentManager().findFragmentById(R.id.face_fragment);
-        initialData();
-        // Load the face regions renderable.
-        // This is a skinned model that renders 3D objects mapped to the regions of the augmented face.
+
         ModelRenderable.builder()
                 .setSource(this, Uri.parse(URLSFB))
                 .build()
-                .thenAccept(
-                        modelRenderable -> {
-                            faceRegionsRenderable = modelRenderable;
-                            modelRenderable.setShadowCaster(false);
-                            modelRenderable.setShadowReceiver(false);
+                .thenAccept(renderable -> shoeRenderable = renderable)
+                .exceptionally(
+                        throwable -> {
+                            Toast toast =
+                                    Toast.makeText(this, "Unable to load model", Toast.LENGTH_LONG);
+                            toast.setGravity(Gravity.CENTER, 0, 0);
+                            toast.show();
+                            return null;
                         });
-
-        ArSceneView sceneView = arFragment.getArSceneView();
-
-        // This is important to make sure that the camera stream renders first so that
-        // the face mesh occlusion works correctly.
-        sceneView.setCameraStreamRenderPriority(Renderable.RENDER_PRIORITY_FIRST);
-
-        Scene scene = sceneView.getScene();
-
-        scene.addOnUpdateListener(
-                (FrameTime frameTime) -> {
-                    if (faceRegionsRenderable == null) {
+        arFragment.setOnTapArPlaneListener(
+                (HitResult hitResult, Plane plane, MotionEvent motionEvent) -> {
+                    if (shoeRenderable == null) {
                         return;
                     }
 
-                    Collection<AugmentedFace> faceList =
-                            sceneView.getSession().getAllTrackables(AugmentedFace.class);
+                    // Create the Anchor.
+                    Anchor anchor = hitResult.createAnchor();
+                    AnchorNode anchorNode = new AnchorNode(anchor);
+                    anchorNode.setParent(arFragment.getArSceneView().getScene());
 
-                    // Make new AugmentedFaceNodes for any new faces.
-                    for (AugmentedFace face : faceList) {
-                        if (!faceNodeMap.containsKey(face)) {
-                            AugmentedFaceNode faceNode = new AugmentedFaceNode(face);
-                            faceNode.setParent(scene);
-                            faceNode.setFaceRegionsRenderable(faceRegionsRenderable);
-                            faceNodeMap.put(face, faceNode);
-                        }
-                    }
-
-                    // Remove any AugmentedFaceNodes associated with an AugmentedFace that stopped tracking.
-                    Iterator<Map.Entry<AugmentedFace, AugmentedFaceNode>> iter =
-                            faceNodeMap.entrySet().iterator();
-                    while (iter.hasNext()) {
-                        Map.Entry<AugmentedFace, AugmentedFaceNode> entry = iter.next();
-                        AugmentedFace face = entry.getKey();
-                        if (face.getTrackingState() == TrackingState.STOPPED) {
-                            AugmentedFaceNode faceNode = entry.getValue();
-                            faceNode.setParent(null);
-                            iter.remove();
-                        }
-                    }
+                    // Create the transformable andy and add it to the anchor.
+                    TransformableNode andy = new TransformableNode(arFragment.getTransformationSystem());
+                    andy.setParent(anchorNode);
+                    andy.setRenderable(shoeRenderable);
+                    andy.select();
                 });
     }
 
@@ -162,19 +111,10 @@ public class AugmentedFacesActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * Returns false and displays an error message if Sceneform can not run, true if Sceneform can run
-     * on this device.
-     *
-     * <p>Sceneform requires Android N on the device as well as OpenGL 3.0 capabilities.
-     *
-     * <p>Finishes the activity if Sceneform can not run
-     */
     public static boolean checkIsSupportedDeviceOrFinish(final Activity activity) {
-        if (ArCoreApk.getInstance().checkAvailability(activity)
-                == ArCoreApk.Availability.UNSUPPORTED_DEVICE_NOT_CAPABLE) {
-            Log.e(TAG, "Augmented Faces requires ARCore.");
-            Toast.makeText(activity, "Augmented Faces requires ARCore", Toast.LENGTH_LONG).show();
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+            Log.e(TAG, "Sceneform requires Android N or later");
+            Toast.makeText(activity, "Sceneform requires Android N or later", Toast.LENGTH_LONG).show();
             activity.finish();
             return false;
         }
@@ -191,6 +131,8 @@ public class AugmentedFacesActivity extends AppCompatActivity {
         }
         return true;
     }
+
+
 
     private String generateFilename() {
         String date = new SimpleDateFormat("yyyyMMddHHMMmmss", java.util.Locale.getDefault()).format(new Date());

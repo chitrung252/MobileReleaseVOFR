@@ -18,11 +18,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.AugmentedFacesActivity">
+    tools:context=".activities.ARShoeActivity">
 
     <fragment
-        android:id="@+id/face_fragment"
-        android:name="fpt.com.virtualoutfitroom.fragments.FaceArFragment"
+        android:id="@+id/shoe_fragment"
+        android:name="com.google.ar.sceneform.ux.ArFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

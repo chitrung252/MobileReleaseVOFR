@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -28,7 +29,7 @@ public class DetailProductActivity extends BaseActivity implements View.OnClickL
    private TextView txtPrice;
    private TextView txtDescription;
    private ImageView imgProductImage;
-   private Button btnPayment;
+   private Button btnArView;
    private Button btnBottomSheet;
    private Product mProduct;
    private String urlGlb ="http://107.150.52.213/api-votf/image/20191106001440088151.glb";
@@ -48,8 +49,8 @@ public class DetailProductActivity extends BaseActivity implements View.OnClickL
         txtName = findViewById(R.id.txt_product_name);
         txtPrice = findViewById(R.id.txt_product_price);
         txtDescription = findViewById(R.id.txt_description);
-        btnPayment = findViewById(R.id.btn_payment);
-        btnPayment.setOnClickListener(this);
+        btnArView = findViewById(R.id.btn_ar_view);
+        btnArView.setOnClickListener(this);
         btnBottomSheet = findViewById(R.id.btn_show_bottom_sheet);
         btnBottomSheet.setOnClickListener(this);
         mImgBack = findViewById(R.id.img_back_to_previous);
@@ -82,7 +83,13 @@ public class DetailProductActivity extends BaseActivity implements View.OnClickL
     @Override
     public void onClick(View view) {
         switch (view.getId()){
-            case R.id.btn_payment: payment();
+            case R.id.btn_ar_view:
+                Toast.makeText(this, mProduct.getMasterCategoryId() + "", Toast.LENGTH_LONG).show();
+                if(mProduct.getMasterCategoryId() == 0){
+                    viewShoeAr();
+                } else {
+                    viewFaceAr();
+                }
                 break;
             case R.id.btn_show_bottom_sheet: showDialogBottom();
             break;
@@ -102,13 +109,22 @@ public class DetailProductActivity extends BaseActivity implements View.OnClickL
         bottomSheet.setArguments(bundle);
     }
 
-    public void payment(){
+    public void viewFaceAr(){
         Intent intent = new Intent(this, AugmentedFacesActivity.class);
         Bundle bundle = new Bundle();
         bundle.putSerializable("PRODUCT", mProduct);
         intent.putExtra("BUNDLE", bundle);
         startActivity(intent);
     }
+
+    public void viewShoeAr() {
+        Intent intent = new Intent(this, ARShoeActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("PRODUCT", mProduct);
+        intent.putExtra("BUNDLE", bundle);
+        startActivity(intent);
+    }
+
     public void show3d(){
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);

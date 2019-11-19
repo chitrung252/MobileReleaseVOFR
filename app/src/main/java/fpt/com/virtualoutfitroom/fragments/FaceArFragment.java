@@ -1,6 +1,7 @@
 package fpt.com.virtualoutfitroom.fragments;
 
 
+import android.Manifest;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -30,6 +31,18 @@ public class FaceArFragment extends ArFragment {
     @Override
     protected Set<Session.Feature> getSessionFeatures() {
         return EnumSet.of(Session.Feature.FRONT_CAMERA);
+    }
+
+    @Override
+    public String[] getAdditionalPermissions() {
+        String[] additionalPermissions = super.getAdditionalPermissions();
+        int permissionLength = additionalPermissions != null ? additionalPermissions.length : 0;
+        String[] permissions = new String[permissionLength + 1];
+        permissions[0] = Manifest.permission.WRITE_EXTERNAL_STORAGE;
+        if (permissionLength > 0) {
+            System.arraycopy(additionalPermissions, 0, permissions, 1, additionalPermissions.length);
+        }
+        return permissions;
     }
 
     @Override
