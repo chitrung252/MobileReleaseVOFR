@@ -28,6 +28,7 @@ import com.google.ar.core.Plane;
 import com.google.ar.sceneform.AnchorNode;
 import com.google.ar.sceneform.ArSceneView;
 import com.google.ar.sceneform.rendering.ModelRenderable;
+import com.google.ar.sceneform.rendering.Renderable;
 import com.google.ar.sceneform.ux.ArFragment;
 import com.google.ar.sceneform.ux.TransformableNode;
 
@@ -49,6 +50,7 @@ public class ARShoeActivity extends AppCompatActivity {
     private ArFragment arFragment;
     private ModelRenderable shoeRenderable;
 
+    private ModelRenderable legRenderable;
     private Product mProduct;
     private FloatingActionButton btnTakePhoto;
     private String URLSFB = "http://107.150.52.213/api-votf/image/20191104181106376304.sfb";
@@ -65,35 +67,63 @@ public class ARShoeActivity extends AppCompatActivity {
         arFragment = (ArFragment) getSupportFragmentManager().findFragmentById(R.id.shoe_fragment);
         btnTakePhoto = (FloatingActionButton)findViewById(R.id.btn_take_photo);
         btnTakePhoto.setOnClickListener(v -> takePhoto());
+        initialData();
 
         ModelRenderable.builder()
-                .setSource(this, Uri.parse(URLSFB))
+                .setSource(this, R.raw.leg_asset)
                 .build()
-                .thenAccept(renderable -> shoeRenderable = renderable)
+                .thenAccept(renderable -> {
+                    legRenderable = renderable;
+                    legRenderable.setRenderPriority(Renderable.RENDER_PRIORITY_LAST);
+                    legRenderable.setShadowCaster(false);
+                    legRenderable.setShadowCaster(false);
+                })
                 .exceptionally(
                         throwable -> {
                             Toast toast =
-                                    Toast.makeText(this, "Unable to load model", Toast.LENGTH_LONG);
+                                    Toast.makeText(this, "Unable to load the invisible leg", Toast.LENGTH_LONG);
                             toast.setGravity(Gravity.CENTER, 0, 0);
                             toast.show();
                             return null;
                         });
+        ModelRenderable.builder()
+                .setSource(this, Uri.parse(URLSFB))
+                .build()
+                .thenAccept(renderable -> {
+                    shoeRenderable = renderable;
+                    shoeRenderable.setRenderPriority(Renderable.RENDER_PRIORITY_LAST);
+                    shoeRenderable.setShadowCaster(false);
+                    shoeRenderable.setShadowCaster(false);
+                })
+                .exceptionally(
+                        throwable -> {
+                            Toast toast =
+                                    Toast.makeText(this, "Unable to load shoe model", Toast.LENGTH_LONG);
+                            toast.setGravity(Gravity.CENTER, 0, 0);
+                            toast.show();
+                            return null;
+                        });
+
         arFragment.setOnTapArPlaneListener(
                 (HitResult hitResult, Plane plane, MotionEvent motionEvent) -> {
                     if (shoeRenderable == null) {
                         return;
                     }
-
                     // Create the Anchor.
                     Anchor anchor = hitResult.createAnchor();
                     AnchorNode anchorNode = new AnchorNode(anchor);
                     anchorNode.setParent(arFragment.getArSceneView().getScene());
 
-                    // Create the transformable andy and add it to the anchor.
-                    TransformableNode andy = new TransformableNode(arFragment.getTransformationSystem());
-                    andy.setParent(anchorNode);
-                    andy.setRenderable(shoeRenderable);
-                    andy.select();
+                    // Create the transformable shoe and add it to the anchor.
+                    TransformableNode shoeNode = new TransformableNode(arFragment.getTransformationSystem());
+                    shoeNode.setParent(anchorNode);
+                    shoeNode.setRenderable(shoeRenderable);
+                    shoeNode.select();
+
+                    // Create the transformable leg and add it to the shoe.
+                    TransformableNode legNode = new TransformableNode(arFragment.getTransformationSystem());
+                    legNode.setParent(shoeNode);
+                    legNode.setRenderable(legRenderable);
                 });
     }
 
@@ -176,6 +206,7 @@ public class ARShoeActivity extends AppCompatActivity {
                 }
 
                 Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "Photo saved", Snackbar.LENGTH_LONG);
+
                 File photoFile = new File(filename);
                 Uri photoURI = FileProvider.getUriForFile(this, this.getPackageName() + ".fileprovider", photoFile);
                 Uri scannerUri = Uri.fromFile(photoFile);
