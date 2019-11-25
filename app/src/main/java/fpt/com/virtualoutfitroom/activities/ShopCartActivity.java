@@ -1,43 +1,56 @@
 package fpt.com.virtualoutfitroom.activities;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ListView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.baoyz.swipemenulistview.SwipeMenuListView;
-
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import fpt.com.virtualoutfitroom.R;
+import fpt.com.virtualoutfitroom.adapter.RecyclerViewApdapter;
 import fpt.com.virtualoutfitroom.adapter.ShopCartAdapter;
 import fpt.com.virtualoutfitroom.adapter.SwipeToDeleteCallback;
+import fpt.com.virtualoutfitroom.dialog.BottomSheetEditOrder;
 import fpt.com.virtualoutfitroom.presenter.ShoppingCartPresenter;
 import fpt.com.virtualoutfitroom.room.OrderItemEntities;
+import fpt.com.virtualoutfitroom.utils.BundleString;
+import fpt.com.virtualoutfitroom.utils.ChangeValue;
+import fpt.com.virtualoutfitroom.utils.SharePreferenceUtils;
 import fpt.com.virtualoutfitroom.views.ShoppingCartView;
 
-public class ShopCartActivity extends BaseActivity implements ShoppingCartView, View.OnClickListener {
+public class ShopCartActivity extends BaseActivity implements ShoppingCartView, View.OnClickListener{
     private RecyclerView mRcvShopCart;
     private List<OrderItemEntities> mListOrder;
     private ShopCartAdapter mShopCartApdapter;
     private ShoppingCartPresenter mPresenter;
     private Button mBtnBack;
     private Button mPayment;
+    private LinearLayout mLnlEmptyCart;
+
+    private double mTotal;
+    private TextView mTxtTotal;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shop_cart);
         initialView();
         initialData();
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mPresenter.getAllOrderItem();
     }
     void initialView(){
         mRcvShopCart = findViewById(R.id.rcv_shop_cart);
@@ -46,25 +59,69 @@ public class ShopCartActivity extends BaseActivity implements ShoppingCartView, 
         mRcvShopCart.setLayoutManager(layoutManager);
         mListOrder = new ArrayList<>();
         mBtnBack = findViewById(R.id.btn_back);
+        mTxtTotal = findViewById(R.id.txt_total_shopping);
         mBtnBack.setOnClickListener(this);
         mPayment = findViewById(R.id.btn_payment);
         mPayment.setOnClickListener(this);
-
+        mLnlEmptyCart = findViewById(R.id.lnl_cart_empty);
     }
     private void initialData(){
         mPresenter= new ShoppingCartPresenter(this, getApplication(), this);
         mPresenter.getAllOrderItem();
     }
     void updateUI(){
-        mShopCartApdapter = new ShopCartAdapter(this, mListOrder);
-        mRcvShopCart.setAdapter(mShopCartApdapter);
+        if(mShopCartApdapter == null){
+            mShopCartApdapter = new ShopCartAdapter(this, mListOrder);
+            mRcvShopCart.setAdapter(mShopCartApdapter);
+            mShopCartApdapter.setOnItemClickedListener(new RecyclerViewApdapter.OnItemClickedListener() {
+                @Override
+                public void onItemClicked(int position) {
+                    intentToEditOrder(mListOrder.get(position));
+                }
+            });
+        }
+        else {
+            mShopCartApdapter.notifyChange(mListOrder);
+        }
     }
-
+    private void intentToEditOrder(OrderItemEntities orderItemEntities){
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("Order", (Serializable) orderItemEntities);
+        BottomSheetEditOrder bottomSheetOrder = new BottomSheetEditOrder();
+        bottomSheetOrder.show(getSupportFragmentManager(),"Bottom Sheet Order");
+        bottomSheetOrder.setArguments(bundle);
+        bottomSheetOrder.OnClickUpdateSucess(new BottomSheetEditOrder.OnUpdateSuccess() {
+            @Override
+            public void clickUpdateSuccess(boolean isSuccess) {
+                mPresenter.getAllOrderItem();
+            }
+        });
+    }
     @Override
     public void showListOrderItem(List<OrderItemEntities> orderItemEntities) {
-        mListOrder = orderItemEntities;
-        updateUI();
-        enableSwipeToDeleteAndUndo(mListOrder);
+        if(orderItemEntities.size() != 0){
+            mListOrder = orderItemEntities;
+            updateUI();
+            costTotal(orderItemEntities);
+            enableSwipeToDeleteAndUndo(mListOrder);
+            mRcvShopCart.setVisibility(View.VISIBLE);
+            mLnlEmptyCart.setVisibility(View.GONE);
+        }else {
+            setLayoutEmpty();
+        }
+    }
+
+    private void setLayoutEmpty(){
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        params.setMargins(0,0,0,0);
+        mRcvShopCart.setVisibility(View.GONE);
+        mBtnBack.setLayoutParams(params);
+        mPayment.setVisibility(View.GONE);
+        mLnlEmptyCart.setVisibility(View.VISIBLE);
+        mTxtTotal.setText("0 VNĐ");
     }
 
     @Override
@@ -81,8 +138,15 @@ public class ShopCartActivity extends BaseActivity implements ShoppingCartView, 
         }
     }
     public void payment(){
-        Intent intent = new Intent(this, PaymentActivity.class);
-        startActivity(intent);
+        String token = SharePreferenceUtils.getStringSharedPreference(this,BundleString.TOKEN);
+        if(token.length() > 0){
+            SharePreferenceUtils.saveFloatSharedPreference(ShopCartActivity.this, BundleString.TOTAL, (float) mTotal);
+            Intent intent = new Intent(this, PaymentActivity.class);
+            startActivity(intent);
+        }else{
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+        }
     }
     public void enableSwipeToDeleteAndUndo(List<OrderItemEntities> mListOrder) {
         SwipeToDeleteCallback swipeToDeleteCallback = new SwipeToDeleteCallback(this) {
@@ -91,9 +155,19 @@ public class ShopCartActivity extends BaseActivity implements ShoppingCartView, 
                 final int position = viewHolder.getAdapterPosition();
                 mShopCartApdapter.removeItem(position);
                 mPresenter.removeItemCard(mListOrder.get(position));
+                mListOrder.remove(position);
+                if(mListOrder.size() == 0){
+                    setLayoutEmpty();
+                }
             }
         };
         ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeToDeleteCallback);
         itemTouchhelper.attachToRecyclerView(mRcvShopCart);
+    }
+    public void costTotal(List<OrderItemEntities> mListOrder){
+        for (int i = 0; i < mListOrder.size(); i++) {
+            mTotal  += mListOrder.get(i).getQuality()*mListOrder.get(i).getProduct().getProductPrice();
+        }
+        mTxtTotal.setText(ChangeValue.formatDecimalPrice(mTotal));
     }
 }

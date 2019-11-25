@@ -23,20 +23,26 @@ import fpt.com.virtualoutfitroom.R;
 import fpt.com.virtualoutfitroom.adapter.FinishPaymentAdapter;
 import fpt.com.virtualoutfitroom.model.Account;
 import fpt.com.virtualoutfitroom.model.ProductPayment;
+import fpt.com.virtualoutfitroom.presenter.ShoppingCartPresenter;
 import fpt.com.virtualoutfitroom.presenter.accounts.InformationAccountPresenter;
 import fpt.com.virtualoutfitroom.room.AccountItemEntities;
+import fpt.com.virtualoutfitroom.room.OrderItemEntities;
+import fpt.com.virtualoutfitroom.utils.RefineImage;
 import fpt.com.virtualoutfitroom.utils.SharePreferenceUtils;
 import fpt.com.virtualoutfitroom.views.GetInforAccountView;
+import fpt.com.virtualoutfitroom.views.ShoppingCartView;
 
 
-public class FinishFragment extends Fragment implements GetInforAccountView {
+public class FinishFragment extends Fragment implements GetInforAccountView, ShoppingCartView {
     private View mView;
     private RecyclerView mRcvPayemnt3;
     private FinishPaymentAdapter mAdapter;
     private List<ProductPayment> data;
     private TextView mTxtAddres;
     private TextView mTxtNameMethod;
-     private String mAddress;
+    private ShoppingCartPresenter mShoppingCartPresenter;
+    private List<OrderItemEntities> mOrderItemEntities;
+    private String mAddress;
      private InformationAccountPresenter mInformationAccountPresenter;
     @Nullable
     @Override
@@ -75,13 +81,8 @@ public class FinishFragment extends Fragment implements GetInforAccountView {
     private void  initialData(Account account){
         mAddress = account.getAddress();
         mTxtAddres.setText(mAddress + "");
-        data = new ArrayList<>();
-        data.add(new ProductPayment("http://www.chiemtaimobile.vn/images/detailed/29/mat-kinh-m1001-h10.jpg","Kính",1500000,2));
-        data.add(new ProductPayment("http://www.chiemtaimobile.vn/images/detailed/21/mat-kinh-MS655.jpg","Kính thời trang",4500000,2));
-        data.add(new ProductPayment("http://www.chiemtaimobile.vn/images/detailed/15/khau-trang-khang-bui-hinh-1.jpg","Khẩu Trang",1500000,8));
-        data.add(new ProductPayment("https://khogiaythethao.vn/wp-content/uploads/2019/06/gucci-chunky-rhyton-sf-2.jpg","Giày",2500000,1));
-        data.add(new ProductPayment("https://canifa.s3.amazonaws.com/media/catalog/product/cache_generated/500x/6ts19c002-sw001-m_2.jpg","Áo thun",3500000,2));
-        updateUỊ̣();
+       mShoppingCartPresenter = new ShoppingCartPresenter(getContext(),getActivity().getApplication(),this);
+       mShoppingCartPresenter.getAllOrderItem();
     }
     private void updateUỊ̣(){
         if(mAdapter == null){
@@ -121,6 +122,18 @@ public class FinishFragment extends Fragment implements GetInforAccountView {
     @Override
     public void getAccountFromRoom(AccountItemEntities accountItemEntities) {
         initialData(accountItemEntities.getAccount());
-
+    }
+    @Override
+    public void showListOrderItem(List<OrderItemEntities> orderItemEntities) {
+        mOrderItemEntities = orderItemEntities;
+        data = new ArrayList<>();
+        for (int i = 0; i <mOrderItemEntities.size() ; i++) {
+            String urlImg = RefineImage.getUrlImage(mOrderItemEntities.get(i).getProduct().getProductImageList(),"img");
+            data.add(new ProductPayment(urlImg,mOrderItemEntities.get(i).getProduct().getProductName(),mOrderItemEntities.get(i).getProduct().getProductPrice(),mOrderItemEntities.get(i).getQuality()));
+        }
+        updateUỊ̣();
+    }
+    @Override
+    public void showError(String message) {
     }
 }

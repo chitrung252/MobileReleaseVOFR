@@ -9,11 +9,13 @@ import android.view.Window;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.kaopiz.kprogresshud.KProgressHUD;
 import com.squareup.picasso.Picasso;
 
 import fpt.com.virtualoutfitroom.R;
@@ -22,6 +24,7 @@ import fpt.com.virtualoutfitroom.model.Product;
 import fpt.com.virtualoutfitroom.model.ProductImage;
 import fpt.com.virtualoutfitroom.utils.CurrencyManagement;
 import fpt.com.virtualoutfitroom.utils.RefineImage;
+import fpt.com.virtualoutfitroom.utils.SpinnerManagement;
 
 
 public class DetailProductActivity extends BaseActivity implements View.OnClickListener{
@@ -37,11 +40,12 @@ public class DetailProductActivity extends BaseActivity implements View.OnClickL
    private ImageView mImgCancel;
    private ImageView mImgBack;
    private Button mBtnShow3D;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_product);
-      initView();
+        initView();
         initData();
     }
     public void initView(){
@@ -58,6 +62,7 @@ public class DetailProductActivity extends BaseActivity implements View.OnClickL
         mBtnShow3D= findViewById(R.id.button_show_3d);
         mBtnShow3D.setOnClickListener(this);
         mBtnShow3D.setVisibility(View.GONE);
+
     }
     public void initData(){
         Intent intent = this.getIntent();
@@ -74,7 +79,6 @@ public class DetailProductActivity extends BaseActivity implements View.OnClickL
                 mBtnShow3D.setVisibility(View.VISIBLE);
             }
         }
-
         txtName.setText(mProduct.getProductName());
         txtPrice.setText(CurrencyManagement.getPrice(mProduct.getProductPrice(),"đ"));
         txtDescription.setText(mProduct.getDescription());
@@ -85,7 +89,7 @@ public class DetailProductActivity extends BaseActivity implements View.OnClickL
         switch (view.getId()){
             case R.id.btn_ar_view:
                 Toast.makeText(this, mProduct.getMasterCategoryId() + "", Toast.LENGTH_LONG).show();
-                if(mProduct.getMasterCategoryId() == 0){
+                if(mProduct.getMasterCategoryId() == 4){
                     viewShoeAr();
                 } else {
                     viewFaceAr();
@@ -97,7 +101,9 @@ public class DetailProductActivity extends BaseActivity implements View.OnClickL
             break;
             case R.id.button_show_3d:
                 show3d();
+
                 break;
+
         }
     }
 

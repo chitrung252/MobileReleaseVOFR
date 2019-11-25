@@ -8,6 +8,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.kaopiz.kprogresshud.KProgressHUD;
+
 import fpt.com.virtualoutfitroom.R;
 import fpt.com.virtualoutfitroom.model.Account;
 import fpt.com.virtualoutfitroom.presenter.accounts.InformationAccountPresenter;
@@ -16,6 +18,7 @@ import fpt.com.virtualoutfitroom.presenter.accounts.UpdateInforAccountPresenter;
 import fpt.com.virtualoutfitroom.room.AccountItemEntities;
 import fpt.com.virtualoutfitroom.utils.BundleString;
 import fpt.com.virtualoutfitroom.utils.SharePreferenceUtils;
+import fpt.com.virtualoutfitroom.utils.SpinnerManagement;
 import fpt.com.virtualoutfitroom.views.GetInforAccountView;
 import fpt.com.virtualoutfitroom.views.UpdateInforAccountView;
 import fpt.com.virtualoutfitroom.views.UpdateToRoomView;
@@ -28,6 +31,7 @@ public class EditAccountActivity extends BaseActivity implements GetInforAccount
     private UpdateInforAccountPresenter updateInforAccountPresenter;
     private UpdateAccountToRoomPresenter updateAccountToRoomPresenter;
     private String mToken;
+    KProgressHUD hud;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +40,7 @@ public class EditAccountActivity extends BaseActivity implements GetInforAccount
         initialView();
         initialData();
     }
+
     private void initialView(){
         mEdtUsername = findViewById(R.id.edt_username);
         mEdtPassword  = findViewById(R.id.edt_password);
@@ -47,23 +52,17 @@ public class EditAccountActivity extends BaseActivity implements GetInforAccount
         mBtnUpdate = findViewById(R.id.button_update_account);
         mBtnBack = findViewById(R.id.button_back_edit_account);
     }
+
     private void initialData(){
         mBtnBack.setOnClickListener(this::onClick);
         mBtnUpdate.setOnClickListener(this::onClick);
         informationAccountPresenter = new InformationAccountPresenter(getApplication(),this);
         informationAccountPresenter.getAccountFromRoom();
     }
-    @Override
-    public void getInforSuccess(Account account) {
 
-
-
+    private void setSpinner(){
+        hud = SpinnerManagement.getSpinner(this);
     }
-    @Override
-    public void getInforFail(String message) {
-
-    }
-
     @Override
     public void getAccountFromRoom(AccountItemEntities accountItemEntities) {
             account = accountItemEntities;
@@ -81,17 +80,24 @@ public class EditAccountActivity extends BaseActivity implements GetInforAccount
             startActivity(intent);
         }
     }
+
     @Override
     public void onClick(View view) {
         int id = view.getId();
         switch (id ){
             case R.id.button_update_account :
-                updateAccount();
+                setSpinner();
+                checkAccountExist();
                 break;
             case R.id.button_back_edit_account:
                 finish();
                 break;
         }
+    }
+
+    private void checkAccountExist(){
+        String userId = SharePreferenceUtils.getStringSharedPreference(EditAccountActivity.this, BundleString.USERID);
+        informationAccountPresenter.getInforAccount(userId);
     }
     private void updateAccount(){
         mToken = SharePreferenceUtils.getStringSharedPreference(EditAccountActivity.this, BundleString.TOKEN);
@@ -111,7 +117,6 @@ public class EditAccountActivity extends BaseActivity implements GetInforAccount
         account.getAccount().setAddress(address);
         updateInforAccountPresenter = new UpdateInforAccountPresenter(EditAccountActivity.this,this);
         updateInforAccountPresenter.updateInforAccount(mToken,account);
-
     }
 
     @Override
@@ -127,8 +132,21 @@ public class EditAccountActivity extends BaseActivity implements GetInforAccount
 
     @Override
     public void updateAccountSuccess() {
+        hud.dismiss();
         Intent intent = new Intent(EditAccountActivity.this,HomeActivity.class);
-        finish();
         startActivity(intent);
+        finishAffinity();
+    }
+    @Override
+    public void getInforSuccess(Account account) {
+        if (account != null){
+            updateAccount();
+        }else {
+            Toast.makeText(this,"Your session is expried",Toast.LENGTH_LONG).show();
+        }
+    }
+    @Override
+    public void getInforFail(String message) {
+
     }
 }

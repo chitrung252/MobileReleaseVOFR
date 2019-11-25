@@ -6,6 +6,7 @@ import android.net.Uri;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -18,9 +19,13 @@ import java.util.Map;
 
 import fpt.com.virtualoutfitroom.model.Account;
 import fpt.com.virtualoutfitroom.model.Category;
+import fpt.com.virtualoutfitroom.model.OrderHistory;
 import fpt.com.virtualoutfitroom.model.Product;
 import fpt.com.virtualoutfitroom.model.ProductImage;
 import fpt.com.virtualoutfitroom.model.ResponseResult;
+import fpt.com.virtualoutfitroom.room.AccountItemEntities;
+import fpt.com.virtualoutfitroom.room.OrderItemEntities;
+import fpt.com.virtualoutfitroom.utils.GetPathFile;
 import fpt.com.virtualoutfitroom.utils.RealPathUtils;
 import fpt.com.virtualoutfitroom.webservice.CallBackData;
 import fpt.com.virtualoutfitroom.webservice.ClientApi;
@@ -183,14 +188,12 @@ public class VofrImpl implements VofrRepository {
                     }
                 }
             }
-
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
 
             }
         });
     }
-
     @Override
     public void getProductByCateId(Context context, int cateId,final CallBackData<List<Product>> callBackData) {
         ClientApi clientApi = new ClientApi();
@@ -258,43 +261,6 @@ public class VofrImpl implements VofrRepository {
             }
         });
     }
-    @Override
-    public void updateAvatarInfo(Context context, String accessToken,String accountId,Uri imageUri, CallBackData<String> callBackData) {
-        ClientApi clientApi = new ClientApi();
-        String hearder = "Bearer " + accessToken;
-        Map<String, String> map = new HashMap<>();
-        map.put("Authorization", hearder);
-        File file = new File(imageUri.getEncodedPath());
-        RequestBody fbody = RequestBody.create(MediaType.parse("imagé́/*"), file);
-        MultipartBody.Part image = MultipartBody.Part.createFormData("file", file.getName(), fbody);
-        Call<ResponseBody> serviceCall = clientApi.rmapService().updateaAvatarInfo(map,accountId,image);
-        serviceCall.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if(response != null && response.body() != null){
-                    if(response.code() == 200){
-                        try {
-                            String result = response.body().string();
-                            callBackData.onSuccess(result);
-                        }catch (Exception e){
-                            e.printStackTrace();
-                        }
-                    }
-                    else {
-                        callBackData.onFail("update không thành công");
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                callBackData.onFail("update không thành công");
-            }
-        });
-
-    }
-
-    @Override
     public void getInforAccount(Context context,String accountID, CallBackData<Account> callBackData) {
         ClientApi clientApi = new ClientApi();
         Call<ResponseBody> serviceCall = clientApi.rmapService().getInforAccount(accountID);
@@ -373,5 +339,128 @@ public class VofrImpl implements VofrRepository {
             }
         });
     }
-}
+    @Override
+    public void updateImage(Context context, String token,String userId, Uri imageUri, CallBackData<String> callBackData) {
+        ClientApi  clientApi = new ClientApi();
+        String hearder = "Bearer " + token;
+        Map<String, String> map = new HashMap<>();
+        map.put("Authorization", hearder);
+        File file = new File(GetPathFile.getPath(context, imageUri));
+        RequestBody fbody = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+        MultipartBody.Part image = MultipartBody.Part.createFormData("file", file.getName(), fbody);
+        Call<ResponseBody> serviceCall = clientApi.rmapService().updateaImage(map,userId,image);
+        serviceCall.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if(response != null && response.body() != null){
+                    if(response.code() == 200){
+                        try {
+                            String result = response.body().string();
+                            Type type = new TypeToken<ResponseResult>() {
+                            }.getType();
+                            ResponseResult responseResult =
+                                    new Gson().fromJson(result, type);
+                            callBackData.onSuccess(responseResult.getMessage());
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                callBackData.onFail("Khong thanh cong");
+            }
+        });
+    }
+    @Override
+    public void createOrder(Context context,String fullname,double finalTotal,String token, AccountItemEntities accountItemEntities, List<OrderItemEntities> orderItemEntities, CallBackData<String> callBackData) {
+        ClientApi  clientApi = new ClientApi();
+        String hearder = "Bearer " + token;
+        Map<String, String> map = new HashMap<>();
+        map.put("Authorization", hearder);
+        JSONObject jsonObject = new JSONObject();
+        try {
+            Account account = accountItemEntities.getAccount();
+            jsonObject.put("total",finalTotal);
+            jsonObject.put("account_id",account.getAccountId());
+            jsonObject.put("full_name",fullname);
+            jsonObject.put("email",account.getEmail());
+            jsonObject.put("address",account.getAddress());
+            jsonObject.put("phone_number",account.getPhoneNumber());
+            JSONArray  jsonArray = new JSONArray();
+            for (int i = 0; i <orderItemEntities.size() ; i++) {
+                JSONObject jsonObject1 = new JSONObject();
+                jsonObject1.put("Price",orderItemEntities.get(i).getProduct().getProductPrice());
+                jsonObject1.put("quantity",orderItemEntities.get(i).getQuality());
+                jsonObject1.put("product_id",orderItemEntities.get(i).getProduct().getId());
+                jsonArray.put(jsonObject1.toString());
+            }
+            jsonObject.put("order_items",jsonArray);
+        }catch (JSONException ex){
+            ex.printStackTrace();
+        }
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObject.toString());
+        Call<ResponseBody> serviceCall = clientApi.rmapService().createOrder(map,body);
+        serviceCall.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if(response != null && response.body() != null){
+                    if(response.code() == 200){
+                        try {
+                            String result = response.body().string();
+                            Type type = new TypeToken<ResponseResult>() {
+                            }.getType();
+                            ResponseResult responseResult =
+                                    new Gson().fromJson(result, type);
+                            callBackData.onSuccess(responseResult.getMessage());
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
 
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            }
+        });
+
+    }
+    @Override
+    public void getOrder(Context context, String token, String accountId, CallBackData<List<OrderHistory>> callBackData) {
+        ClientApi  clientApi = new ClientApi();
+        String hearder = "Bearer " + token;
+        Map<String, String> map = new HashMap<>();
+        map.put("Authorization", hearder);
+        Call<ResponseBody> serviceCall = clientApi.rmapService().getOrder(accountId);
+        serviceCall.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if(response != null && response.body() != null){
+                    if(response.code() == 200){
+                        try {
+                            String result = response.body().string();
+                            Type type = new TypeToken<ResponseResult<List<OrderHistory>>>() {
+                            }.getType();
+                            ResponseResult<List<OrderHistory>> responseResult =
+                                    new Gson().fromJson(result, type);
+                            if (responseResult == null) {
+                                callBackData.onFail(response.message());
+                            } else {
+                                List<OrderHistory> orderHistoryList = responseResult.getData();
+                                callBackData.onSuccess(orderHistoryList);
+                            }
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            callBackData.onFail("Lấy thông tin không thành công");
+            }
+        });
+    }
+}

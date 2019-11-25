@@ -97,7 +97,7 @@ public class ProfileFragment extends Fragment implements AddToRoomView, GetInfor
         mAddAccountToRoomPresenter.addAccountToRooṃ(accountItemEntities);
     }
     @Override
-    public void AddToRoomSuccess() {
+    public void addToRoomSuccess() {
         mTxtName.setText(mAccount.getFirstName() + " " + mAccount.getLastName());
         mTxtEmail.setText(mAccount.getEmail());
         mTxtPhone.setText(mAccount.getPhoneNumber());

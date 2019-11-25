@@ -32,14 +32,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Tên Đăng Nhập"
-            android:textColor="@color/color_cus_light_gray"/>
+            android:textColor="@color/color_cus_light_gray"
+            android:textSize="@dimen/dp15"/>
         <EditText
             android:paddingTop="5dp"
             android:id="@+id/edt_username"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dp38"
+            android:layout_height="42dp"
             android:background="@drawable/edit_text_background"
-            android:drawableLeft="@drawable/ic_user_menu"
+            android:drawableLeft="@drawable/ic_user_black"
             android:drawablePadding="@dimen/dp20"
             android:inputType="text"
             android:maxLines="1"/>
@@ -48,14 +49,15 @@
             android:layout_height="wrap_content"
             android:text="Mật Khẩu"
             android:textColor="@color/color_cus_light_gray"
-            android:layout_marginTop="@dimen/dp10"/>
+            android:layout_marginTop="@dimen/dp10"
+            android:textSize="@dimen/dp15"/>
         <EditText
             android:paddingTop="5dp"
             android:id="@+id/edt_password"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dp38"
+            android:layout_height="42dp"
             android:background="@drawable/edit_text_background"
-            android:drawableLeft="@drawable/ic_password2"
+            android:drawableLeft="@drawable/ic_lock_black"
             android:drawablePadding="@dimen/dp20"
             android:inputType="textPassword"
             android:maxLines="1"/>

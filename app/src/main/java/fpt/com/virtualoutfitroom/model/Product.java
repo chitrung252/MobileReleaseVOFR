@@ -8,7 +8,6 @@ import java.util.List;
 public class Product implements Serializable {
     @SerializedName("product_id")
     private int id;
-
     @SerializedName("product_name")
     private String productName;
 
@@ -32,7 +31,6 @@ public class Product implements Serializable {
 
     @SerializedName("master_category_id")
     private int masterCategoryId;
-
     public int getMasterCategoryId() {
         return masterCategoryId;
     }
@@ -107,4 +105,5 @@ public class Product implements Serializable {
     public void setProductPrice(Double productPrice) {
         this.productPrice = productPrice;
     }
+
 }

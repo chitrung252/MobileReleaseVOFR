@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.kaopiz.kprogresshud.KProgressHUD;
 import com.squareup.picasso.Picasso;
 import com.synnapps.carouselview.CarouselView;
 import com.synnapps.carouselview.ImageListener;
@@ -31,6 +32,7 @@ import fpt.com.virtualoutfitroom.model.Product;
 import fpt.com.virtualoutfitroom.model.ProductImage;
 import fpt.com.virtualoutfitroom.presenter.HomePresenter;
 import fpt.com.virtualoutfitroom.utils.InternetHelper;
+import fpt.com.virtualoutfitroom.utils.SpinnerManagement;
 import fpt.com.virtualoutfitroom.views.HomeView;
 
 public class HomeFragment extends Fragment implements HomeView, View.OnClickListener {
@@ -41,6 +43,7 @@ public class HomeFragment extends Fragment implements HomeView, View.OnClickList
     private ImageView mImgShopCart;
     private CarouselView mCarouselView;
     private List<Integer> listImageHeader;
+    private KProgressHUD hud;
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -54,6 +57,7 @@ public class HomeFragment extends Fragment implements HomeView, View.OnClickList
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_home, container, false);
         setLayout(rootView);
+        getSpinner();
         return rootView;
     }
     public static Fragment newInstance(){
@@ -67,6 +71,9 @@ public class HomeFragment extends Fragment implements HomeView, View.OnClickList
         super.onViewCreated(view, savedInstanceState);
         setupCarousel();
         initialData();
+    }
+    public void getSpinner(){
+      hud = SpinnerManagement.getSpinner(getActivity());
     }
     public void initialData() {
         mPresenter = new HomePresenter(getActivity(), this);
@@ -163,6 +170,7 @@ public class HomeFragment extends Fragment implements HomeView, View.OnClickList
     }
     @Override
     public void showListProduct(List<Product> productList) {
+        hud.dismiss();
         for (Product product : productList) {
             if (product.getMasterCategoryId() == 1 && product.isActived() == true) {
                 mListGlasses.add(product);

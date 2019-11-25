@@ -18,8 +18,8 @@ public class AddAccountToRoomPresenter {
         accountManagement = new AccountManagement(mApplication);
         this.addToRoomView = addToRoomView;
     }
-    public  void addAccountToRooṃ(AccountItemEntities accountItemEntities){
+    public void addAccountToRooṃ(AccountItemEntities accountItemEntities){
         accountManagement.addAccountItem(accountItemEntities);
-        addToRoomView.AddToRoomSuccess();
+        addToRoomView.addToRoomSuccess();
     }
 }

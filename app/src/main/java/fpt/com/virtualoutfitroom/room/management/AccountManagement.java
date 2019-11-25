@@ -19,9 +19,9 @@ public class AccountManagement {
     }
     public interface DataCallBack{
         void onSuccess(AccountItemEntities account);
-        void  onFail(String message);
+        void onFail(String message);
     }
-    private class AddOrderItemAsync extends AsyncTask<AccountItemEntities,Void,Void> {
+    private class AddAccountItemAsync extends AsyncTask<AccountItemEntities,Void,Void> {
         private AccountDAO accountDAO;
         @Override
         protected Void doInBackground(AccountItemEntities... accountItemEntities) {
@@ -29,7 +29,7 @@ public class AccountManagement {
             return null;
         }
 
-        public AddOrderItemAsync(AccountDAO accountDAO) {
+        public AddAccountItemAsync(AccountDAO accountDAO) {
             this.accountDAO = accountDAO;
         }
     }
@@ -47,9 +47,8 @@ public class AccountManagement {
         protected Void doInBackground(AccountItemEntities... accountItemEntities) {
             try {
                 accountE = accountDAO.getAccount();
-
             }catch (Exception e){
-
+                e.printStackTrace();
             }
             return null;
         }
@@ -92,8 +91,6 @@ public class AccountManagement {
         public UpdateCustomerAsyn(AccountDAO mAccountDao) {
             this.mAccountDaoAsync = mAccountDao;
         }
-
-
         @Override
         protected Void doInBackground(AccountItemEntities... accountItemEntities) {
             try {
@@ -119,8 +116,8 @@ public class AccountManagement {
         deleteAsync.execute();
     }
     public void addAccountItem(AccountItemEntities accountItemEntities){
-        AddOrderItemAsync addOrderItemAsync = new AddOrderItemAsync(accountDAO);
-        addOrderItemAsync.execute(accountItemEntities);
+        AddAccountItemAsync addAccountItemAsync = new AddAccountItemAsync(accountDAO);
+        addAccountItemAsync.execute(accountItemEntities);
     }
     public void getAccountItem(DataCallBack dataCallBack){
         GetAccountItemAsync getAccountItemAsync = new GetAccountItemAsync(accountDAO, dataCallBack);

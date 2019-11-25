@@ -1,6 +1,7 @@
 package fpt.com.virtualoutfitroom.room.management;
 
 import android.app.Application;
+import android.database.sqlite.SQLiteConstraintException;
 import android.os.AsyncTask;
 
 import java.util.List;
@@ -12,7 +13,6 @@ import fpt.com.virtualoutfitroom.room.database.VOFRDatabase;
 public class OrderItemManagement {
     private OrderDAO orderDAO;
     private Application application;
-
     public OrderItemManagement(Application application) {
         this.application = application;
         VOFRDatabase vofrDatabase = VOFRDatabase.getDatabase(application);
@@ -21,7 +21,7 @@ public class OrderItemManagement {
 
     public interface DataCallBack{
       void onSuccess(List<OrderItemEntities> list);
-       void  onFail(String message);
+      void onFail(String message);
     }
     private class AddOrderItemAsync extends AsyncTask<OrderItemEntities,Void,Void>{
         private OrderDAO orderDAO;
@@ -69,8 +69,6 @@ public class OrderItemManagement {
      public void addOrderItem(OrderItemEntities orderItemEntities){
         AddOrderItemAsync addOrderItemAsync = new AddOrderItemAsync(orderDAO);
         addOrderItemAsync.execute(orderItemEntities);
-
-
      }
      public void getOrderItem(DataCallBack dataCallBack){
         GetOrderItemAsync getOrderItemAsync = new GetOrderItemAsync(orderDAO, dataCallBack);
@@ -79,6 +77,10 @@ public class OrderItemManagement {
     public void deleteOrderItem(OrderItemEntities orderItem) {
         DeleteOrderItemAsyn deleteOrderItemAsyn = new DeleteOrderItemAsyn(orderDAO);
         deleteOrderItemAsyn.execute(orderItem);
+    }
+    public void updateOrder(OrderItemEntities orderItemEntities) {
+        UpdateOrderAsyn updateOrderAsyn = new UpdateOrderAsyn(orderDAO);
+        updateOrderAsyn.execute(orderItemEntities);
     }
     private class DeleteOrderItemAsyn extends AsyncTask<OrderItemEntities, Void, Void> {
         private OrderDAO orderDAO;
@@ -94,4 +96,51 @@ public class OrderItemManagement {
         }
     }
 
+    private class UpdateOrderAsyn extends AsyncTask<OrderItemEntities, Void, Void> {
+        private OrderDAO mOrderDAO;
+
+        public UpdateOrderAsyn(OrderDAO mOrderDAO) {
+            this.mOrderDAO = mOrderDAO;
+        }
+
+        @Override
+        protected Void doInBackground(OrderItemEntities... orderItemEntities) {
+            try {
+                mOrderDAO.updateOrder(orderItemEntities);
+            } catch (SQLiteConstraintException e) {
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+        }
+    }
+
+    private class DeleteAllOrderAsync extends AsyncTask<OrderItemEntities, Void, Void> {
+        private OrderDAO mDaoAsync;
+
+        public DeleteAllOrderAsync(OrderDAO mDaoAsync) {
+            this.mDaoAsync = mDaoAsync;
+        }
+
+        @Override
+        protected Void doInBackground(OrderItemEntities... orderItemEntities) {
+            try {
+                mDaoAsync.deleleAllOrder();
+            } catch (SQLiteConstraintException e) {
+
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+        }
+    }
+    public void deleteAllAccount() {
+        DeleteAllOrderAsync deleteAsync = new DeleteAllOrderAsync(orderDAO);
+        deleteAsync.execute();
+    }
 }

@@ -8,23 +8,19 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.util.UUID;
+import com.kaopiz.kprogresshud.KProgressHUD;
 
-import fpt.com.virtualoutfitroom.MainActivity;
 import fpt.com.virtualoutfitroom.R;
 import fpt.com.virtualoutfitroom.model.Account;
-import fpt.com.virtualoutfitroom.presenter.HomePresenter;
 import fpt.com.virtualoutfitroom.presenter.accounts.AddAccountToRoomPresenter;
 import fpt.com.virtualoutfitroom.presenter.accounts.InformationAccountPresenter;
 import fpt.com.virtualoutfitroom.presenter.accounts.LoginPresenter;
-import fpt.com.virtualoutfitroom.room.AccountItemEntities;
 import fpt.com.virtualoutfitroom.utils.BundleString;
 import fpt.com.virtualoutfitroom.utils.SharePreferenceUtils;
+import fpt.com.virtualoutfitroom.utils.SpinnerManagement;
 import fpt.com.virtualoutfitroom.views.AccountView;
-import fpt.com.virtualoutfitroom.views.AddToRoomView;
-import fpt.com.virtualoutfitroom.views.GetInforAccountView;
 
-public class LoginActivity extends BaseActivity implements View.OnClickListener, AccountView, GetInforAccountView,AddToRoomView{
+public class LoginActivity extends BaseActivity implements View.OnClickListener, AccountView{
     private LinearLayout lnlLayout;
     private TextView mTxtRegister;
     private TextView mTxtForgetPass;
@@ -33,6 +29,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     private Button mLogin;
     private AddAccountToRoomPresenter mAddAccountToRoomPresenter;
     private InformationAccountPresenter mInformationAccountPresenter;
+    private KProgressHUD hud;
+    private String mCurrentSrceen;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +38,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         setContentView(R.layout.activity_login);
         initialData();
     }
+
     public void initialData(){
         lnlLayout =(LinearLayout) findViewById(R.id.lnl_login);
         lnlLayout.setBackgroundColor(getResources().getColor(R.color.color_white));
@@ -52,6 +51,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         mLogin = findViewById(R.id.btn_login);
         mLogin.setOnClickListener(this);
     }
+
+    private void getSpinner(){
+        hud = SpinnerManagement.getSpinner(this);
+    }
     @Override
     public void onClick(View view) {
         switch (view.getId()){
@@ -59,7 +62,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
             break;
             case R.id.txt_forget_pass: clickToForgetPage();
             break;
-            case R.id.btn_login :checkLogin();
+            case R.id.btn_login :
+                getSpinner();
+                checkLogin();
             break;
         }
     }
@@ -80,42 +85,17 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     }
     @Override
     public void loginSuccess(Account account) {
+        hud.dismiss();
         SharePreferenceUtils.saveStringSharedPreference(LoginActivity.this, BundleString.TOKEN,account.getAccessToken());
         SharePreferenceUtils.saveStringSharedPreference(LoginActivity.this, BundleString.USERID,account.getAccountId());
-        mInformationAccountPresenter = new InformationAccountPresenter(LoginActivity.this,this);
-        mInformationAccountPresenter.getInforAccount(account.getAccountId());
+        Intent intent = new Intent();
+        intent.putExtra("success", true);
+        setResult(RESULT_OK, intent);
+        finish();
+
     }
     @Override
     public void showError(String message) {
-    }
-    @Override
-    public void getInforSuccess(Account account) {
-            if(account!=null){
-                addToRoom(account);
-            }
-    }
-    @Override
-    public void getInforFail(String message) {
 
-    }
-
-    @Override
-    public void getAccountFromRoom(AccountItemEntities accountItemEntities) {
-
-    }
-
-    @Override
-    public void AddToRoomSuccess() {
-        Intent intent = new Intent(LoginActivity.this,HomeActivity.class);
-        finish();
-        startActivity(intent);
-    }
-    private void addToRoom(Account account){
-        AccountItemEntities accountItemEntities= new AccountItemEntities();
-        String accountId = UUID.randomUUID().toString();
-        accountItemEntities.setAccountId(accountId);
-        accountItemEntities.setAccount(account);
-        mAddAccountToRoomPresenter = new AddAccountToRoomPresenter(LoginActivity.this,getApplication(),this);
-        mAddAccountToRoomPresenter.addAccountToRooṃ(accountItemEntities);
     }
 }

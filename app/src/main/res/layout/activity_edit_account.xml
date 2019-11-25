@@ -13,7 +13,6 @@
     <TextView
         android:textStyle="bold"
         android:layout_marginLeft="@dimen/dp10"
-        android:layout_marginBottom="@dimen/dp10"
         android:layout_marginTop="@dimen/dp10"
         android:text="Chỉnh Sửa Thông Tin"
         android:textColor="@color/color_cus_blue"
@@ -23,7 +22,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dp20"
+        android:layout_marginTop="@dimen/dp10"
         android:orientation="vertical"
         android:paddingLeft="@dimen/dp20"
         android:paddingRight="@dimen/dp20">
@@ -36,10 +35,12 @@
             android:paddingTop="5dp"
             android:id="@+id/edt_username"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dp38"
+            android:layout_height="42dp"
             android:background="@drawable/edit_text_background"
-            android:drawableLeft="@drawable/ic_user_menu"
-            android:drawablePadding="@dimen/dp20"/>
+            android:drawableLeft="@drawable/ic_user_gray"
+            android:drawablePadding="@dimen/dp20"
+            android:enabled="false"
+            android:maxLines="1"/>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -50,26 +51,31 @@
             android:paddingTop="5dp"
             android:id="@+id/edt_password"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dp38"
+            android:layout_height="42dp"
             android:background="@drawable/edit_text_background"
-            android:drawableLeft="@drawable/ic_password2"
+            android:drawableLeft="@drawable/ic_lock_gray"
             android:drawablePadding="@dimen/dp20"
-            android:inputType="textPassword"/>
+            android:inputType="textPassword"
+            android:enabled="false"
+            android:maxLines="1"/>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Email"
             android:textColor="@color/color_cus_light_gray"
-            android:layout_marginTop="@dimen/dp10"/>
+            android:layout_marginTop="@dimen/dp10"
+            />
         <EditText
             android:id="@+id/edt_email"
             android:paddingTop="5dp"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dp38"
+            android:layout_height="42dp"
             android:background="@drawable/edit_text_background"
-            android:drawableLeft="@drawable/ic_password2"
+            android:drawableLeft="@drawable/ic_envelope_gray"
             android:drawablePadding="@dimen/dp20"
-            android:inputType="textEmailAddress"/>
+            android:inputType="textEmailAddress"
+            android:enabled="false"
+            android:maxLines="1"/>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -80,26 +86,30 @@
             android:id="@+id/edt_phone"
             android:paddingTop="5dp"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dp38"
+            android:layout_height="42dp"
             android:background="@drawable/edit_text_background"
-            android:drawableLeft="@drawable/ic_password2"
+            android:drawableLeft="@drawable/ic_phone_gray"
             android:drawablePadding="@dimen/dp20"
-            android:inputType="phone"/>
+            android:inputType="phone"
+            android:enabled="false"
+            android:maxLines="1"/>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Họ"
             android:textColor="@color/color_cus_light_gray"
-            android:layout_marginTop="@dimen/dp10"/>
+            android:layout_marginTop="@dimen/dp10"
+            android:enabled="false"/>
         <EditText
             android:id="@+id/edt_first_name"
             android:paddingTop="5dp"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dp38"
+            android:layout_height="42dp"
             android:background="@drawable/edit_text_background"
-            android:drawableLeft="@drawable/ic_password2"
+            android:drawableLeft="@drawable/ic_first_name"
             android:drawablePadding="@dimen/dp20"
-            android:inputType="text"/>
+            android:inputType="text"
+            android:maxLines="1"/>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -110,11 +120,12 @@
             android:id="@+id/edt_lastname"
             android:paddingTop="5dp"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dp38"
+            android:layout_height="42dp"
             android:background="@drawable/edit_text_background"
-            android:drawableLeft="@drawable/ic_password2"
+            android:drawableLeft="@drawable/ic_last_name"
             android:drawablePadding="@dimen/dp20"
-            android:inputType="text"/>
+            android:inputType="text"
+            android:maxLines="1"/>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -125,11 +136,11 @@
             android:id="@+id/edt_address"
             android:paddingTop="5dp"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dp38"
+            android:layout_height="80dp"
             android:background="@drawable/edit_text_background"
-            android:drawableLeft="@drawable/ic_password2"
+            android:drawableLeft="@drawable/ic_address"
             android:drawablePadding="@dimen/dp20"
-            android:inputType="text"/>
+            android:inputType="textMultiLine"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"

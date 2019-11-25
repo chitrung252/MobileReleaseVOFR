@@ -11,30 +11,6 @@
         <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
     </style>
 
-    <style name="InformationTextView">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:padding">4dp</item>
-        <item name="android:gravity">center</item>
-        <item name="android:textSize">15sp</item>
-    </style>
-
-    <style name="textViewMuliExtraBold">
-        <item name="fontPath">fonts/BalooTamma-Regular.ttf</item>
-    </style>
-
-    <style name="ABeeZee">
-        <item name="fontPath">fonts/ABeeZee-Regular.ttf</item>
-    </style>
-
-    <style name="text_intro">
-        <item name="android:textSize">36sp</item>
-        <item name="android:shadowColor">#40000000</item>
-        <item name="android:shadowDx">0</item>
-        <item name="android:shadowDy">4</item>
-        <item name="android:shadowRadius">4</item>
-    </style>
-
     <style name="MyMaterial" parent="Theme.MaterialComponents.Light.DarkActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/color_cus_blue</item>
@@ -55,12 +31,4 @@
         <item name="android:background">@drawable/bottom_up_background</item>
     </style>
 
-    <style name="AppTheme.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-    </style>
-
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

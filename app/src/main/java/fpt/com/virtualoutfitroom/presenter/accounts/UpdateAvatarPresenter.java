@@ -14,12 +14,13 @@ public class UpdateAvatarPresenter {
         this.mUpdateAvataView = mUpdateAvataView;
         this.mVofrRepository = new VofrImpl();
     }
-    public void updateAvatarAccount(String token,String accountId,Uri imageUri){
-        this.mVofrRepository.updateAvatarInfo(context,token,accountId, imageUri, new CallBackData<String>() {
+    public void updateImage(String token,String userId, Uri imageUri){
+        this.mVofrRepository.updateImage(context, token, userId, imageUri, new CallBackData<String>() {
             @Override
             public void onSuccess(String s) {
                 mUpdateAvataView.updateAvatarSuccess(s);
             }
+
             @Override
             public void onFail(String message) {
                 mUpdateAvataView.updateAvatarFail(message);

@@ -1,14 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.HistoryFragment">
+    tools:context=".fragments.HistoryFragment"
+    android:orientation="vertical">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
-
-</FrameLayout>
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:text="Lịch sử giao dịch"
+        android:textColor="@color/color_cus_blue"
+        android:textSize="25sp"/>
+    <LinearLayout
+        android:id="@+id/lnl_has_history"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:weightSum="5"
+        android:orientation="horizontal"
+        android:layout_marginTop="@dimen/dp5">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Mã Đơn Hàng"
+            android:layout_weight="1.5"
+            android:gravity="center"
+            android:textColor="@color/color_cus_light_gray"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Tổng Tiền"
+            android:layout_weight="2"
+            android:gravity="center"
+            android:textColor="@color/color_cus_light_gray"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Trạng Thái"
+            android:layout_weight="1.5"
+            android:gravity="center"
+            android:textColor="@color/color_cus_light_gray"/>
+    </LinearLayout>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rvc_history"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </android.support.v7.widget.RecyclerView>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/lnl_no_history"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:src="@drawable/not_found"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Không có lịch sử giao dịch"
+            android:textColor="@color/color_cus_gray"
+            android:textSize="@dimen/dp25"
+            android:gravity="center"
+            android:layout_marginTop="@dimen/dp5"/>
+    </LinearLayout>
+</LinearLayout>

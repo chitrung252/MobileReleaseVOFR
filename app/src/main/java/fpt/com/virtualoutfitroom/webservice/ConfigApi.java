@@ -9,8 +9,10 @@ public class ConfigApi {
        String SUBCATEGORY ="category/get-child-category";
        String PRODUCTCATE ="product/get-list-pro-by-cate-id";
        String PRODUCTIMG= "product-image/get-list-img";
-       String UPDATEAVATAR="account/update-image-user";
+       String UPDATEAVATAR="update-user-image";
        String GETINFORACCOUNT ="account";
        String UPDATEINFO = "account/update-account";
+       String CREATEORDER = "order/create-order";
+       String ORDER = "order";
     }
 }

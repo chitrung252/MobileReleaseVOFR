@@ -25,13 +25,13 @@ import fpt.com.virtualoutfitroom.presenter.accounts.InformationAccountPresenter;
 import fpt.com.virtualoutfitroom.room.AccountItemEntities;
 import fpt.com.virtualoutfitroom.utils.FragmentSentData;
 import fpt.com.virtualoutfitroom.views.GetInforAccountView;
-public class AddressFragment extends Fragment implements View.OnClickListener, GetInforAccountView {
+public class AddressFragment extends Fragment implements View.OnClickListener, GetInforAccountView{
     private View mView;
     private EditText mEdtName,mEdtPhone,mEdtEmail,mEdtAddress;
     private LinearLayout mlnlName,mLnlEmail,mLnlPhone,mLnlAddress;
     private TextView mTxtName,mTxtPhone,mTxtEmail,mTxtAddress;
     private boolean isClickName = false,isClickEmail = false,isClickPhone = false,isClickAddress = false;
-    private Account mAccount;
+    private AccountItemEntities mAccount;
     private String name,email,phone,address;
     private InformationAccountPresenter informationAccountPresenter;
     private FirstFragmentListener mFragmentSentData;
@@ -100,6 +100,9 @@ public class AddressFragment extends Fragment implements View.OnClickListener, G
     public void setEditTextNamẹ̣(){
         if(isClickName == true){
             name =  mEdtName.getText().toString()+"";
+            email = mEdtEmail.getText().toString()+"";
+            phone = mEdtPhone.getText().toString()+"";
+            address = mEdtAddress.getText().toString()+"";
             mTxtName.setText(name);
             sendData(name,email,phone,address);
             mEdtName.setVisibility(View.GONE);
@@ -116,7 +119,10 @@ public class AddressFragment extends Fragment implements View.OnClickListener, G
 
     public void setEditTextNEmaiḷ̣(){
         if(isClickEmail == true){
+            name =  mEdtName.getText().toString()+"";
             email = mEdtEmail.getText().toString()+"";
+            phone = mEdtPhone.getText().toString()+"";
+            address = mEdtAddress.getText().toString()+"";
             mTxtEmail.setText(email);
             sendData(name,email,phone,address);
             mEdtEmail.setVisibility(View.GONE);
@@ -132,7 +138,10 @@ public class AddressFragment extends Fragment implements View.OnClickListener, G
     }
     public void setEditTextPhonẹ(){
         if(isClickPhone == true){
+            name =  mEdtName.getText().toString()+"";
+            email = mEdtEmail.getText().toString()+"";
             phone = mEdtPhone.getText().toString()+"";
+            address = mEdtAddress.getText().toString()+"";
             mTxtPhone.setText(phone);
             sendData(name,email,phone,address);
             mEdtPhone.setVisibility(View.GONE);
@@ -148,6 +157,9 @@ public class AddressFragment extends Fragment implements View.OnClickListener, G
     }
     public void setEditTextAddress(){
         if(isClickAddress == true){
+            name =  mEdtName.getText().toString()+"";
+            email = mEdtEmail.getText().toString()+"";
+            phone = mEdtPhone.getText().toString()+"";
             address = mEdtAddress.getText().toString()+"";
             mTxtAddress.setText(address);
             sendData(name,email,phone,address);
@@ -170,20 +182,25 @@ public class AddressFragment extends Fragment implements View.OnClickListener, G
     public void getInforFail(String message) {
 
     }
-
     @Override
     public void getAccountFromRoom(AccountItemEntities accountItemEntities) {
-        mAccount = accountItemEntities.getAccount();
-        mTxtName.setText(mAccount.getFirstName() + " " + mAccount.getLastName());
-        mTxtEmail.setText(mAccount.getEmail());
-        mTxtPhone.setText(mAccount.getPhoneNumber());
-        mTxtAddress.setText(mAccount.getAddress());
+        mAccount = accountItemEntities;
+        name = mAccount.getAccount().getFirstName() + " " + mAccount.getAccount().getLastName();
+        phone = mAccount.getAccount().getPhoneNumber();
+        email = mAccount.getAccount().getEmail();
+        address = mAccount.getAccount().getAddress();
+        mTxtName.setText(name);
+        mEdtName.setText(name);
+        mTxtEmail.setText(email);
+        mEdtEmail.setText(email);
+        mTxtPhone.setText(phone);
+        mEdtPhone.setText(phone);
+        mEdtAddress.setText(address);
+        mTxtAddress.setText(address);
     }
-
     private  void sendData(String name,String email,String phone,String address){
        mFragmentSentData.sendData(name,email,phone,address);
     }
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);

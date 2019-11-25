@@ -7,10 +7,13 @@ import android.support.design.widget.BottomSheetDialogFragment;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 import java.util.UUID;
@@ -20,16 +23,24 @@ import fpt.com.virtualoutfitroom.model.Category;
 import fpt.com.virtualoutfitroom.model.Product;
 import fpt.com.virtualoutfitroom.presenter.CartPresenter;
 import fpt.com.virtualoutfitroom.room.OrderItemEntities;
+import fpt.com.virtualoutfitroom.utils.ChangeValue;
 import fpt.com.virtualoutfitroom.utils.CurrencyManagement;
+import fpt.com.virtualoutfitroom.utils.RefineImage;
 import fpt.com.virtualoutfitroom.views.AddToCartView;
+import fpt.com.virtualoutfitroom.views.UpdateCardView;
 
-public class BottomSheetDialog extends BottomSheetDialogFragment implements View.OnClickListener, AddToCartView {
+public class BottomSheetDialog extends BottomSheetDialogFragment implements View.OnClickListener, AddToCartView, UpdateCardView {
     private BottomSheetBehavior mBehavior;
     private Button mBtnAddToCart;
     private CartPresenter cartPresenter;
     private LinearLayout mLnlDismiss;
     private Product mProduct;
     private ImageView mImgProduct;
+    private double mTotal = 1;
+    private int mQuantity = 1;
+    private EditText mEdtQuantity;
+    private ImageView mImgIncrease;
+    private ImageView mImgDecrease;
     private TextView mProductName;
     private TextView mProductPrice;
 
@@ -58,6 +69,12 @@ public class BottomSheetDialog extends BottomSheetDialogFragment implements View
         mImgProduct = view.findViewById(R.id.img_product_image);
         mProductName = view.findViewById(R.id.txt_product_name);
         mProductPrice = view.findViewById(R.id.txt_product_price);
+        mEdtQuantity = view.findViewById(R.id.edit_text_quantity_product);
+        mEdtQuantity.setEnabled(false);
+        mImgDecrease = view.findViewById(R.id.image_decrease_setting_order);
+        mImgIncrease = view.findViewById(R.id.image_increase_setting_order);
+        mImgIncrease.setOnClickListener(this::onClick);
+        mImgDecrease.setOnClickListener(this::onClick);
     }
 
     public void initialData(){
@@ -65,6 +82,10 @@ public class BottomSheetDialog extends BottomSheetDialogFragment implements View
         mProduct =(Product) bundle.getSerializable("PRODUCT");
         mProductName.setText(mProduct.getProductName().toString());
         mProductPrice.setText(CurrencyManagement.getPrice(mProduct.getProductPrice(),"đ"));
+        String img = RefineImage.getUrlImage(mProduct.getProductImageList(),"img");
+        Picasso.get().load(img).placeholder(R.mipmap.glasses).into(mImgProduct);
+        mEdtQuantity.setText("1");
+        mTotal = mProduct.getProductPrice();
     }
     @Override
     public void onClick(View view) {
@@ -75,34 +96,76 @@ public class BottomSheetDialog extends BottomSheetDialogFragment implements View
             case R.id.lnl_dismiss:
                 dismissBottomSheet();
                 break;
+            case R.id.image_decrease_setting_order:
+                buttonDecrease();
+                break;
+            case R.id.image_increase_setting_order:
+                buttonIncrease();
+                break;
         }
     }
-
+    private void buttonIncrease(){
+        mQuantity++;
+        mTotal = mProduct.getProductPrice()* mQuantity;
+        mEdtQuantity.setText(String.valueOf(mQuantity));
+        mProductPrice.setText(ChangeValue.formatDecimalPrice((double) mTotal));
+    }
+    private void buttonDecrease(){
+        mQuantity--;
+        if (mQuantity < 1) {
+            mQuantity = 1;
+        }
+        mTotal = mProduct.getProductPrice()* mQuantity;
+        mEdtQuantity.setText(String.valueOf(mQuantity));
+        mProductPrice.setText(ChangeValue.formatDecimalPrice((double) mTotal));
+    }
     private void addToCart() {
-        OrderItemEntities o = new OrderItemEntities();
-        String orderId = UUID.randomUUID().toString();
-        o.setOrderItemId(orderId);
-        o.setProduct(mProduct);
-        cartPresenter = new CartPresenter(getActivity(),getActivity().getApplication(),this);
-        cartPresenter.addToCart(o);
+        cartPresenter = new CartPresenter(getActivity(),getActivity().getApplication(),this,this);
+        cartPresenter.getListOrder();
     }
     private void  dismissBottomSheet(){
         getDialog().cancel();
     }
-
     @Override
     public void onSuccess() {
-        getDialog().cancel();
-        cartPresenter.getListOrder();
+        cancelDialog();
     }
 
     @Override
     public void showListOrderItem(List<OrderItemEntities> item) {
-        Log.e("aaa",item.size() + "");
+        if(item != null){
+            for (OrderItemEntities order:item) {
+                if(order.getProduct().getId() == mProduct.getId()){
+                    order.setQuality(order.getQuality() + mQuantity);
+                    order.setTotal(order.getTotal() + order.getProduct().getProductPrice() * mQuantity);
+                    cartPresenter = new CartPresenter(getActivity(),getActivity().getApplication(),this,this);
+                    cartPresenter.updateToCart(order);
+                    return;
+                }
+            }
+        }
+        createOrderItem();
     }
-
+    private void createOrderItem(){
+        OrderItemEntities o = new OrderItemEntities();
+        String orderId = UUID.randomUUID().toString();
+        o.setOrderItemId(orderId);
+        o.setTotal(mTotal);
+        o.setQuality(mQuantity);
+        o.setProduct(mProduct);
+        cartPresenter.addToCart(o);
+    }
     @Override
     public void showError(String message) {
         Toast.makeText(getContext(),message,Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void updateCardSuccess() {
+        cancelDialog();
+    }
+    private void cancelDialog(){
+        Toast.makeText(getActivity(),"Đã thêm vào gỏ hàng", Toast.LENGTH_LONG).show();
+        getDialog().cancel();
     }
 }

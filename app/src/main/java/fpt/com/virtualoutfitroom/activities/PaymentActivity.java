@@ -1,5 +1,6 @@
 package fpt.com.virtualoutfitroom.activities;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -17,18 +18,29 @@ import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItem;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentStatePagerItemAdapter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import fpt.com.virtualoutfitroom.R;
 import fpt.com.virtualoutfitroom.adapter.PaymentCustomTab;
 import fpt.com.virtualoutfitroom.fragments.AddressFragment;
 import fpt.com.virtualoutfitroom.fragments.FinishFragment;
 import fpt.com.virtualoutfitroom.fragments.MethodFragment;
 import fpt.com.virtualoutfitroom.model.Account;
+import fpt.com.virtualoutfitroom.presenter.ShoppingCartPresenter;
 import fpt.com.virtualoutfitroom.presenter.accounts.InformationAccountPresenter;
+import fpt.com.virtualoutfitroom.presenter.orders.CreateOrderPresenter;
 import fpt.com.virtualoutfitroom.room.AccountItemEntities;
+import fpt.com.virtualoutfitroom.room.OrderItemEntities;
+import fpt.com.virtualoutfitroom.utils.BundleString;
 import fpt.com.virtualoutfitroom.utils.FragmentSentData;
+import fpt.com.virtualoutfitroom.utils.SharePreferenceUtils;
+import fpt.com.virtualoutfitroom.views.CreateOrderView;
+import fpt.com.virtualoutfitroom.views.DeleteOrderView;
 import fpt.com.virtualoutfitroom.views.GetInforAccountView;
+import fpt.com.virtualoutfitroom.views.ShoppingCartView;
 
-public class PaymentActivity extends BaseActivity implements GetInforAccountView,AddressFragment.FirstFragmentListener, MethodFragment.SecordFragmentListener {
+public class PaymentActivity extends BaseActivity implements GetInforAccountView,AddressFragment.FirstFragmentListener, MethodFragment.SecordFragmentListener, ShoppingCartView, CreateOrderView, DeleteOrderView {
     private ViewPager mViewPager;
     private SmartTabLayout mSmartTabLayout;
     private FragmentStatePagerItemAdapter mAdapter;
@@ -36,7 +48,14 @@ public class PaymentActivity extends BaseActivity implements GetInforAccountView
     private LinearLayout mBtnBack;
     private TextView mTxtNext;
     private Account mAccount;
+    private AccountItemEntities mAccountItemEntities;
+    private CreateOrderPresenter mCreateOrderPresenter;
+    private String mFullname,mEmail,mPhone,mAddress;
     private int ischeck =-1 ;
+    private List<OrderItemEntities> mOrderItemEntities;
+    private ShoppingCartPresenter mShoppingCartPresenter;
+    private float finalTotal = 0;
+    private String token ;
     private InformationAccountPresenter  informationAccountPresenter;
     int PAGE = 0;
     @Override
@@ -109,7 +128,12 @@ public class PaymentActivity extends BaseActivity implements GetInforAccountView
             mBtnNext.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    mViewPager.setCurrentItem(mViewPager.getCurrentItem() + 1, true);
+                    if(PAGE ==3) {
+                        payment();
+                    }
+                    else {
+                        mViewPager.setCurrentItem(mViewPager.getCurrentItem() + 1, true);
+                    }
                 }
             });
 
@@ -129,14 +153,18 @@ public class PaymentActivity extends BaseActivity implements GetInforAccountView
             @Override
             public void onPageSelected(int position) {
                 if(position==0) {
+                    PAGE = 1;
                     mTxtNext.setText("Tiếp theo");
                 }else  {
+                    PAGE = 1;
                     mBtnBack.setVisibility(View.VISIBLE);
                 }
                 if(position < mViewPager.getAdapter().getCount()-1 ) {
                     mBtnNext.setVisibility(View.VISIBLE);
+                    PAGE = 2;
                     mTxtNext.setText("Tiếp theo");
                 }else  {
+                    PAGE = 3;
                     mBtnNext.setVisibility(View.VISIBLE);
                     mTxtNext.setText("Hoàn thành");
                 }
@@ -147,6 +175,13 @@ public class PaymentActivity extends BaseActivity implements GetInforAccountView
         });
     }
 
+    private void payment(){
+        mAccountItemEntities.getAccount().setAddress(mAddress);
+        mAccountItemEntities.getAccount().setEmail(mEmail);
+        mAccountItemEntities.getAccount().setPhoneNumber(mPhone);
+        mCreateOrderPresenter = new CreateOrderPresenter(PaymentActivity.this,this);
+        mCreateOrderPresenter.createOrder(mFullname,finalTotal,token,mAccountItemEntities,mOrderItemEntities);
+    }
     private void disableTab(int tabNumber)
     {
         ViewGroup vg = (ViewGroup) mSmartTabLayout.getChildAt(0);
@@ -160,15 +195,24 @@ public class PaymentActivity extends BaseActivity implements GetInforAccountView
     public void getInforFail(String message) {
         initialData();
     }
-
     @Override
     public void getAccountFromRoom(AccountItemEntities accountItemEntities) {
-        mAccount =  accountItemEntities.getAccount();
-        initialData();
+        mAccountItemEntities =  accountItemEntities;
+        finalTotal = SharePreferenceUtils.getFloatSharedPreference(PaymentActivity.this, BundleString.TOTAL);
+        mFullname = accountItemEntities.getAccount().getFirstName() + " " + accountItemEntities.getAccount().getLastName();
+        mPhone = accountItemEntities.getAccount().getPhoneNumber();
+        mEmail = accountItemEntities.getAccount().getPhoneNumber();
+        mAddress = accountItemEntities.getAccount().getAddress();
+        token = SharePreferenceUtils.getStringSharedPreference(PaymentActivity.this,BundleString.TOKEN);
+        mShoppingCartPresenter = new ShoppingCartPresenter(PaymentActivity.this,getApplication(), (ShoppingCartView) this);
+        mShoppingCartPresenter.getAllOrderItem();
     }
-
     @Override
     public void sendData(String name, String email, String phone, String address) {
+        mFullname = name;
+        mEmail = email;
+        mPhone = phone;
+        mAddress = address;
         FinishFragment fragment = (FinishFragment) getSupportFragmentManager().getFragments().get(2);
         fragment.getData(name,email,phone,address);
     }
@@ -177,5 +221,38 @@ public class PaymentActivity extends BaseActivity implements GetInforAccountView
         ischeck = index;
         FinishFragment fragment = (FinishFragment) getSupportFragmentManager().getFragments().get(2);
         fragment.getMethoid(index);
+    }
+    @Override
+    public void showListOrderItem(List<OrderItemEntities> orderItemEntities) {
+            mOrderItemEntities = new ArrayList<>();
+            mOrderItemEntities = orderItemEntities;
+            initialData();
+    }
+    @Override
+    public void showError(String message) {
+
+    }
+
+    @Override
+    public void createOrderSuccess(String messgae) {
+        mShoppingCartPresenter = new ShoppingCartPresenter(PaymentActivity.this,getApplication(), (DeleteOrderView) this);
+        mShoppingCartPresenter.deleteOrder();
+
+    }
+
+    @Override
+    public void createOrderFail(String messageFail) {
+
+    }
+
+    @Override
+    public void deleteOrderSuccess(String success) {
+        Intent intent = new Intent(PaymentActivity.this,HomeActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public void deleteOrderFail(String message) {
+
     }
 }

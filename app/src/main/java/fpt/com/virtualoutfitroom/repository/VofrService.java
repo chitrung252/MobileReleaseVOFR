@@ -17,13 +17,14 @@ import retrofit2.http.PUT;
 import retrofit2.http.Part;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
-
 public interface VofrService {
     @GET(ConfigApi.Api.PRODUCT)
     Call<ResponseBody> getListProduct();
+
     @POST(ConfigApi.Api.LOGIN)
     @Headers({"Content-Type: application/json"})
     Call<ResponseBody> checkLogin(@Body RequestBody requestBody);
+
     @GET(ConfigApi.Api.PARENTCATEGORY)
     Call<ResponseBody> getListCategory();
 
@@ -32,16 +33,19 @@ public interface VofrService {
 
     @GET(ConfigApi.Api.PRODUCTCATE)
     Call<ResponseBody> getListProduByCateId(@Query("id") int cateId );
-
     @GET(ConfigApi.Api.PRODUCTIMG)
     Call<ResponseBody> getListImage(@Query("id") int productID, @Query("type") String typeImage);
 
-//    @Headers({"Content-Type: multipart/form-data","Content-Type: text/plain"})
-    @Multipart
-    @PUT(ConfigApi.Api.UPDATEAVATAR)
-    Call<ResponseBody> updateaAvatarInfo(@HeaderMap Map<String, String> header,@Query("id") String accountId ,@Part MultipartBody.Part  image);
     @GET(ConfigApi.Api.GETINFORACCOUNT)
     Call<ResponseBody> getInforAccount(@Query("id") String accountId );
+
     @PUT(ConfigApi.Api.UPDATEINFO)
     Call<ResponseBody> updateaInfoAccount(@HeaderMap Map<String, String> header,@Body RequestBody orderJsonObject);
+    @POST(ConfigApi.Api.UPDATEAVATAR)
+    Call<ResponseBody> updateaImage(@HeaderMap Map<String, String> header,@Query("userId")String userId,@Part MultipartBody.Part  image);
+    @Headers({"Content-Type: application/json"})
+    @POST(ConfigApi.Api.CREATEORDER)
+    Call<ResponseBody> createOrder(@HeaderMap Map<String, String> header,@Body RequestBody orderJsonObject);
+    @GET(ConfigApi.Api.ORDER)
+    Call<ResponseBody> getOrder(@Query("accountId") String accountId );
 }

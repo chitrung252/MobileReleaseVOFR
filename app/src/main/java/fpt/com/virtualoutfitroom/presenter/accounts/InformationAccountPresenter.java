@@ -26,6 +26,7 @@ public class InformationAccountPresenter {
     public InformationAccountPresenter(Application application, GetInforAccountView mInforAccountView) {
         this.application = application;
         this.accountManagement = new AccountManagement(application);
+        this.mVofrRepository= new VofrImpl();
         this.mInforAccountView = mInforAccountView;
     }
 

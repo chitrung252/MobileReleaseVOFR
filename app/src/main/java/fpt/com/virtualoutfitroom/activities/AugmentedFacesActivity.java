@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 package fpt.com.virtualoutfitroom.activities;
-
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
@@ -33,7 +32,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.PixelCopy;
 import android.widget.Toast;
-
 import com.google.ar.core.ArCoreApk;
 import com.google.ar.core.AugmentedFace;
 import com.google.ar.core.TrackingState;
@@ -43,6 +41,7 @@ import com.google.ar.sceneform.Scene;
 import com.google.ar.sceneform.rendering.ModelRenderable;
 import com.google.ar.sceneform.rendering.Renderable;
 import com.google.ar.sceneform.ux.AugmentedFaceNode;
+import com.kaopiz.kprogresshud.KProgressHUD;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -59,6 +58,7 @@ import fpt.com.virtualoutfitroom.R;
 import fpt.com.virtualoutfitroom.fragments.FaceArFragment;
 import fpt.com.virtualoutfitroom.model.Product;
 import fpt.com.virtualoutfitroom.model.ProductImage;
+import fpt.com.virtualoutfitroom.utils.SpinnerManagement;
 
 /**
  * This is an example activity that uses the Sceneform UX package to make common Augmented Faces
@@ -77,6 +77,7 @@ public class AugmentedFacesActivity extends AppCompatActivity {
     private String URLSFB = "http://107.150.52.213/api-votf/image/20191104181106376304.sfb";
 
     private final HashMap<AugmentedFace, AugmentedFaceNode> faceNodeMap = new HashMap<>();
+    private KProgressHUD hud;
 
     @Override
     @SuppressWarnings({"AndroidApiChecker", "FutureReturnValueIgnored"})
@@ -93,6 +94,7 @@ public class AugmentedFacesActivity extends AppCompatActivity {
         btnTakePhoto = (FloatingActionButton)findViewById(R.id.btn_take_photo);
         btnTakePhoto.setOnClickListener(v -> takePhoto());
         arFragment = (FaceArFragment) getSupportFragmentManager().findFragmentById(R.id.face_fragment);
+        getSpinner();
         initialData();
         // Load the face regions renderable.
         // This is a skinned model that renders 3D objects mapped to the regions of the augmented face.
@@ -104,6 +106,7 @@ public class AugmentedFacesActivity extends AppCompatActivity {
                             faceRegionsRenderable = modelRenderable;
                             modelRenderable.setShadowCaster(false);
                             modelRenderable.setShadowReceiver(false);
+                            hud.dismiss();
                         });
 
         ArSceneView sceneView = arFragment.getArSceneView();
@@ -147,6 +150,10 @@ public class AugmentedFacesActivity extends AppCompatActivity {
                     }
                 });
     }
+
+        public void getSpinner(){
+            hud = SpinnerManagement.getSpinner(this);
+        }
 
     public void initialData() {
         Intent intent = this.getIntent();
@@ -236,8 +243,7 @@ public class AugmentedFacesActivity extends AppCompatActivity {
                 Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "Photo saved", Snackbar.LENGTH_LONG);
                 File photoFile = new File(filename);
                 Uri photoURI = FileProvider.getUriForFile(this, this.getPackageName() + ".fileprovider", photoFile);
-                Uri scannerUri = Uri.fromFile(photoFile);
-                sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, scannerUri));
+
                 snackbar.setAction("Open in photo", v -> {
                     Intent intent = new Intent(Intent.ACTION_VIEW);
                     intent.setDataAndType(photoURI, "image/*");
@@ -246,6 +252,8 @@ public class AugmentedFacesActivity extends AppCompatActivity {
                 });
                 snackbar.setActionTextColor(Color.parseColor("#3F51B5"));
                 snackbar.show();
+                Uri scannerUri = Uri.fromFile(photoFile);
+                sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, scannerUri));
             } else {
                 Toast toast = Toast.makeText(this, "Failed to copy pixels: " + copyResult, Toast.LENGTH_LONG);
                 toast.show();

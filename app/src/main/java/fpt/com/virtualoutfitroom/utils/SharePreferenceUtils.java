@@ -13,7 +13,7 @@ public class SharePreferenceUtils {
             editor.putString(key, value);
             editor.commit();
         }catch (Exception e){
-
+            e.printStackTrace();
         }
     }
 

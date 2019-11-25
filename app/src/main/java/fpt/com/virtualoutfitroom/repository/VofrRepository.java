@@ -7,8 +7,11 @@ import java.util.List;
 
 import fpt.com.virtualoutfitroom.model.Account;
 import fpt.com.virtualoutfitroom.model.Category;
+import fpt.com.virtualoutfitroom.model.OrderHistory;
 import fpt.com.virtualoutfitroom.model.Product;
 import fpt.com.virtualoutfitroom.model.ProductImage;
+import fpt.com.virtualoutfitroom.room.AccountItemEntities;
+import fpt.com.virtualoutfitroom.room.OrderItemEntities;
 import fpt.com.virtualoutfitroom.webservice.CallBackData;
 
 public interface VofrRepository {
@@ -18,7 +21,9 @@ public interface VofrRepository {
     void getListSubCategory(Context context,int categoryId, CallBackData<List<Category>> callbackData);
     void getProductByCateId(Context context, int cateId, CallBackData<List<Product>> callBackData);
     void getListImage(Context context, int productId, String imageType, CallBackData<List<ProductImage>> callBackData);
-    void updateAvatarInfo(Context context,String actoken,String accountId,Uri imageUri,CallBackData<String> callBackData);
     void getInforAccount (Context context,String accountID,CallBackData<Account>callBackData);
     void updateInforAccount(Context context,String token, Account account,CallBackData<String>callBackData);
+    void updateImage(Context context,String token,String userId,Uri imageUri,CallBackData<String>callBackData);
+    void createOrder(Context context,String fullname,double finalTotal,String token,AccountItemEntities accountItemEntities, List<OrderItemEntities> orderItemEntities,CallBackData<String> callBackData);
+    void getOrder(Context context, String token, String accountId, CallBackData<List<OrderHistory>> callBackData);
 }

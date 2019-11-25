@@ -72,8 +72,8 @@ public class BottomSheetEditAccount extends BottomSheetDialogFragment implements
     }
     public void moveToLoginActivity(){
         Intent intent = new Intent(getActivity(), HomeActivity.class);
-        getActivity().finishAffinity();
         startActivity(intent);
+        getActivity().finishAffinity();
     }
     @Override
     public void deleteAccountSuccess() {

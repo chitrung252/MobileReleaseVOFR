@@ -6,6 +6,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context=".fragments.AccountFragment">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -34,72 +39,65 @@
                     app:civ_border_width="@dimen/dp3"
                     android:layout_marginRight="@dimen/dp20"
                     android:id="@+id/profile_image"
-                    android:src="@drawable/vector12"
+                    android:src="@drawable/user_default"
                     android:layout_width="match_parent"
                     android:layout_height="180dp" />
             </LinearLayout>
             <LinearLayout
-                android:orientation="vertical"
+                android:orientation="horizontal"
                 android:layout_weight="5.5"
-                android:weightSum="10"
                 android:layout_width="0dp"
                 android:layout_height="125dp">
-                <LinearLayout
-                    android:weightSum="10"
-                    android:orientation="horizontal"
-                    android:layout_weight="8.5"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp">
-                    <LinearLayout
-                        android:background="@drawable/edit_text_search_background"
-                        android:layout_weight="0.2"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"></LinearLayout>
+                <View
+                    android:layout_width="3dp"
+                    android:layout_height="90dp"
+                    android:background="@drawable/edit_text_search_background"
+                    android:layout_marginTop="@dimen/dp10"/>
                     <LinearLayout
                         android:layout_marginRight="@dimen/dp10"
                         android:layout_marginLeft="@dimen/dp10"
                         android:orientation="vertical"
-                        android:layout_weight="9.8"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent">
-                        <TextView
-                            android:textStyle="bold"
-                            android:textSize="25sp"
-                            android:textColor="@color/color_white"
-                            android:text="Chi Trung 252"
-                            android:layout_weight="1"
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp" />
-                        <TextView
-                            android:textStyle="bold"
-                            android:textSize="14sp"
-                            android:textColor="@color/color_white"
-                            android:text="0 đơn hàng"
-                            android:layout_weight="1"
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp" />
-                    </LinearLayout>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/lnl_choose_edit_account"
-                    android:layout_width="150dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/dp10"
-                    android:layout_marginRight="50dp"
-                    android:layout_weight="1.5"
-                    android:background="@drawable/radius_linear_oragne">
-
-                    <TextView
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:text="Chỉnh sửa trang cá nhân "
-                        android:textColor="@color/color_white"
-                        android:textSize="10sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
+                        >
+                            <TextView
+                                android:id="@+id/txt_name_title_account"
+                                android:textStyle="bold"
+                                android:textSize="25sp"
+                                android:textColor="@color/color_white"
+                                android:text=""
+                                android:layout_width="match_parent"
+                                android:layout_height="40dp"
+                                android:layout_marginBottom="5dp"/>
+                            <TextView
+                                android:textStyle="bold"
+                                android:textSize="14sp"
+                                android:textColor="@color/color_white"
+                                android:text=" đơn hàng"
+                                android:layout_width="match_parent"
+                                android:layout_height="25dp"
+                                android:layout_marginBottom="5dp"/>
+                            <LinearLayout
+                                android:id="@+id/lnl_choose_edit_account"
+                                android:layout_width="match_parent"
+                                android:layout_height="20dp"
+                                android:background="@drawable/radius_linear_oragne">
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="center"
+                                    android:gravity="center"
+                                    android:text="Chỉnh sửa trang cá nhân "
+                                    android:textColor="@color/color_white"
+                                    android:textSize="10sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+
+
+                    </LinearLayout>
+
+
+
             </LinearLayout>
         </LinearLayout>
     </FrameLayout>
@@ -132,4 +130,6 @@
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
+    </LinearLayout>
+
 </LinearLayout>
