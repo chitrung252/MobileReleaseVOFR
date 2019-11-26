@@ -41,11 +41,21 @@ public interface VofrService {
 
     @PUT(ConfigApi.Api.UPDATEINFO)
     Call<ResponseBody> updateaInfoAccount(@HeaderMap Map<String, String> header,@Body RequestBody orderJsonObject);
+
     @POST(ConfigApi.Api.UPDATEAVATAR)
     Call<ResponseBody> updateaImage(@HeaderMap Map<String, String> header,@Query("userId")String userId,@Part MultipartBody.Part  image);
+
     @Headers({"Content-Type: application/json"})
     @POST(ConfigApi.Api.CREATEORDER)
     Call<ResponseBody> createOrder(@HeaderMap Map<String, String> header,@Body RequestBody orderJsonObject);
+
     @GET(ConfigApi.Api.ORDER)
     Call<ResponseBody> getOrder(@Query("accountId") String accountId );
+
+    @GET(ConfigApi.Api.ORDERITEM)
+    Call<ResponseBody> getOrderItem(@Query("orderId") String orderId);
+
+    @GET(ConfigApi.Api.SEARCHPRODUCT)
+    @Headers({"Content-Type: application/json"})
+    Call<ResponseBody> searchProduct(@Query("proName") String proName);
 }

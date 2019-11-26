@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="70dp"
+    android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:weightSum="6"
+        android:padding="@dimen/dp10"
+        >
+        <ImageView
+            android:id="@+id/img_product_image_order"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@mipmap/glasses"
+            android:layout_weight="1"
+            android:layout_gravity="center_vertical"/>
+        <TextView
+            android:id="@+id/txt_product_name_order"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Gọng kính trong suốt cho nam"
+            android:layout_weight="2"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/dp5"/>
+        <TextView
+            android:id="@+id/txt_product_quantity_order"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="1"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:layout_gravity="center_vertical"/>
+        <TextView
+            android:id="@+id/txt_product_price_order"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="100.000.000đ"
+            android:layout_weight="2"
+            android:gravity="right"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="@dimen/dp5"/>
+    </LinearLayout>
+</LinearLayout>

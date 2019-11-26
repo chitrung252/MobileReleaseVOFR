@@ -48,7 +48,8 @@
                     android:weightSum="10"
                     android:orientation="horizontal"
                     android:layout_width="0dp"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="@dimen/dp10">
                     <FrameLayout
                         android:layout_weight="8"
                         android:layout_width="0dp"
@@ -85,7 +86,7 @@
                         android:layout_height="match_parent">
                         <ImageView
                             android:scaleType="fitXY"
-                            android:src="@mipmap/ic_launcher"
+                            android:src="@drawable/ic_three_dots"
                             android:layout_width="@dimen/dp15"
                             android:layout_height="@dimen/dp15">
                         </ImageView>
@@ -117,7 +118,9 @@
                     android:weightSum="10"
                     android:orientation="horizontal"
                     android:layout_width="0dp"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="@dimen/dp10"
+                    >
                     <FrameLayout
                         android:layout_weight="8"
                         android:layout_width="0dp"
@@ -155,7 +158,7 @@
                         android:layout_height="match_parent">
                         <ImageView
                             android:scaleType="fitXY"
-                            android:src="@mipmap/ic_launcher"
+                            android:src="@drawable/ic_three_dots"
                             android:layout_width="@dimen/dp15"
                             android:layout_height="@dimen/dp15">
                         </ImageView>
@@ -188,7 +191,8 @@
                     android:weightSum="10"
                     android:orientation="horizontal"
                     android:layout_width="0dp"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="10dp">
                     <FrameLayout
                         android:layout_weight="8"
                         android:layout_width="0dp"
@@ -224,7 +228,7 @@
                         android:layout_height="match_parent">
                         <ImageView
                             android:scaleType="fitXY"
-                            android:src="@mipmap/ic_launcher"
+                            android:src="@drawable/ic_three_dots"
                             android:layout_width="@dimen/dp15"
                             android:layout_height="@dimen/dp15">
                         </ImageView>
@@ -255,7 +259,8 @@
                     android:weightSum="10"
                     android:orientation="horizontal"
                     android:layout_width="0dp"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="@dimen/dp10">
                     <FrameLayout
                         android:layout_weight="8"
                         android:layout_width="0dp"
@@ -292,7 +297,7 @@
                         android:layout_height="match_parent">
                         <ImageView
                             android:scaleType="fitXY"
-                            android:src="@mipmap/ic_launcher"
+                            android:src="@drawable/ic_three_dots"
                             android:layout_width="@dimen/dp15"
                             android:layout_height="@dimen/dp15">
                         </ImageView>

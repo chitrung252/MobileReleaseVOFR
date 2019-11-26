@@ -37,4 +37,17 @@ public class HomePresenter {
             }
         });
     }
+   public void searchProduct(String productName){
+        mRepository.searchProduct(mContext, productName, new CallBackData<List<Product>>() {
+            @Override
+            public void onSuccess(List<Product> productList) {
+                    mView.showListProductSearch(productList);
+            }
+
+            @Override
+            public void onFail(String message) {
+                mView.showError(message);
+            }
+        });
+   }
 }

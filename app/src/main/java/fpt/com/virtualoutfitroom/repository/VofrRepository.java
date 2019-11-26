@@ -8,6 +8,7 @@ import java.util.List;
 import fpt.com.virtualoutfitroom.model.Account;
 import fpt.com.virtualoutfitroom.model.Category;
 import fpt.com.virtualoutfitroom.model.OrderHistory;
+import fpt.com.virtualoutfitroom.model.OrderItem;
 import fpt.com.virtualoutfitroom.model.Product;
 import fpt.com.virtualoutfitroom.model.ProductImage;
 import fpt.com.virtualoutfitroom.room.AccountItemEntities;
@@ -26,4 +27,6 @@ public interface VofrRepository {
     void updateImage(Context context,String token,String userId,Uri imageUri,CallBackData<String>callBackData);
     void createOrder(Context context,String fullname,double finalTotal,String token,AccountItemEntities accountItemEntities, List<OrderItemEntities> orderItemEntities,CallBackData<String> callBackData);
     void getOrder(Context context, String token, String accountId, CallBackData<List<OrderHistory>> callBackData);
+    void getOrderItem(Context context,String token, String orderId, CallBackData<List<OrderItem>> callBackData);
+    void searchProduct(Context context, String productName, CallBackData<List<Product>> callBackData);
 }

@@ -9,9 +9,11 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -21,11 +23,13 @@ import com.synnapps.carouselview.CarouselView;
 import com.synnapps.carouselview.ImageListener;
 import com.synnapps.carouselview.ViewListener;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import fpt.com.virtualoutfitroom.R;
 import fpt.com.virtualoutfitroom.activities.DetailProductActivity;
+import fpt.com.virtualoutfitroom.activities.SearchProductActivity;
 import fpt.com.virtualoutfitroom.activities.ShopCartActivity;
 import fpt.com.virtualoutfitroom.adapter.RecyclerViewApdapter;
 import fpt.com.virtualoutfitroom.model.Product;
@@ -37,13 +41,14 @@ import fpt.com.virtualoutfitroom.views.HomeView;
 
 public class HomeFragment extends Fragment implements HomeView, View.OnClickListener {
     private RecyclerView mRrvEaring, mRrvGlasses, mRrvHat, mRrvShoes ;
-    private List<Product> mListGlasses, mListHat, mListEaring, mListShoes;
+    private List<Product> mListGlasses, mListHat, mListEaring, mListShoes, mListSearch;
     private RecyclerViewApdapter mRrvAdapterGlasses, mRrvAdapterHat, mRrvAdapterEaring, mRrvAdapterShoes;
     private HomePresenter mPresenter;
     private ImageView mImgShopCart;
     private CarouselView mCarouselView;
     private List<Integer> listImageHeader;
     private KProgressHUD hud;
+    private EditText mEdtSearch;
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -106,6 +111,20 @@ public class HomeFragment extends Fragment implements HomeView, View.OnClickList
         mListShoes = new ArrayList<>();
         mImgShopCart = rootView.findViewById(R.id.img_shop_cart);
         mImgShopCart.setOnClickListener(this);
+        mEdtSearch = rootView.findViewById(R.id.edt_search_home);
+        mEdtSearch.setOnKeyListener(new View.OnKeyListener() {
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                // If the event is a key-down event on the "enter" button
+                if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
+                        (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                    // Perform action on key press
+                    getSpinner();
+                    mPresenter.searchProduct(mEdtSearch.getText().toString());
+                    return true;
+                }
+                return false;
+            }
+        });
     }
     public void updateUIGlasses() {
         mRrvAdapterGlasses = new RecyclerViewApdapter(getActivity(), mListGlasses);
@@ -191,11 +210,23 @@ public class HomeFragment extends Fragment implements HomeView, View.OnClickList
         }
     }
 
+    @Override
+    public void showListProductSearch(List<Product> productList) {
+        hud.dismiss();
+        mListSearch = productList;
+        Intent intent = new Intent(getActivity(), SearchProductActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("LISTPRODUCT", (Serializable) mListSearch);
+        intent.putExtra("BUNDLE",bundle);
+        startActivity(intent);
+    }
+
 
     @Override
     public void showError(String message) {
         Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
     }
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -204,6 +235,7 @@ public class HomeFragment extends Fragment implements HomeView, View.OnClickList
                 break;
         }
     }
+
     void moveToShopCart(){
         Intent intent = new Intent(getActivity(), ShopCartActivity.class);
         startActivity(intent);

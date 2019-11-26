@@ -47,6 +47,7 @@ public class AccountFragment extends Fragment implements UpdateAvataView, View.O
     private View mIndicator;
     private ViewPager mViewPager;
     private int indicatorWidth;
+    private int indicatorHeight;
     SwitchTabAdapter adapter;
     private ImageView mImgLoginFirst;
     private CircleImageView mImageAvata;
@@ -139,8 +140,10 @@ public class AccountFragment extends Fragment implements UpdateAvataView, View.O
             @Override
             public void run() {
                 indicatorWidth = mTabs.getWidth() / mTabs.getTabCount();
+                indicatorHeight = mTabs.getHeight();
                 FrameLayout.LayoutParams indicatorParams = (FrameLayout.LayoutParams) mIndicator.getLayoutParams();
                 indicatorParams.width = indicatorWidth;
+                indicatorParams.height = indicatorHeight;
                 mIndicator.setLayoutParams(indicatorParams);
             }
         });

@@ -7,6 +7,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.kaopiz.kprogresshud.KProgressHUD;
 
@@ -96,6 +97,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     }
     @Override
     public void showError(String message) {
-
+        Toast.makeText(this,"Tên đăng nhập hoặc mật khẩu không đúng",Toast.LENGTH_LONG).show();
+        hud.dismiss();
     }
 }

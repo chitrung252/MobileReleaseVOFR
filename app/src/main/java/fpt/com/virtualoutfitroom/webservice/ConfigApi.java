@@ -14,5 +14,7 @@ public class ConfigApi {
        String UPDATEINFO = "account/update-account";
        String CREATEORDER = "order/create-order";
        String ORDER = "order";
+       String ORDERITEM = "order-item/order-item-history";
+       String SEARCHPRODUCT = "product/search-product-by-name";
     }
 }

@@ -31,6 +31,7 @@ import com.google.ar.sceneform.rendering.ModelRenderable;
 import com.google.ar.sceneform.rendering.Renderable;
 import com.google.ar.sceneform.ux.ArFragment;
 import com.google.ar.sceneform.ux.TransformableNode;
+import com.kaopiz.kprogresshud.KProgressHUD;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -42,14 +43,14 @@ import java.util.Date;
 import fpt.com.virtualoutfitroom.R;
 import fpt.com.virtualoutfitroom.model.Product;
 import fpt.com.virtualoutfitroom.model.ProductImage;
+import fpt.com.virtualoutfitroom.utils.SpinnerManagement;
 
 public class ARShoeActivity extends AppCompatActivity {
     private static final String TAG = R.class.getSimpleName();
     private static final double MIN_OPENGL_VERSION = 3.0;
-
     private ArFragment arFragment;
     private ModelRenderable shoeRenderable;
-
+    private KProgressHUD hub;
     private ModelRenderable legRenderable;
     private Product mProduct;
     private FloatingActionButton btnTakePhoto;
@@ -67,8 +68,8 @@ public class ARShoeActivity extends AppCompatActivity {
         arFragment = (ArFragment) getSupportFragmentManager().findFragmentById(R.id.shoe_fragment);
         btnTakePhoto = (FloatingActionButton)findViewById(R.id.btn_take_photo);
         btnTakePhoto.setOnClickListener(v -> takePhoto());
+        getSpinner();
         initialData();
-
         ModelRenderable.builder()
                 .setSource(this, R.raw.leg_asset)
                 .build()
@@ -90,6 +91,7 @@ public class ARShoeActivity extends AppCompatActivity {
                 .setSource(this, Uri.parse(URLSFB))
                 .build()
                 .thenAccept(renderable -> {
+                    hub.dismiss();
                     shoeRenderable = renderable;
                     shoeRenderable.setRenderPriority(Renderable.RENDER_PRIORITY_LAST);
                     shoeRenderable.setShadowCaster(false);
@@ -125,6 +127,10 @@ public class ARShoeActivity extends AppCompatActivity {
                     legNode.setParent(shoeNode);
                     legNode.setRenderable(legRenderable);
                 });
+    }
+
+    public void getSpinner(){
+        hub = SpinnerManagement.getSpinner(this);
     }
 
     public void initialData() {

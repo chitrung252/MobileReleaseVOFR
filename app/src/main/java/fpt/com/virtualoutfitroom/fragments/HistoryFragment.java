@@ -1,6 +1,7 @@
 package fpt.com.virtualoutfitroom.fragments;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fpt.com.virtualoutfitroom.R;
+import fpt.com.virtualoutfitroom.activities.OrderItemDetailActivity;
 import fpt.com.virtualoutfitroom.adapter.OrderAdapter;
 import fpt.com.virtualoutfitroom.adapter.RecyclerViewApdapter;
 import fpt.com.virtualoutfitroom.model.OrderHistory;
@@ -73,7 +75,11 @@ public class HistoryFragment extends Fragment implements OrderView {
         mRcvOrderAdapter.setOnItemClickedListener(new OrderAdapter.OnItemClickedListener() {
             @Override
             public void onItemClicked(int position) {
-                Toast.makeText(getActivity(),"ahuhu", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(getActivity(), OrderItemDetailActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("ORDER", mListOrder.get(position));
+                intent.putExtra("BUNBLE", bundle);
+                startActivity(intent);
             }
         });
 

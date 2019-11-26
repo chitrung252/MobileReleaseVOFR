@@ -55,8 +55,7 @@ public class ProductCategoryActivity extends BaseActivity implements CategoryVie
             bundle.putSerializable("SUBCATEGORY", categoryList.get(i));
             creator.add(categoryList.get(i).getCategoryName(), PageFragment.class, bundle);
         }
-        mAdapter = new FragmentPagerItemAdapter(getSupportFragmentManager(),
-                creator.create());
+        mAdapter = new FragmentPagerItemAdapter(getSupportFragmentManager(), creator.create());
         mViewPager.setOffscreenPageLimit(categoryList.size());
         mViewPager.setAdapter(mAdapter);
         //set viewPager for SmartTabLayout

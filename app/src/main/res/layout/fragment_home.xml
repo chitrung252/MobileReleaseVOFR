@@ -63,11 +63,9 @@
                     </LinearLayout>
 
                 </FrameLayout>
-
             </LinearLayout>
-
-
             <EditText
+                android:id="@+id/edt_search_home"
                 android:layout_width="300dp"
                 android:layout_height="50dp"
                 android:layout_gravity="bottom|center"

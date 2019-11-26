@@ -7,4 +7,5 @@ import fpt.com.virtualoutfitroom.model.ProductImage;
 
 public interface HomeView extends BaseView{
     void showListProduct(List<Product> productList);
+    void showListProductSearch(List<Product> productList);
 }

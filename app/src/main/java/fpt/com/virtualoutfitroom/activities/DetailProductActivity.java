@@ -72,11 +72,15 @@ public class DetailProductActivity extends BaseActivity implements View.OnClickL
         if(mProduct.getProductImageList() != null){
             String urlImg = RefineImage.getUrlImage(mProduct.getProductImageList(),"img");
             urlGlb = RefineImage.getUrlImage(mProduct.getProductImageList(),"glb");
+            String urlSfb = RefineImage.getUrlImage(mProduct.getProductImageList(),"sfb");
             if(urlImg != null){
                 Picasso.get().load(urlImg).into(imgProductImage);
             }
             if(urlGlb != null){
                 mBtnShow3D.setVisibility(View.VISIBLE);
+            }
+            if(urlSfb == null){
+                btnArView.setVisibility(View.GONE);
             }
         }
         txtName.setText(mProduct.getProductName());
@@ -88,7 +92,6 @@ public class DetailProductActivity extends BaseActivity implements View.OnClickL
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.btn_ar_view:
-                Toast.makeText(this, mProduct.getMasterCategoryId() + "", Toast.LENGTH_LONG).show();
                 if(mProduct.getMasterCategoryId() == 4){
                     viewShoeAr();
                 } else {
@@ -101,9 +104,7 @@ public class DetailProductActivity extends BaseActivity implements View.OnClickL
             break;
             case R.id.button_show_3d:
                 show3d();
-
                 break;
-
         }
     }
 

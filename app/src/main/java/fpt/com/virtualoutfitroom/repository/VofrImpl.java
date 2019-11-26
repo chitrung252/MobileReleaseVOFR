@@ -2,6 +2,7 @@ package fpt.com.virtualoutfitroom.repository;
 
 import android.content.Context;
 import android.net.Uri;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -20,6 +21,7 @@ import java.util.Map;
 import fpt.com.virtualoutfitroom.model.Account;
 import fpt.com.virtualoutfitroom.model.Category;
 import fpt.com.virtualoutfitroom.model.OrderHistory;
+import fpt.com.virtualoutfitroom.model.OrderItem;
 import fpt.com.virtualoutfitroom.model.Product;
 import fpt.com.virtualoutfitroom.model.ProductImage;
 import fpt.com.virtualoutfitroom.model.ResponseResult;
@@ -462,5 +464,83 @@ public class VofrImpl implements VofrRepository {
             callBackData.onFail("Lấy thông tin không thành công");
             }
         });
+    }
+
+    @Override
+    public void getOrderItem(Context context, String token, String orderId, CallBackData<List<OrderItem>> callBackData) {
+        ClientApi  clientApi = new ClientApi();
+        String hearder = "Bearer " + token;
+        Map<String, String> map = new HashMap<>();
+        map.put("Authorization", hearder);
+        Call<ResponseBody> serviceCall = clientApi.rmapService().getOrderItem(orderId);
+        serviceCall.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if(response != null && response.body() != null){
+                    if(response.code() == 200){
+                        try{
+                            String result = response.body().string();
+                            Type type = new TypeToken<ResponseResult<List<OrderItem>>>() {
+                            }.getType();
+                            ResponseResult<List<OrderItem>> responseResult =
+                                    new Gson().fromJson(result, type);
+                            if (responseResult == null) {
+                                callBackData.onFail(response.message());
+                            } else {
+                                List<OrderItem> orderItemHistoryList = responseResult.getData();
+                                callBackData.onSuccess(orderItemHistoryList);
+                            }
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                callBackData.onFail("Get data fail");
+            }
+        });
+    }
+
+    @Override
+    public void searchProduct(Context context, String productName, CallBackData<List<Product>> callBackData) {
+        ClientApi  clientApi = new ClientApi();
+        Call<ResponseBody> serviceCall = clientApi.rmapService().searchProduct(productName);
+        serviceCall.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if(response != null && response.body() != null){
+                    if(response.code() == 200){
+                        try{
+                            String result = response.body().string();
+                            Type type = new TypeToken<ResponseResult<List<Product>>>() {
+                            }.getType();
+                            ResponseResult<List<Product>> responseResult =
+                                    new Gson().fromJson(result, type);
+
+                            if (responseResult == null) {
+                                callBackData.onFail(response.message());
+                            } else {
+                                List<Product> productList = responseResult.getData();
+                                callBackData.onSuccess(productList);
+                            }
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+                    }
+                }
+                else{
+                    Toast.makeText(context, "a", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                callBackData.onFail("Get data fail");
+            }
+        });
+
     }
 }

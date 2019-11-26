@@ -70,7 +70,6 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Recycl
             mImgVCategoryImage = itemView.findViewById(R.id.img_cate_view);
             mTxtCategoryName = itemView.findViewById(R.id.txt_category_name);
             mCardView = itemView.findViewById(R.id.card_view_cate);
-
         }
     }
 }

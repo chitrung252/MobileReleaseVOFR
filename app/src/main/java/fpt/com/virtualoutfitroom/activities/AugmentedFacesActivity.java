@@ -31,6 +31,9 @@ import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.PixelCopy;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.google.ar.core.ArCoreApk;
 import com.google.ar.core.AugmentedFace;
@@ -64,7 +67,7 @@ import fpt.com.virtualoutfitroom.utils.SpinnerManagement;
  * This is an example activity that uses the Sceneform UX package to make common Augmented Faces
  * tasks easier.
  */
-public class AugmentedFacesActivity extends AppCompatActivity {
+public class AugmentedFacesActivity extends BaseActivity {
     private static final String TAG = AugmentedFacesActivity.class.getSimpleName();
 
     private static final double MIN_OPENGL_VERSION = 3.0;
@@ -75,7 +78,8 @@ public class AugmentedFacesActivity extends AppCompatActivity {
     private Product mProduct;
     private FloatingActionButton btnTakePhoto;
     private String URLSFB = "http://107.150.52.213/api-votf/image/20191104181106376304.sfb";
-
+    private ImageView mImgBack;
+    private TextView mTxtProductName;
     private final HashMap<AugmentedFace, AugmentedFaceNode> faceNodeMap = new HashMap<>();
     private KProgressHUD hud;
 
@@ -85,12 +89,18 @@ public class AugmentedFacesActivity extends AppCompatActivity {
     // FutureReturnValueIgnored is not valid
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         if (!checkIsSupportedDeviceOrFinish(this)) {
             return;
         }
-
         setContentView(R.layout.activity_face_mesh);
+        mTxtProductName = findViewById(R.id.txt_product_name);
+        mImgBack = findViewById(R.id.img_back_to_previous);
+        mImgBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
         btnTakePhoto = (FloatingActionButton)findViewById(R.id.btn_take_photo);
         btnTakePhoto.setOnClickListener(v -> takePhoto());
         arFragment = (FaceArFragment) getSupportFragmentManager().findFragmentById(R.id.face_fragment);
@@ -167,6 +177,7 @@ public class AugmentedFacesActivity extends AppCompatActivity {
             }
             i++;
         }
+        mTxtProductName.setText(mProduct.getProductName());
     }
 
     /**
