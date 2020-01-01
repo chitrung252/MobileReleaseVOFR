@@ -62,6 +62,43 @@ public class VofrImpl implements VofrRepository {
                                 List<Product> productList = responseResult.getData();
                                 callBackData.onSuccess(productList);
                             }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                } else {
+                    callBackData.onFail("Tải dữ liệu thất bại!");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                callBackData.onFail("Tải dữ liệu thất bại");
+            }
+        });
+    }
+
+    @Override
+    public void getProduct(Context context,int productId, CallBackData<Product> callBackData) {
+        ClientApi clientApi = new ClientApi();
+        Call<ResponseBody> serviceCall = clientApi.rmapService().getProduct(productId);
+        serviceCall.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response != null && response.body() != null) {
+                    if (response.code() == 200) {
+                        try {
+                            String result = response.body().string();
+                            Type type = new TypeToken<ResponseResult<List<Product>>>() {
+                            }.getType();
+                            ResponseResult<List<Product>> responseResult =
+                                    new Gson().fromJson(result, type);
+                            if (responseResult == null) {
+                                callBackData.onFail(response.message());
+                            } else {
+                                List<Product> product = responseResult.getData();
+                                callBackData.onSuccess(product.get(0));
+                            }
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -121,7 +158,6 @@ public class VofrImpl implements VofrRepository {
                 @Override
                 public void onFailure(Call<ResponseBody> call, Throwable t) {
                     callBackData.onFail("Failure");
-
                 }
             });
 
@@ -393,12 +429,13 @@ public class VofrImpl implements VofrRepository {
             JSONArray  jsonArray = new JSONArray();
             for (int i = 0; i <orderItemEntities.size() ; i++) {
                 JSONObject jsonObject1 = new JSONObject();
-                jsonObject1.put("Price",orderItemEntities.get(i).getProduct().getProductPrice());
+                jsonObject1.put("price",orderItemEntities.get(i).getProduct().getProductPrice());
                 jsonObject1.put("quantity",orderItemEntities.get(i).getQuality());
                 jsonObject1.put("product_id",orderItemEntities.get(i).getProduct().getId());
-                jsonArray.put(jsonObject1.toString());
+                jsonArray.put(jsonObject1);
             }
             jsonObject.put("order_items",jsonArray);
+        int a = 1;
         }catch (JSONException ex){
             ex.printStackTrace();
         }
@@ -532,7 +569,7 @@ public class VofrImpl implements VofrRepository {
                     }
                 }
                 else{
-                    Toast.makeText(context, "a", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Error", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -542,5 +579,47 @@ public class VofrImpl implements VofrRepository {
             }
         });
 
+    }
+
+    @Override
+    public void createUser(Context context, Account account, CallBackData<String> callBackData) {
+        ClientApi  clientApi = new ClientApi();
+        JSONObject jsonObject = new JSONObject();
+        try{
+            jsonObject.put("email", account.getEmail());
+            jsonObject.put("phone_number", account.getPhoneNumber());
+            jsonObject.put("role_id", account.getRoleId());
+            jsonObject.put("username",account.getUserName());
+            jsonObject.put("password", account.getPassword());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObject.toString());
+        Call<ResponseBody> serviceCall = clientApi.rmapService().createUser(body);
+        serviceCall.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if(response != null && response.body() != null){
+                        if(response.code() == 200){
+                            try {
+                                String result = response.body().string();
+                                Type type = new TypeToken<ResponseResult>() {
+                                }.getType();
+                                ResponseResult responseResult =
+                                        new Gson().fromJson(result, type);
+                                callBackData.onSuccess(responseResult.getMessage());
+                            }catch (Exception e){
+                                e.printStackTrace();
+                            }
+                        }
+                }else {
+                    Toast.makeText(context, "Error", Toast.LENGTH_SHORT).show();
+                }
+            }
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                callBackData.onFail("Create user fail");
+            }
+        });
     }
 }

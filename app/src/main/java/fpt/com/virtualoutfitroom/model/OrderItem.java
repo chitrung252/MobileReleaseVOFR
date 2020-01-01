@@ -14,7 +14,7 @@ public class OrderItem implements Serializable {
     @SerializedName("product")
     private Product product;
     @SerializedName("order_id")
-    private int orderId;
+    private String orderId;
 
     public OrderItem() {
     }
@@ -51,11 +51,11 @@ public class OrderItem implements Serializable {
         this.product = product;
     }
 
-    public int getOrderId() {
+    public String getOrderId() {
         return orderId;
     }
 
-    public void setOrderId(int orderId) {
+    public void setOrderId(String orderId) {
         this.orderId = orderId;
     }
 }

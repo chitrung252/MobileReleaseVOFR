@@ -71,5 +71,9 @@ dependencies {
     implementation 'com.github.yalantis:ucrop:2.2.2-native'
     // switch tab
     implementation 'lib.kingja.switchbutton:switchbutton:1.1.8'
+    //gif
+    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.1.+'
+    //PRdownload
+    implementation 'com.mindorks.android:prdownloader:0.5.0'
 
 }

@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -42,6 +43,8 @@ public class ProfileFragment extends Fragment implements AddToRoomView, GetInfor
     private AddAccountToRoomPresenter mAddAccountToRoomPresenter;
     private InformationAccountPresenter mInformationAccountPresenter;
     private Account mAccount;
+    private LinearLayout mLnlUpdateInfo1,mLnlUpdateInfo2;
+    private TextView mTxtEditAcc;
     public ProfileFragment() {
 
     }
@@ -79,13 +82,21 @@ public class ProfileFragment extends Fragment implements AddToRoomView, GetInfor
         mTxtEmail = mView.findViewById(R.id.txt_email_account);
         mTxtPhone = mView.findViewById(R.id.txt_phone_account);
         nmTxtAddress = mView.findViewById(R.id.txt_address_account);
+        mLnlUpdateInfo2 = mView.findViewById(R.id.lnl_update_info_2);
+        mLnlUpdateInfo1 = mView.findViewById(R.id.lnl_update_info_1);
+        mTxtEditAcc = mView.findViewById(R.id.txt_update_info);
+        mTxtEditAcc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), EditAccountActivity.class);
+                startActivity(intent);
+            }
+        });
     }
     private void initialData(){
         mInformationAccountPresenter = new InformationAccountPresenter(this.getContext(),this);
         mInformationAccountPresenter.getInforAccount(userId);
     }
-
-
 
     private void addToRoom(Account account){
         mAccount = account;
@@ -98,10 +109,15 @@ public class ProfileFragment extends Fragment implements AddToRoomView, GetInfor
     }
     @Override
     public void addToRoomSuccess() {
-        mTxtName.setText(mAccount.getFirstName() + " " + mAccount.getLastName());
-        mTxtEmail.setText(mAccount.getEmail());
-        mTxtPhone.setText(mAccount.getPhoneNumber());
-        nmTxtAddress.setText(mAccount.getAddress());
+        if(mAccount.getFirstName().length() <= 0){
+            mLnlUpdateInfo2.setVisibility(View.VISIBLE);
+            mLnlUpdateInfo1.setVisibility(View.GONE);
+        }else{
+            mTxtName.setText(mAccount.getFirstName() + " " + mAccount.getLastName());
+            mTxtEmail.setText(mAccount.getEmail());
+            mTxtPhone.setText(mAccount.getPhoneNumber());
+            nmTxtAddress.setText(mAccount.getAddress());
+        }
     }
     @Override
     public void getInforSuccess(Account account) {

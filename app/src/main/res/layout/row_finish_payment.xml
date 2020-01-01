@@ -16,7 +16,6 @@
         android:layout_width="0dp"
         android:layout_height="match_parent">
         <ImageView
-            android:scaleType="fitXY"
             android:background="@drawable/edit_text_background"
             android:id="@+id/image_view_product_payment"
             android:src="@mipmap/ic_launcher"

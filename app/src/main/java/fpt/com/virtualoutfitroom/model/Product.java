@@ -3,6 +3,7 @@ package fpt.com.virtualoutfitroom.model;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.Comparator;
 import java.util.List;
 
 public class Product implements Serializable {
@@ -31,6 +32,16 @@ public class Product implements Serializable {
 
     @SerializedName("master_category_id")
     private int masterCategoryId;
+    private int clicked;
+
+    public int getClicked() {
+        return clicked;
+    }
+
+    public void setClicked(int clicked) {
+        this.clicked = clicked;
+    }
+
     public int getMasterCategoryId() {
         return masterCategoryId;
     }
@@ -38,7 +49,6 @@ public class Product implements Serializable {
     public void setMasterCategoryId(int masterCategoryId) {
         this.masterCategoryId = masterCategoryId;
     }
-
     public Product() {
     }
 
@@ -105,5 +115,4 @@ public class Product implements Serializable {
     public void setProductPrice(Double productPrice) {
         this.productPrice = productPrice;
     }
-
 }

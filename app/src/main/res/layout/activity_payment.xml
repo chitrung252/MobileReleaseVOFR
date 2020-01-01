@@ -52,7 +52,7 @@
             app:stl_underlineThickness="0dp">
 
         </com.ogaclejapan.smarttablayout.SmartTabLayout>
-        <android.support.v4.view.ViewPager
+        <fpt.com.virtualoutfitroom.adapter.CustomViewPager
             android:id="@+id/view_pager_payment"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />

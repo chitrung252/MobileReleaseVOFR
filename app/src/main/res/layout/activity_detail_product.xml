@@ -102,13 +102,32 @@
                 android:layout_weight="1"
                 android:orientation="vertical">
 
-                <Button
-                    android:id="@+id/btn_ar_view"
+                <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Thử AR"
-                    android:textColor="@color/color_white"
-                    android:background="@drawable/button_ar_background"/>
+                    android:background="@drawable/button_gray_background"
+                    >
+                    <Button
+                        android:id="@+id/btn_ar_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Thử AR"
+                        android:textColor="@color/color_white"
+                        android:background="@drawable/button_ar_background"
+                        />
+                    <pl.droidsonroids.gif.GifImageView
+                        android:id="@+id/gif_view_loading"
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
+                        android:src="@drawable/loading"
+                        android:layout_gravity="center"
+                        android:padding="@dimen/dp10"
+                        android:layout_margin="1dp"
+                        android:visibility="gone"
+                        />
+
+                </FrameLayout>
+
 
                 <Button
                     android:id="@+id/btn_show_bottom_sheet"
@@ -140,12 +159,23 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="kinh mat"/>
-                <TextView
+                <LinearLayout
+                    android:id="@+id/lnl_product_seen"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Sản Phẩm liên quan"
-                    android:textColor="@color/color_cus_blue"
-                    android:textSize="20sp" />
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Sản phẩm đã xem"
+                        android:textColor="@color/color_cus_blue"
+                        android:textSize="20sp" />
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/rcv_product_seen"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+                </LinearLayout>
+
             </LinearLayout>
         </android.support.v4.widget.NestedScrollView>
 

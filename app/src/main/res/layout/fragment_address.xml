@@ -9,306 +9,157 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="@dimen/dp20"
+            >
+            <EditText
+                android:id="@+id/edt_name_payment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/edit_text_cus_background"
+                android:paddingTop="@dimen/dp10"
+                android:paddingLeft="@dimen/dp15"
+                android:paddingRight="@dimen/dp15"
+                android:paddingBottom="@dimen/dp3"
+                android:text=""
+                android:drawableRight="@drawable/ic_user_black"
+                android:inputType="text"
+                android:maxLines="1"
+                />
+            <TextView
+                android:layout_width="110dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dp15"
+                android:layout_marginTop="3dp"
+                android:background="@drawable/text_view_cus_background"
+                android:textSize="14sp"
+                android:text=" Họ và Tên "
+                android:paddingLeft="@dimen/dp5"
+                android:paddingRight="@dimen/dp5"
+                android:textColor="@color/color_white"
+                android:gravity="center"
+                />
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="@dimen/dp25">
+            <EditText
+                android:id="@+id/edt_email_payment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/edit_text_cus_background"
+                android:paddingTop="@dimen/dp10"
+                android:paddingLeft="@dimen/dp15"
+                android:paddingRight="@dimen/dp15"
+                android:paddingBottom="@dimen/dp3"
+                android:text=""
+                android:drawableRight="@drawable/ic_envelope_black"
+                android:inputType="text"
+                android:maxLines="1"
+                />
+            <TextView
+                android:layout_width="110dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dp15"
+                android:layout_marginTop="3dp"
+                android:background="@drawable/text_view_cus_background"
+                android:textSize="14sp"
+                android:text=" Địa chỉ Email "
+                android:paddingLeft="@dimen/dp5"
+                android:paddingRight="@dimen/dp5"
+                android:textColor="@color/color_white"
+                android:gravity="center"
+                />
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="@dimen/dp25">
+            <EditText
+                android:id="@+id/edt_phone_payment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/edit_text_cus_background"
+                android:paddingTop="@dimen/dp10"
+                android:paddingLeft="@dimen/dp15"
+                android:paddingRight="@dimen/dp15"
+                android:paddingBottom="@dimen/dp3"
+                android:text=""
+                android:drawableRight="@drawable/ic_phone_black"
+                android:inputType="number"
+                android:maxLines="1"/>
+            <TextView
+                android:layout_width="110dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dp15"
+                android:layout_marginTop="3dp"
+                android:background="@drawable/text_view_cus_background"
+                android:textSize="14sp"
+                android:text=" Số điện thoại "
+                android:paddingLeft="@dimen/dp5"
+                android:paddingRight="@dimen/dp5"
+                android:textColor="@color/color_white"
+                android:gravity="center"
+                />
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="@dimen/dp25">
+            <EditText
+                android:id="@+id/edt_address_payment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/edit_text_cus_background"
+                android:paddingTop="@dimen/dp10"
+                android:paddingLeft="@dimen/dp15"
+                android:paddingRight="@dimen/dp15"
+                android:paddingBottom="@dimen/dp3"
+                android:text=""
+                android:drawableRight="@drawable/ic_address"
+                android:inputType="textMultiLine"
+                android:maxLines="1"/>
+            <TextView
+                android:layout_width="110dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dp15"
+                android:layout_marginTop="3dp"
+                android:background="@drawable/text_view_cus_background"
+                android:textSize="14sp"
+                android:text=" Địa chỉ GH "
+                android:paddingLeft="@dimen/dp5"
+                android:paddingRight="@dimen/dp5"
+                android:textColor="@color/color_white"
+                android:gravity="center"
+                />
+        </RelativeLayout>
         <TextView
             android:layout_marginTop="@dimen/dp10"
             android:layout_marginRight="@dimen/dp10"
-            android:layout_marginLeft="@dimen/dp10"
+            android:layout_marginLeft="@dimen/dp20"
             android:textSize="15sp"
             android:textColor="@color/color_cus_light_gray"
-            android:text="Địa chỉ thanh toán"
+            android:text="Vui lòng nhập thông tin chính xác để thanh toán"
             android:textStyle="bold"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
         </TextView>
-        <LinearLayout
-            android:layout_marginTop="@dimen/dp10"
-            android:layout_width="match_parent"
-            android:orientation="vertical"
-            android:layout_height="match_parent">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:orientation="horizontal"
-                android:weightSum="10"
-                android:layout_marginTop="@dimen/dp5"
-                android:layout_marginBottom="@dimen/dp5"
-                android:layout_height="90dp">
-                <TextView
-                    android:textSize="@dimen/sp16"
-                    android:text="Họ và tên :"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:layout_weight="3"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent">
-                </TextView>
-                <LinearLayout
-                    android:background="@drawable/edit_text_background"
-                    android:layout_weight="7"
-                    android:weightSum="10"
-                    android:orientation="horizontal"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginRight="@dimen/dp10">
-                    <FrameLayout
-                        android:layout_weight="8"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                    >
-                        <TextView
-                            android:id="@+id/txt_name_payment"
-                            android:textStyle="bold"
-                            android:layout_gravity="center|center_horizontal"
-                            android:textColor="@color/color_black"
-                            android:text="Nguyễn Đình Chí Trung"
-                            android:gravity="center"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent">
-
-                        </TextView>
-                        <EditText
-                            android:visibility="gone"
-                            android:id="@+id/edt_name_payment"
-                            android:textStyle="bold"
-                            android:gravity="center|center_horizontal"
-                            android:textColor="@color/color_black"
-                            android:textSize="15sp"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent">
-                        </EditText>
-                    </FrameLayout>
-                    <LinearLayout
-                        android:id="@+id/lnl_button_name"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:layout_weight="2"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent">
-                        <ImageView
-                            android:scaleType="fitXY"
-                            android:src="@drawable/ic_three_dots"
-                            android:layout_width="@dimen/dp15"
-                            android:layout_height="@dimen/dp15">
-                        </ImageView>
-                    </LinearLayout>
-                </LinearLayout>
-
-
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:orientation="horizontal"
-                android:weightSum="10"
-                android:layout_marginTop="@dimen/dp5"
-                android:layout_marginBottom="@dimen/dp5"
-                android:layout_height="90dp">
-                <TextView
-                    android:textSize="@dimen/sp16"
-                    android:text="Email:"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:layout_weight="3"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent">
-
-                </TextView>
-                <LinearLayout
-                    android:background="@drawable/edit_text_background"
-                    android:layout_weight="7"
-                    android:weightSum="10"
-                    android:orientation="horizontal"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginRight="@dimen/dp10"
-                    >
-                    <FrameLayout
-                        android:layout_weight="8"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        >
-                    <TextView
-                        android:id="@+id/txt_email_payment"
-                        android:textStyle="bold"
-                        android:layout_gravity="center|center_horizontal"
-                        android:textColor="@color/color_black"
-                        android:text="trungndcse1234@fp.edu.v"
-                        android:gravity="center"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
-                    </TextView>
-                    <EditText
-                        android:visibility="gone"
-                        android:id="@+id/edt_email_payment"
-                        android:textStyle="bold"
-                        android:gravity="center|center_horizontal"
-                        android:textColor="@color/color_black"
-                        android:textSize="15sp"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-                    </EditText>
-                    </FrameLayout>
-                    <LinearLayout
-                        android:id="@+id/lnl_button_email"
-
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:layout_weight="2"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent">
-                        <ImageView
-                            android:scaleType="fitXY"
-                            android:src="@drawable/ic_three_dots"
-                            android:layout_width="@dimen/dp15"
-                            android:layout_height="@dimen/dp15">
-                        </ImageView>
-                    </LinearLayout>
-                </LinearLayout>
-
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:orientation="horizontal"
-                android:weightSum="10"
-                android:layout_marginTop="@dimen/dp5"
-                android:layout_marginBottom="@dimen/dp5"
-                android:layout_height="90dp">
-                <TextView
-                    android:textSize="@dimen/sp16"
-                    android:text="Số điện thoại  :"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:layout_weight="3"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent">
-
-                </TextView>
-                <LinearLayout
-                    android:background="@drawable/edit_text_background"
-                    android:layout_weight="7"
-                    android:weightSum="10"
-                    android:orientation="horizontal"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginRight="10dp">
-                    <FrameLayout
-                        android:layout_weight="8"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        >
-                    <TextView
-                        android:id="@+id/txt_phone_payment"
-                        android:textStyle="bold"
-                        android:layout_gravity="center|center_horizontal"
-                        android:textColor="@color/color_black"
-                        android:text="012345678"                        android:gravity="center"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
-                    </TextView>
-                    <EditText
-                        android:visibility="gone"
-                        android:id="@+id/edt_phone_payment"
-                        android:textStyle="bold"
-                        android:gravity="center|center_horizontal"
-                        android:textColor="@color/color_black"
-                        android:textSize="15sp"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-                    </EditText>
-                    </FrameLayout>
-                    <LinearLayout
-                        android:id="@+id/lnl_button_phone"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:layout_weight="2"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent">
-                        <ImageView
-                            android:scaleType="fitXY"
-                            android:src="@drawable/ic_three_dots"
-                            android:layout_width="@dimen/dp15"
-                            android:layout_height="@dimen/dp15">
-                        </ImageView>
-                    </LinearLayout>
-                </LinearLayout>
-
-
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:orientation="horizontal"
-                android:weightSum="10"
-                android:layout_marginTop="@dimen/dp5"
-                android:layout_marginBottom="@dimen/dp5"
-                android:layout_height="90dp">
-                <TextView
-                    android:textSize="@dimen/sp16"
-                    android:text="Địa chỉ :"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:layout_weight="3"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent">
-                </TextView>
-                <LinearLayout
-                    android:background="@drawable/edit_text_background"
-                    android:layout_weight="7"
-                    android:weightSum="10"
-                    android:orientation="horizontal"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginRight="@dimen/dp10">
-                    <FrameLayout
-                        android:layout_weight="8"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        >
-                    <TextView
-                        android:id="@+id/txt_address_payment"
-                        android:textStyle="bold"
-                        android:layout_gravity="center|center_horizontal"
-                        android:textColor="@color/color_black"
-                        android:text="496/18 Lê Xuân Oai,Phường Long Thành,Quận 9,Thành Phố Hồ Chí Minh"
-                        android:gravity="center"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
-                    </TextView>
-                    <EditText
-                        android:visibility="gone"
-                        android:id="@+id/edt_address_payment"
-                        android:textStyle="bold"
-                        android:gravity="center|center_horizontal"
-                        android:textColor="@color/color_black"
-                        android:textSize="15sp"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-                    </EditText>
-                    </FrameLayout>
-                    <LinearLayout
-                        android:id="@+id/lnl_button_address"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:layout_weight="2"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent">
-                        <ImageView
-                            android:scaleType="fitXY"
-                            android:src="@drawable/ic_three_dots"
-                            android:layout_width="@dimen/dp15"
-                            android:layout_height="@dimen/dp15">
-                        </ImageView>
-                    </LinearLayout>
-                </LinearLayout>
-
-
-            </LinearLayout>
-
-
-        </LinearLayout>
     </LinearLayout>
 
 </android.support.v4.widget.NestedScrollView>

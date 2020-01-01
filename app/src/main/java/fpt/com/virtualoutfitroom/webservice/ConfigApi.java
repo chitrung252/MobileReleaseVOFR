@@ -1,7 +1,7 @@
 package fpt.com.virtualoutfitroom.webservice;
 
 public class ConfigApi {
-    public static final String BASE_URL = "http://107.150.52.213/api-votf/api/";
+    public static final String BASE_URL = "http://23.94.26.75/vat-api/api/";
     public interface Api{
        String PRODUCT = "product";
        String LOGIN = "account/check-login-mobile";
@@ -12,9 +12,10 @@ public class ConfigApi {
        String UPDATEAVATAR="update-user-image";
        String GETINFORACCOUNT ="account";
        String UPDATEINFO = "account/update-account";
-       String CREATEORDER = "order/create-order";
+       String CREATEORDER = "order/create-order";;
        String ORDER = "order";
        String ORDERITEM = "order-item/order-item-history";
        String SEARCHPRODUCT = "product/search-product-by-name";
+       String CREATUSER = "account/create-account";
     }
 }

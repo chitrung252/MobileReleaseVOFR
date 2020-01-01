@@ -1,5 +1,6 @@
 package fpt.com.virtualoutfitroom.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -18,8 +19,9 @@ import fpt.com.virtualoutfitroom.fragments.HomeFragment;
 import fpt.com.virtualoutfitroom.fragments.MessagesFragment;
 
 public class HomeActivity extends BaseActivity {
-    private SpaceTabLayout mSpaceTabLayout;
+    public SpaceTabLayout mSpaceTabLayout;
     ViewPager viewPager;
+    static List<Fragment> fragmentList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,7 +29,7 @@ public class HomeActivity extends BaseActivity {
         initialView(savedInstanceState);
     }
     private void initialView(Bundle savedInstanceState){
-        List<Fragment> fragmentList = new ArrayList<>();
+        fragmentList = new ArrayList<>();
         fragmentList.add(HomeFragment.newInstance());
         fragmentList.add(CategoryFragment.newInstance());
         fragmentList.add(AccountFragment.newInstance());
@@ -35,6 +37,7 @@ public class HomeActivity extends BaseActivity {
         mSpaceTabLayout = (SpaceTabLayout) findViewById(R.id.spaceTabLayout);
         mSpaceTabLayout.initialize(viewPager, getSupportFragmentManager(),
                 fragmentList, savedInstanceState);
+
     }
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -49,14 +52,21 @@ public class HomeActivity extends BaseActivity {
             if(data!= null){
                 boolean success = data.getBooleanExtra("success", false);
                 if(success){
-                    List<Fragment> fragmentList = new ArrayList<>();
-                    fragmentList.add(HomeFragment.newInstance());
-                    fragmentList.add(CategoryFragment.newInstance());
-                    fragmentList.add(AccountFragment.newInstance());
+                    //doan code duoi sai vi no se tao ra 3 instance moi khong attach voi actitity nen
+                    // khi getActivity tu fragment se bi null
+//                    fragmentList.clear();
+//                    fragmentList.add(HomeFragment.newInstance());
+//                    fragmentList.add(CategoryFragment.newInstance());
+//                    fragmentList.add(AccountFragment.newInstance());
                     mSpaceTabLayout.initialize(viewPager, getSupportFragmentManager(),
                             fragmentList, new Bundle());
                 }
             }
         }
+    }
+
+    public static void updateUI(){
+        HomeFragment homeFragment = (HomeFragment) fragmentList.get(0);
+        homeFragment.setCountShopCart();
     }
 }

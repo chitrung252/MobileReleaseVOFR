@@ -28,8 +28,8 @@ public class PaymentCustomTab implements SmartTabLayout.TabProvider {
     public enum PaymentActivityPages {
         TAB_1(0,  R.drawable.ic_location, AddressFragment.newInstance()),
         TAB_2(1,  R.drawable.ic_method, MethodFragment.newInstance()),
-        TAB_3(2,  R.drawable.ic_finish, FinishFragment.newInstance("Chí Trung","fsfsd",
-                "fssd","fsdf"));
+        TAB_3(2,  R.drawable.ic_finish, FinishFragment.newInstance("Chí Trung","trung",
+                "0905111526","Hồ Chí Minh"));
         public int index;
         public int resourceId;
         public Fragment fragment;

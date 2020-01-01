@@ -21,6 +21,9 @@ public interface VofrService {
     @GET(ConfigApi.Api.PRODUCT)
     Call<ResponseBody> getListProduct();
 
+    @GET(ConfigApi.Api.PRODUCT)
+    Call<ResponseBody> getProduct(@Query("id") int productId);
+
     @POST(ConfigApi.Api.LOGIN)
     @Headers({"Content-Type: application/json"})
     Call<ResponseBody> checkLogin(@Body RequestBody requestBody);
@@ -58,4 +61,7 @@ public interface VofrService {
     @GET(ConfigApi.Api.SEARCHPRODUCT)
     @Headers({"Content-Type: application/json"})
     Call<ResponseBody> searchProduct(@Query("proName") String proName);
+
+    @POST(ConfigApi.Api.CREATUSER)
+    Call<ResponseBody> createUser(@Body RequestBody userJsonObject);
 }

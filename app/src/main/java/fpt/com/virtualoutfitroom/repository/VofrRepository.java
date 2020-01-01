@@ -17,6 +17,7 @@ import fpt.com.virtualoutfitroom.webservice.CallBackData;
 
 public interface VofrRepository {
     void getListProduct(Context context, CallBackData<List<Product>> callBackData);
+    void getProduct(Context context,int productId, CallBackData<Product> callBackData);
     void checkLogin(Context context, String email, String password, CallBackData<Account> callBackData);
     void getListCategory(Context context, CallBackData<List<Category>> callbackData);
     void getListSubCategory(Context context,int categoryId, CallBackData<List<Category>> callbackData);
@@ -29,4 +30,5 @@ public interface VofrRepository {
     void getOrder(Context context, String token, String accountId, CallBackData<List<OrderHistory>> callBackData);
     void getOrderItem(Context context,String token, String orderId, CallBackData<List<OrderItem>> callBackData);
     void searchProduct(Context context, String productName, CallBackData<List<Product>> callBackData);
+    void createUser(Context context, Account account, CallBackData<String> callBackData);
 }

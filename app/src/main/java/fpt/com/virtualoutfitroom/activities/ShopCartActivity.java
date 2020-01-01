@@ -3,6 +3,7 @@ package fpt.com.virtualoutfitroom.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -22,6 +23,9 @@ import fpt.com.virtualoutfitroom.adapter.RecyclerViewApdapter;
 import fpt.com.virtualoutfitroom.adapter.ShopCartAdapter;
 import fpt.com.virtualoutfitroom.adapter.SwipeToDeleteCallback;
 import fpt.com.virtualoutfitroom.dialog.BottomSheetEditOrder;
+import fpt.com.virtualoutfitroom.fragments.AccountFragment;
+import fpt.com.virtualoutfitroom.fragments.CategoryFragment;
+import fpt.com.virtualoutfitroom.fragments.HomeFragment;
 import fpt.com.virtualoutfitroom.presenter.ShoppingCartPresenter;
 import fpt.com.virtualoutfitroom.room.OrderItemEntities;
 import fpt.com.virtualoutfitroom.utils.BundleString;
@@ -158,6 +162,11 @@ public class ShopCartActivity extends BaseActivity implements ShoppingCartView, 
                 mListOrder.remove(position);
                 if(mListOrder.size() == 0){
                     setLayoutEmpty();
+                    SharePreferenceUtils.saveIntSharedPreference(getApplication(),BundleString.COUNTSHOPCART, 0);
+                    HomeActivity.updateUI();
+                }else{
+                    costTotal(mListOrder);
+                    countShopCart(mListOrder);
                 }
             }
         };
@@ -165,9 +174,21 @@ public class ShopCartActivity extends BaseActivity implements ShoppingCartView, 
         itemTouchhelper.attachToRecyclerView(mRcvShopCart);
     }
     public void costTotal(List<OrderItemEntities> mListOrder){
+        mTotal = 0;
         for (int i = 0; i < mListOrder.size(); i++) {
             mTotal  += mListOrder.get(i).getQuality()*mListOrder.get(i).getProduct().getProductPrice();
         }
         mTxtTotal.setText(ChangeValue.formatDecimalPrice(mTotal));
+    }
+
+    private void countShopCart(List<OrderItemEntities> mListOrder){
+        int totalCount = 0;
+        for (OrderItemEntities order:mListOrder) {
+           totalCount += order.getQuality();
+        }
+        SharePreferenceUtils.saveIntSharedPreference(this,BundleString.COUNTSHOPCART, totalCount);
+        //update quantity
+        HomeActivity.updateUI();
+
     }
 }

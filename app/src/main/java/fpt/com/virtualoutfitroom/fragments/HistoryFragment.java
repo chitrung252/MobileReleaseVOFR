@@ -87,7 +87,7 @@ public class HistoryFragment extends Fragment implements OrderView {
 
     @Override
     public void getOrderSuccess(List<OrderHistory> orderHistory) {
-        if(orderHistory != null){
+        if(orderHistory.size() > 0){
             mLnlHasHistory.setVisibility(View.VISIBLE);
             mLnlNoHistory.setVisibility(View.GONE);
             mListOrder = orderHistory;

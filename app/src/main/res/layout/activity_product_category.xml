@@ -9,7 +9,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:background="@color/color_white">
         <ImageView
             android:id="@+id/img_back_to_previous"
             android:layout_width="wrap_content"

@@ -19,12 +19,15 @@ import com.kaopiz.kprogresshud.KProgressHUD;
 import java.util.List;
 
 import fpt.com.virtualoutfitroom.R;
+import fpt.com.virtualoutfitroom.activities.HomeActivity;
 import fpt.com.virtualoutfitroom.model.Product;
 import fpt.com.virtualoutfitroom.presenter.CartPresenter;
 import fpt.com.virtualoutfitroom.presenter.ShoppingCartPresenter;
 import fpt.com.virtualoutfitroom.room.OrderItemEntities;
+import fpt.com.virtualoutfitroom.utils.BundleString;
 import fpt.com.virtualoutfitroom.utils.ChangeValue;
 import fpt.com.virtualoutfitroom.utils.CurrencyManagement;
+import fpt.com.virtualoutfitroom.utils.SharePreferenceUtils;
 import fpt.com.virtualoutfitroom.utils.SpinnerManagement;
 import fpt.com.virtualoutfitroom.views.DeleteToRomView;
 import fpt.com.virtualoutfitroom.views.ShoppingCartView;
@@ -39,6 +42,7 @@ public class BottomSheetEditOrder extends BottomSheetDialogFragment implements V
     private ImageView mImgProduct;
     private double mTotal = 0;
     private int mQuantity = 1;
+    private int mOldQuantity;
     private EditText mEdtQuantity;
     private ImageView mImgIncrease;
     private ImageView mImgDecrease;
@@ -85,6 +89,7 @@ public class BottomSheetEditOrder extends BottomSheetDialogFragment implements V
         Bundle bundle = this.getArguments();
         orderItemEntities =(OrderItemEntities) bundle.getSerializable("Order");
         mQuantity = orderItemEntities.getQuality();
+        mOldQuantity = orderItemEntities.getQuality();
         mTotal = orderItemEntities.getTotal();
         mProductName.setText(orderItemEntities.getProduct().getProductName());
         mProductPrice.setText(ChangeValue.formatDecimalPrice(orderItemEntities.getTotal()));
@@ -133,9 +138,17 @@ public class BottomSheetEditOrder extends BottomSheetDialogFragment implements V
     private void  dismissBottomSheet(){
         getDialog().cancel();
     }
-
+    private void countShopCart(){
+        int count = SharePreferenceUtils.getIntSharedPreference(getActivity(), BundleString.COUNTSHOPCART);
+        int num = mOldQuantity - mQuantity;
+        if(num != 0){
+            SharePreferenceUtils.saveIntSharedPreference(getActivity(),BundleString.COUNTSHOPCART, count - num);
+        }
+        HomeActivity.updateUI();
+    }
     @Override
     public void updateCardSuccess() {
+            countShopCart();
             dismissBottomSheet();
         new Handler().postDelayed(new Runnable() {
             @Override

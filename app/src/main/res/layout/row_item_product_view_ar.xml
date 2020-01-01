@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+<!--    <LinearLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:orientation="horizontal">-->
+<!--        <ImageView-->
+<!--            android:layout_width="100dp"-->
+<!--            android:layout_height="100dp"-->
+<!--            android:src="@mipmap/glasses"/>-->
+<!--        <LinearLayout-->
+<!--            android:layout_width="200dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:orientation="vertical"-->
+<!--            android:layout_gravity="center_vertical"-->
+<!--            android:padding="@dimen/dp15">-->
+<!--            <TextView-->
+<!--                android:id="@+id/txt_product_name_update"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:textSize="@dimen/dp20"-->
+<!--                android:text="Kinh Mat" />-->
+<!--            <TextView-->
+<!--                android:id="@+id/txt_product_price_update"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:textSize="@dimen/dp20"-->
+<!--                android:text="300.000"/>-->
+<!--            <LinearLayout-->
+<!--                android:weightSum="10"-->
+<!--                android:orientation="horizontal"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content">-->
+
+<!--                <LinearLayout-->
+<!--                    android:layout_width="0dp"-->
+<!--                    android:layout_height="match_parent"-->
+<!--                    android:layout_weight="10"-->
+<!--                    android:gravity="left">-->
+<!--                    <ImageView-->
+<!--                        android:backgroundTint="@color/color_cus_blue"-->
+<!--                        android:id="@+id/image_decrease_setting_order_update"-->
+<!--                        android:layout_width="30dp"-->
+<!--                        android:layout_height="30dp"-->
+<!--                        android:src="@mipmap/ic_decrease"-->
+<!--                        android:layout_marginTop="5dp"/>-->
+<!--                    <EditText-->
+<!--                        android:textStyle="bold"-->
+<!--                        android:id="@+id/edit_text_quantity_order"-->
+<!--                        android:layout_width="@dimen/dp50"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:textAlignment="center"-->
+<!--                        android:textColor="@color/color_cus_blue"-->
+<!--                        android:textSize="@dimen/sp18"-->
+<!--                        android:layout_marginTop="-8dp"/>-->
+
+<!--                    <ImageView-->
+<!--                        android:id="@+id/image_increase_setting_order_update"-->
+<!--                        android:layout_width="30dp"-->
+<!--                        android:layout_height="30dp"-->
+<!--                        android:src="@mipmap/ic_increase"-->
+<!--                        android:layout_marginTop="5dp"/>-->
+<!--                </LinearLayout>-->
+
+<!--            </LinearLayout>-->
+
+<!--        </LinearLayout>-->
+<!--        <Button-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:background="@drawable/radius_button_red"-->
+<!--            android:drawableLeft="ic_"-->
+<!--            android:textColor="@color/color_white"-->
+<!--            />-->
+<!--    </LinearLayout>-->
+
+
+    </LinearLayout>

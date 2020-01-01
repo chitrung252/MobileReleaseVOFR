@@ -33,17 +33,18 @@ import fpt.com.virtualoutfitroom.views.GetInforAccountView;
 import fpt.com.virtualoutfitroom.views.ShoppingCartView;
 
 
-public class FinishFragment extends Fragment implements GetInforAccountView, ShoppingCartView {
+public class FinishFragment extends Fragment implements ShoppingCartView {
     private View mView;
     private RecyclerView mRcvPayemnt3;
     private FinishPaymentAdapter mAdapter;
     private List<ProductPayment> data;
     private TextView mTxtAddres;
+    private TextView mTxtUserName;
+    private TextView mTxtEmail;
+    private TextView mTxtPhone;
     private TextView mTxtNameMethod;
     private ShoppingCartPresenter mShoppingCartPresenter;
     private List<OrderItemEntities> mOrderItemEntities;
-    private String mAddress;
-     private InformationAccountPresenter mInformationAccountPresenter;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -58,7 +59,7 @@ public class FinishFragment extends Fragment implements GetInforAccountView, Sho
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initialView();
-        getData();
+        initialData();
     }
     public static Fragment newInstance(String name, String email, String phone, String address){
         FinishFragment fragment = new FinishFragment();
@@ -68,21 +69,19 @@ public class FinishFragment extends Fragment implements GetInforAccountView, Sho
     }
     private void initialView(){
         mRcvPayemnt3 = mView.findViewById(R.id.rcv_finish);
+        mTxtUserName =mView.findViewById(R.id.txt_user_name_finish);
+        mTxtEmail = mView.findViewById(R.id.txt_email_finish);
+        mTxtPhone = mView.findViewById(R.id.txt_phone_finish);
         mTxtAddres = mView.findViewById(R.id.txt_address_finish);
         mTxtNameMethod = mView.findViewById(R.id.txt_method_finish);
         final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRcvPayemnt3.setLayoutManager(layoutManager);
     }
-    public  void getData(){
-        mInformationAccountPresenter = new InformationAccountPresenter(getActivity().getApplication(),this);
-        mInformationAccountPresenter.getAccountFromRoom();
-    }
-    private void  initialData(Account account){
-        mAddress = account.getAddress();
-        mTxtAddres.setText(mAddress + "");
-       mShoppingCartPresenter = new ShoppingCartPresenter(getContext(),getActivity().getApplication(),this);
-       mShoppingCartPresenter.getAllOrderItem();
+
+    private void  initialData(){
+        mShoppingCartPresenter = new ShoppingCartPresenter(getContext(),getActivity().getApplication(),this);
+        mShoppingCartPresenter.getAllOrderItem();
     }
     private void updateUỊ̣(){
         if(mAdapter == null){
@@ -94,14 +93,18 @@ public class FinishFragment extends Fragment implements GetInforAccountView, Sho
         }
     }
     public void getData(String name,String email,String phone,String address){
-        mTxtAddres.setText(address+"");
+        mTxtUserName.setText("Tên người nhận: " + name);
+        mTxtEmail.setText("Email: " + email);
+        mTxtPhone.setText("Phone: " + phone);
+        mTxtAddres.setText("Địa chỉ: " + address);
     }
-    public void getMethoid(int position){
+    public void getMethod(){
+        int position = SharePreferenceUtils.getIntSharedPreference(getActivity(),"METHOD");
         if(position == 1 ){
             mTxtNameMethod.setText("Thanh toán khi nhận hàng");
         }
         else if(position == 2 ){
-            mTxtNameMethod.setText("Thanh toán bằng thẻ ngân hàng");
+            mTxtNameMethod.setText("Thanh toán tại cửa hàng");
         }
         else if(position == 3){
             mTxtNameMethod.setText("Thanh toán bằng Paypal");
@@ -110,19 +113,6 @@ public class FinishFragment extends Fragment implements GetInforAccountView, Sho
             mTxtNameMethod.setText("Bạn chưa chọn phương thức");
     }
 
-    @Override
-    public void getInforSuccess(Account account) {
-    }
-
-    @Override
-    public void getInforFail(String message) {
-
-    }
-
-    @Override
-    public void getAccountFromRoom(AccountItemEntities accountItemEntities) {
-        initialData(accountItemEntities.getAccount());
-    }
     @Override
     public void showListOrderItem(List<OrderItemEntities> orderItemEntities) {
         mOrderItemEntities = orderItemEntities;

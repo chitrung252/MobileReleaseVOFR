@@ -19,13 +19,16 @@ import java.util.List;
 import java.util.UUID;
 
 import fpt.com.virtualoutfitroom.R;
+import fpt.com.virtualoutfitroom.activities.HomeActivity;
 import fpt.com.virtualoutfitroom.model.Category;
 import fpt.com.virtualoutfitroom.model.Product;
 import fpt.com.virtualoutfitroom.presenter.CartPresenter;
 import fpt.com.virtualoutfitroom.room.OrderItemEntities;
+import fpt.com.virtualoutfitroom.utils.BundleString;
 import fpt.com.virtualoutfitroom.utils.ChangeValue;
 import fpt.com.virtualoutfitroom.utils.CurrencyManagement;
 import fpt.com.virtualoutfitroom.utils.RefineImage;
+import fpt.com.virtualoutfitroom.utils.SharePreferenceUtils;
 import fpt.com.virtualoutfitroom.views.AddToCartView;
 import fpt.com.virtualoutfitroom.views.UpdateCardView;
 
@@ -87,6 +90,7 @@ public class BottomSheetDialog extends BottomSheetDialogFragment implements View
         mEdtQuantity.setText("1");
         mTotal = mProduct.getProductPrice();
     }
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -123,6 +127,15 @@ public class BottomSheetDialog extends BottomSheetDialogFragment implements View
         cartPresenter = new CartPresenter(getActivity(),getActivity().getApplication(),this,this);
         cartPresenter.getListOrder();
     }
+    private void countShopCart(){
+        int count = SharePreferenceUtils.getIntSharedPreference(getActivity(), BundleString.COUNTSHOPCART);
+        if(count == 0){
+            SharePreferenceUtils.saveIntSharedPreference(getActivity(),BundleString.COUNTSHOPCART, mQuantity);
+        }else{
+            SharePreferenceUtils.saveIntSharedPreference(getActivity(),BundleString.COUNTSHOPCART, mQuantity + count);
+        }
+        HomeActivity.updateUI();
+    }
     private void  dismissBottomSheet(){
         getDialog().cancel();
     }
@@ -154,6 +167,7 @@ public class BottomSheetDialog extends BottomSheetDialogFragment implements View
         o.setQuality(mQuantity);
         o.setProduct(mProduct);
         cartPresenter.addToCart(o);
+        countShopCart();
     }
     @Override
     public void showError(String message) {
@@ -162,10 +176,11 @@ public class BottomSheetDialog extends BottomSheetDialogFragment implements View
 
     @Override
     public void updateCardSuccess() {
+        countShopCart();
         cancelDialog();
     }
     private void cancelDialog(){
-        Toast.makeText(getActivity(),"Đã thêm vào gỏ hàng", Toast.LENGTH_LONG).show();
+        Toast.makeText(getActivity(),"Đã thêm vào giỏ hàng", Toast.LENGTH_LONG).show();
         getDialog().cancel();
     }
 }

@@ -13,9 +13,11 @@
     <color name = "color_oragne_white">#FFBB5C</color>
     <color name="color_tranparent">#10000000</color>
     <color name="color_cus_light_blue">#466EF0</color>
+    <color name="color_cus_light_blue_2">#6D8FFF</color>
     <color name="color_cus_light_hr">#EDEBEB</color>
     <color name="color_card">#F8F8F8</color>
     <color name="color_cus_bg_gray">#F4F4F4</color>
     <color name="color_cus_bg_black">#313131</color>
     <color name="color_cus_red">#FF584E</color>
+    <color name="black_20">#20000000</color>
 </resources>

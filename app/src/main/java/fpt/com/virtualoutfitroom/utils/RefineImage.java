@@ -1,5 +1,11 @@
 package fpt.com.virtualoutfitroom.utils;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.List;
 
 import fpt.com.virtualoutfitroom.model.ProductImage;

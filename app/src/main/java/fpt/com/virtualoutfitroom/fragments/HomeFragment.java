@@ -1,6 +1,7 @@
 package fpt.com.virtualoutfitroom.fragments;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.media.Image;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kaopiz.kprogresshud.KProgressHUD;
@@ -29,13 +31,16 @@ import java.util.List;
 
 import fpt.com.virtualoutfitroom.R;
 import fpt.com.virtualoutfitroom.activities.DetailProductActivity;
+import fpt.com.virtualoutfitroom.activities.HomeActivity;
 import fpt.com.virtualoutfitroom.activities.SearchProductActivity;
 import fpt.com.virtualoutfitroom.activities.ShopCartActivity;
 import fpt.com.virtualoutfitroom.adapter.RecyclerViewApdapter;
 import fpt.com.virtualoutfitroom.model.Product;
 import fpt.com.virtualoutfitroom.model.ProductImage;
 import fpt.com.virtualoutfitroom.presenter.HomePresenter;
+import fpt.com.virtualoutfitroom.utils.BundleString;
 import fpt.com.virtualoutfitroom.utils.InternetHelper;
+import fpt.com.virtualoutfitroom.utils.SharePreferenceUtils;
 import fpt.com.virtualoutfitroom.utils.SpinnerManagement;
 import fpt.com.virtualoutfitroom.views.HomeView;
 
@@ -49,6 +54,7 @@ public class HomeFragment extends Fragment implements HomeView, View.OnClickList
     private List<Integer> listImageHeader;
     private KProgressHUD hud;
     private EditText mEdtSearch;
+    private TextView mTxtCount;
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -86,9 +92,20 @@ public class HomeFragment extends Fragment implements HomeView, View.OnClickList
             Toast.makeText(getActivity(), "No Connection", Toast.LENGTH_LONG).show();
         } else {
             mPresenter.getListProduct();
+
         }
+        setCountShopCart();
+    }
+    public void setCountShopCart(){
+            int count = SharePreferenceUtils.getIntSharedPreference(getActivity(), BundleString.COUNTSHOPCART);
+            if(count == 0){
+                mTxtCount.setText("0");
+            }else{
+                mTxtCount.setText(count + "");
+            }
     }
     public void setLayout(View rootView) {
+        mTxtCount = rootView.findViewById(R.id.txt_count_shop_cart);
         mRrvGlasses = rootView.findViewById(R.id.rcv_list_glasses);
         mRrvHat = rootView.findViewById(R.id.rcv_list_hat);
         mRrvEaring = rootView.findViewById(R.id.rcv_list_earing);
@@ -145,7 +162,6 @@ public class HomeFragment extends Fragment implements HomeView, View.OnClickList
         mRrvAdapterHat = new RecyclerViewApdapter(getActivity(), mListHat);
         // Inflate the layout for this fragment
         mRrvHat.setAdapter(mRrvAdapterHat);
-
         mRrvAdapterHat.setOnItemClickedListener(new RecyclerViewApdapter.OnItemClickedListener() {
             @Override
             public void onItemClicked(int position) {
@@ -224,6 +240,7 @@ public class HomeFragment extends Fragment implements HomeView, View.OnClickList
 
     @Override
     public void showError(String message) {
+        hud.dismiss();
         Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
     }
 

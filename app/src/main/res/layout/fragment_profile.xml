@@ -20,6 +20,7 @@
         android:textSize="25sp"/>
 
     <LinearLayout
+        android:id="@+id/lnl_update_info_1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="10dp"
@@ -85,6 +86,43 @@
             android:paddingTop="5dp"
             android:text=""
             android:textSize="18sp"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:id="@+id/lnl_update_info_2"
+        android:orientation="vertical"
+        android:visibility="gone"
+        >
+        <ImageView
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:src="@drawable/ic_warning"
+            android:layout_marginTop="@dimen/dp20"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            android:gravity="center">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cập nhật thông tin cá nhân"
+                android:textSize="20dp"
+                android:textColor="@color/color_cus_gray"/>
+            <TextView
+                android:id="@+id/txt_update_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/color_cus_blue"
+                android:text="Tại đây"
+                android:textSize="@dimen/dp20"
+                android:paddingLeft="@dimen/dp5"
+                />
+        </LinearLayout>
+
     </LinearLayout>
 </LinearLayout>
 </android.support.v4.widget.NestedScrollView>

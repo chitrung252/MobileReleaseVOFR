@@ -32,6 +32,7 @@ import fpt.com.virtualoutfitroom.dialog.BottomSheetEditAccount;
 import fpt.com.virtualoutfitroom.model.Account;
 import fpt.com.virtualoutfitroom.presenter.accounts.AddAccountToRoomPresenter;
 import fpt.com.virtualoutfitroom.presenter.accounts.InformationAccountPresenter;
+import fpt.com.virtualoutfitroom.presenter.accounts.UpdateAccountToRoomPresenter;
 import fpt.com.virtualoutfitroom.presenter.accounts.UpdateAvatarPresenter;
 import fpt.com.virtualoutfitroom.room.AccountItemEntities;
 import fpt.com.virtualoutfitroom.utils.BundleString;
@@ -40,8 +41,9 @@ import fpt.com.virtualoutfitroom.utils.SpinnerManagement;
 import fpt.com.virtualoutfitroom.views.AddToRoomView;
 import fpt.com.virtualoutfitroom.views.GetInforAccountView;
 import fpt.com.virtualoutfitroom.views.UpdateAvataView;
+import fpt.com.virtualoutfitroom.views.UpdateToRoomView;
 
-public class AccountFragment extends Fragment implements UpdateAvataView, View.OnClickListener, GetInforAccountView, AddToRoomView {
+public class AccountFragment extends Fragment implements UpdateAvataView, View.OnClickListener, GetInforAccountView, UpdateToRoomView {
     private View mView;
     private TabLayout mTabs;
     private View mIndicator;
@@ -56,11 +58,11 @@ public class AccountFragment extends Fragment implements UpdateAvataView, View.O
     private LinearLayout mLnlChooseEditAccout;
     private String token;
     private String userId;
-    private AccountItemEntities mAccountItemEntities;
     private TextView mTxtNameAccount;
     private InformationAccountPresenter mInformationAccountPresenter;
-    private AddAccountToRoomPresenter mAddAccountToRoomPresenter;
+    private UpdateAccountToRoomPresenter updateAccountToRoomPresenter;
     private KProgressHUD hud;
+    private Account mAccount;
 
     public AccountFragment() {
     }
@@ -236,15 +238,22 @@ public class AccountFragment extends Fragment implements UpdateAvataView, View.O
     @Override
     public void getInforSuccess(Account account) {
         if (account != null) {
-            Picasso.get().load(account.getImageUser()).placeholder(R.drawable.user_default).into(mImageAvata);
+
+            if(account.getImageUser().length() > 0){
+                Picasso.get().load(account.getImageUser()).placeholder(R.drawable.user_default).into(mImageAvata);
+            }
             mTxtNameAccount.setText(account.getUserName());
-            addToRoom(account);
+            mAccount = account;
+            mInformationAccountPresenter = new InformationAccountPresenter(getActivity().getApplication(),this);
+            mInformationAccountPresenter.getAccountFromRoom();
             hud.dismiss();
         } else {
+            hud.dismiss();
             Toast.makeText(getActivity(), "Your sessionn is expired!", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(getActivity(), LoginActivity.class);
             startActivity(intent);
             getActivity().finish();
+
         }
     }
 
@@ -289,13 +298,9 @@ public class AccountFragment extends Fragment implements UpdateAvataView, View.O
 
     }
 
-    private void addToRoom(Account account) {
-        AccountItemEntities accountItemEntities = new AccountItemEntities();
-        String accountId = UUID.randomUUID().toString();
-        accountItemEntities.setAccountId(accountId);
-        accountItemEntities.setAccount(account);
-        mAddAccountToRoomPresenter = new AddAccountToRoomPresenter(getActivity(), getActivity().getApplication(), this);
-        mAddAccountToRoomPresenter.addAccountToRooṃ(accountItemEntities);
+    private void updateAccToRoom(AccountItemEntities account) {
+        updateAccountToRoomPresenter = new UpdateAccountToRoomPresenter(getActivity().getApplication(), this);
+        updateAccountToRoomPresenter.updateAccount(account);
     }
 
     @Override
@@ -307,15 +312,21 @@ public class AccountFragment extends Fragment implements UpdateAvataView, View.O
     }
 
     @Override
-    public void addToRoomSuccess() {
-    }
-
-    @Override
     public void getInforFail(String message) {
     }
 
     @Override
     public void getAccountFromRoom(AccountItemEntities accountItemEntities) {
+        if(accountItemEntities != null){
+            accountItemEntities.setAccount(mAccount);
+            updateAccToRoom(accountItemEntities);
+        }else{
+            Toast.makeText(getContext(), "account room is null", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    public void updateAccountSuccess() {
     }
 }
 

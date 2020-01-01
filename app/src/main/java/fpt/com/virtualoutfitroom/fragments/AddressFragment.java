@@ -1,38 +1,49 @@
 package fpt.com.virtualoutfitroom.fragments;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
 import fpt.com.virtualoutfitroom.R;
+import fpt.com.virtualoutfitroom.activities.PaymentActivity;
 import fpt.com.virtualoutfitroom.model.Account;
 import fpt.com.virtualoutfitroom.presenter.accounts.InformationAccountPresenter;
 import fpt.com.virtualoutfitroom.room.AccountItemEntities;
+import fpt.com.virtualoutfitroom.utils.RegexHelper;
 import fpt.com.virtualoutfitroom.views.GetInforAccountView;
-public class AddressFragment extends Fragment implements View.OnClickListener, GetInforAccountView{
+
+public class AddressFragment extends Fragment implements GetInforAccountView {
     private View mView;
-    private EditText mEdtName,mEdtPhone,mEdtEmail,mEdtAddress;
-    private LinearLayout mlnlName,mLnlEmail,mLnlPhone,mLnlAddress;
-    private TextView mTxtName,mTxtPhone,mTxtEmail,mTxtAddress;
-    private boolean isClickName = false,isClickEmail = false,isClickPhone = false,isClickAddress = false;
+    private EditText mEdtName, mEdtPhone, mEdtEmail, mEdtAddress;
     private AccountItemEntities mAccount;
-    private String name,email,phone,address;
+    private String name, email, phone, address;
     private InformationAccountPresenter informationAccountPresenter;
     private FirstFragmentListener mFragmentSentData;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_address, container, false);
         return mView;
     }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -42,138 +53,45 @@ public class AddressFragment extends Fragment implements View.OnClickListener, G
 
     public AddressFragment() {
     }
-    public static Fragment newInstance(){
+
+    public static Fragment newInstance() {
         AddressFragment fragment = new AddressFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
     }
-    public  void initialView(){
+
+    public void initialView() {
         mEdtName = mView.findViewById(R.id.edt_name_payment);
+        mEdtName.addTextChangedListener(new CustomTextWatcher(mEdtName, "name"));
+        mEdtName.setOnTouchListener(new CustomTextWatcher(mEdtName));
         mEdtEmail = mView.findViewById(R.id.edt_email_payment);
+        mEdtEmail.addTextChangedListener(new CustomTextWatcher(mEdtEmail,"email"));
+        mEdtEmail.setOnTouchListener(new CustomTextWatcher(mEdtEmail));
         mEdtPhone = mView.findViewById(R.id.edt_phone_payment);
+        mEdtPhone.addTextChangedListener(new CustomTextWatcher(mEdtPhone,"phone"));
+        mEdtPhone.setOnTouchListener(new CustomTextWatcher(mEdtPhone));
         mEdtAddress = mView.findViewById(R.id.edt_address_payment);
-        mlnlName = mView.findViewById(R.id.lnl_button_name);
-        mLnlEmail = mView.findViewById(R.id.lnl_button_email);
-        mLnlPhone = mView.findViewById(R.id.lnl_button_phone);
-        mLnlAddress = mView.findViewById(R.id.lnl_button_address);
-        mTxtName = mView.findViewById(R.id.txt_name_payment);
-        mTxtEmail = mView.findViewById(R.id.txt_email_payment);
-        mTxtPhone = mView.findViewById(R.id.txt_phone_payment);
-        mTxtAddress = mView.findViewById(R.id.txt_address_payment);
+        mEdtAddress.addTextChangedListener(new CustomTextWatcher(mEdtAddress,"address"));
+        mEdtAddress.setOnTouchListener(new CustomTextWatcher(mEdtAddress));
     }
-    public  void initialData(){
-         mlnlName.setOnClickListener(this::onClick);
-         mLnlEmail.setOnClickListener(this::onClick);
-         mLnlPhone.setOnClickListener(this::onClick);
-         mLnlAddress.setOnClickListener(this::onClick);
-        informationAccountPresenter = new InformationAccountPresenter(getActivity().getApplication(),this);
+
+    public void initialData() {
+        informationAccountPresenter = new InformationAccountPresenter(getActivity().getApplication(), this);
         informationAccountPresenter.getAccountFromRoom();
 
     }
-    @Override
-    public void onClick(View view) {
-            int id = view.getId();
-            switch (id){
-              case   R.id.lnl_button_name:
-                  setEditTextNamẹ̣();
-                  break;
-                case R.id.lnl_button_email:
-                    setEditTextNEmaiḷ̣();
-                    break;
-                case R.id.lnl_button_phone:
-                    setEditTextPhonẹ();
-                    break;
-                case R.id.lnl_button_address:
-                    setEditTextAddress();
-                    break;
-            }
-    }
-    public void setEditTextNamẹ̣(){
-        if(isClickName == true){
-            name =  mEdtName.getText().toString()+"";
-            email = mEdtEmail.getText().toString()+"";
-            phone = mEdtPhone.getText().toString()+"";
-            address = mEdtAddress.getText().toString()+"";
-            mTxtName.setText(name);
-            sendData(name,email,phone,address);
-            mEdtName.setVisibility(View.GONE);
-            mTxtName.setVisibility(View.VISIBLE);
-            isClickName = false;
-        }
-        else{
-            isClickName = true;
-            mEdtName.setText(mTxtName.getText().toString()+"");
-            mTxtName.setVisibility(View.GONE);
-            mEdtName.setVisibility(View.VISIBLE);
-        }
-    }
 
-    public void setEditTextNEmaiḷ̣(){
-        if(isClickEmail == true){
-            name =  mEdtName.getText().toString()+"";
-            email = mEdtEmail.getText().toString()+"";
-            phone = mEdtPhone.getText().toString()+"";
-            address = mEdtAddress.getText().toString()+"";
-            mTxtEmail.setText(email);
-            sendData(name,email,phone,address);
-            mEdtEmail.setVisibility(View.GONE);
-            mTxtEmail.setVisibility(View.VISIBLE);
-            isClickEmail = false;
-        }
-        else{
-            isClickEmail = true;
-            mEdtEmail.setText(mTxtEmail.getText().toString()+"");
-            mTxtEmail.setVisibility(View.GONE);
-            mEdtEmail.setVisibility(View.VISIBLE);
-        }
-    }
-    public void setEditTextPhonẹ(){
-        if(isClickPhone == true){
-            name =  mEdtName.getText().toString()+"";
-            email = mEdtEmail.getText().toString()+"";
-            phone = mEdtPhone.getText().toString()+"";
-            address = mEdtAddress.getText().toString()+"";
-            mTxtPhone.setText(phone);
-            sendData(name,email,phone,address);
-            mEdtPhone.setVisibility(View.GONE);
-            mTxtPhone.setVisibility(View.VISIBLE);
-            isClickPhone = false;
-        }
-        else{
-            isClickPhone = true;
-            mEdtPhone.setText(mTxtPhone.getText().toString()+"");
-            mTxtPhone.setVisibility(View.GONE);
-            mEdtPhone.setVisibility(View.VISIBLE);
-        }
-    }
-    public void setEditTextAddress(){
-        if(isClickAddress == true){
-            name =  mEdtName.getText().toString()+"";
-            email = mEdtEmail.getText().toString()+"";
-            phone = mEdtPhone.getText().toString()+"";
-            address = mEdtAddress.getText().toString()+"";
-            mTxtAddress.setText(address);
-            sendData(name,email,phone,address);
-            mEdtAddress.setVisibility(View.GONE);
-            mTxtAddress.setVisibility(View.VISIBLE);
-            isClickAddress = false;
-        }
-        else{
-            isClickAddress = true;
-            mEdtAddress.setText(mTxtAddress.getText().toString()+"");
-            mTxtAddress.setVisibility(View.GONE);
-            mEdtAddress.setVisibility(View.VISIBLE);
-        }
-    }
     @Override
     public void getInforSuccess(Account account) {
 
     }
+
     @Override
     public void getInforFail(String message) {
 
     }
+
     @Override
     public void getAccountFromRoom(AccountItemEntities accountItemEntities) {
         mAccount = accountItemEntities;
@@ -181,18 +99,16 @@ public class AddressFragment extends Fragment implements View.OnClickListener, G
         phone = mAccount.getAccount().getPhoneNumber();
         email = mAccount.getAccount().getEmail();
         address = mAccount.getAccount().getAddress();
-        mTxtName.setText(name);
         mEdtName.setText(name);
-        mTxtEmail.setText(email);
         mEdtEmail.setText(email);
-        mTxtPhone.setText(phone);
         mEdtPhone.setText(phone);
         mEdtAddress.setText(address);
-        mTxtAddress.setText(address);
     }
-    private  void sendData(String name,String email,String phone,String address){
-       mFragmentSentData.sendData(name,email,phone,address);
+
+    public void getData() {
+        mFragmentSentData.sendData(mEdtName.getText().toString(), mEdtEmail.getText().toString(), mEdtPhone.getText().toString(), mEdtAddress.getText().toString());
     }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -203,8 +119,89 @@ public class AddressFragment extends Fragment implements View.OnClickListener, G
                     + " You must implement FirstFragmentListener");
         }
     }
+
     public interface FirstFragmentListener {
-        void sendData(String name,String email,String phone,String address);
+        void sendData(String name, String email, String phone, String address);
+    }
+
+    private class CustomTextWatcher implements TextWatcher,View.OnTouchListener {
+        private EditText mEditText;
+        private String mName;
+
+        public CustomTextWatcher(EditText e, String mName) {
+            this.mEditText = e;
+            this.mName = mName;
+        }
+
+        public CustomTextWatcher(EditText e) {
+            this.mEditText = e;
+        }
+
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        public void afterTextChanged(Editable s) {
+            String param = mEditText.getText().toString().trim();
+            boolean check = true;
+            mEditText.setBackgroundResource(R.drawable.edit_text_cus_background);
+            if (mName == "name") {
+                if (!RegexHelper.checkSpecChar(param)) {
+                    mEditText.setError("Tên không chứa các kí tự và số");
+                    mEditText.setBackgroundResource(R.drawable.edit_text_cus_border);
+                    check = false;
+                }
+            }
+            if (mName == "email") {
+                if (!RegexHelper.checkEmail(param)) {
+                    mEditText.setError("Email không đúng định dạng");
+                    check = false;
+                    mEditText.setBackgroundResource(R.drawable.edit_text_cus_border);
+                }
+            }
+            if (mName == "phone") {
+                if (!RegexHelper.checkPhoneNumber(param)) {
+                    mEditText.setError("Số điện thoại không hợp lệ");
+                    check = false;
+                    mEditText.setBackgroundResource(R.drawable.edit_text_cus_border);
+                }
+            }
+            if (mEditText.getText().toString().length() <= 0) {
+                mEditText.setError("Trường này không được để trống");
+                check = false;
+                mEditText.setBackgroundResource(R.drawable.edit_text_cus_border);
+            }
+            ((PaymentActivity) getActivity()).changeStateBtnNext(check);
+        }
+
+        public void setDefaultValue() {
+            if (!mEdtName.getBackground().getConstantState().equals(getActivity().getResources().getDrawable(R.drawable.edit_text_cus_border).getConstantState())) {
+                mEdtName.setBackgroundResource(R.drawable.edit_text_cus_background);
+            }
+            if (!mEdtAddress.getBackground().getConstantState().equals(getActivity().getResources().getDrawable(R.drawable.edit_text_cus_border).getConstantState())) {
+                mEdtAddress.setBackgroundResource(R.drawable.edit_text_cus_background);
+            }
+            if (!mEdtEmail.getBackground().getConstantState().equals(getActivity().getResources().getDrawable(R.drawable.edit_text_cus_border).getConstantState())) {
+                mEdtEmail.setBackgroundResource(R.drawable.edit_text_cus_background);
+            }
+            if (!mEdtPhone.getBackground().getConstantState().equals(getActivity().getResources().getDrawable(R.drawable.edit_text_cus_border).getConstantState())) {
+                mEdtPhone.setBackgroundResource(R.drawable.edit_text_cus_background);
+            }
+        }
+
+        @Override
+        public boolean onTouch(View view, MotionEvent motionEvent) {
+            setDefaultValue();
+            if (!mEditText.getBackground().getConstantState().equals(getActivity().getResources().getDrawable(R.drawable.edit_text_cus_border).getConstantState())) {
+                //compare drawable
+                mEditText.setBackgroundResource(R.drawable.edit_text_cus_blu_border);
+            }
+            return false;
+        }
     }
 }
 

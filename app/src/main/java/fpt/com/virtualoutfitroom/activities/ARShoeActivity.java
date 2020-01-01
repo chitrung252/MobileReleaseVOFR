@@ -54,7 +54,8 @@ public class ARShoeActivity extends AppCompatActivity {
     private ModelRenderable legRenderable;
     private Product mProduct;
     private FloatingActionButton btnTakePhoto;
-    private String URLSFB = "http://107.150.52.213/api-votf/image/20191104181106376304.sfb";
+    private String URLSFB = "http://23.94.26.75/vat-api/image/20191104181106376304.sfb";
+
     @Override
     @SuppressWarnings({"AndroidApiChecker", "FutureReturnValueIgnored"})
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +67,7 @@ public class ARShoeActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_arshoe);
         arFragment = (ArFragment) getSupportFragmentManager().findFragmentById(R.id.shoe_fragment);
-        btnTakePhoto = (FloatingActionButton)findViewById(R.id.btn_take_photo);
+        btnTakePhoto = (FloatingActionButton) findViewById(R.id.btn_take_photo);
         btnTakePhoto.setOnClickListener(v -> takePhoto());
         getSpinner();
         initialData();
@@ -126,10 +127,13 @@ public class ARShoeActivity extends AppCompatActivity {
                     TransformableNode legNode = new TransformableNode(arFragment.getTransformationSystem());
                     legNode.setParent(shoeNode);
                     legNode.setRenderable(legRenderable);
+
+                    arFragment.getTransformationSystem().getSelectionVisualizer().removeSelectionVisual(shoeNode);
+                    arFragment.getTransformationSystem().getSelectionVisualizer().removeSelectionVisual(legNode);
                 });
     }
 
-    public void getSpinner(){
+    public void getSpinner() {
         hub = SpinnerManagement.getSpinner(this);
     }
 
@@ -167,7 +171,6 @@ public class ARShoeActivity extends AppCompatActivity {
         }
         return true;
     }
-
 
 
     private String generateFilename() {

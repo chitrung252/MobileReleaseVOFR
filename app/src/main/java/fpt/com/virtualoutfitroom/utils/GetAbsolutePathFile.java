@@ -8,8 +8,21 @@ import android.os.Build;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.support.v4.content.ContextCompat;
+
+import java.io.File;
 
 public class GetAbsolutePathFile {
+
+    public static String getRootDirPath(Context context) {
+        if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
+            File file = ContextCompat.getExternalFilesDirs(context.getApplicationContext(),
+                    null)[0];
+            return file.getAbsolutePath();
+        } else {
+            return context.getApplicationContext().getFilesDir().getAbsolutePath();
+        }
+    }
     public  static String getRealPathFromUri(Context mContext,final Uri uri) {
         // DocumentProvider
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && DocumentsContract.isDocumentUri(mContext, uri)) {

@@ -12,12 +12,12 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import fpt.com.virtualoutfitroom.R;
+import fpt.com.virtualoutfitroom.utils.SharePreferenceUtils;
 
 
-public class MethodFragment extends Fragment implements View.OnClickListener {
+public class MethodFragment extends Fragment {
     private LinearLayout mLnlMethod1,mLnlMethod2,mLnlMethod3;
     private View mView;
-    private SecordFragmentListener secordFragmentListener;
     private int index =0;
     @Nullable
     @Override
@@ -40,65 +40,43 @@ public class MethodFragment extends Fragment implements View.OnClickListener {
         fragment.setArguments(args);
         return fragment;
     }
+
     private void initialView(){
         mLnlMethod1 = mView.findViewById(R.id.lnl_method_1);
         mLnlMethod2 = mView.findViewById(R.id.lnl_method_2);
         mLnlMethod3 = mView.findViewById(R.id.lnl_method_3);
     }
-    private void initialData(){
-        mLnlMethod1.setOnClickListener(this::onClick);
-        mLnlMethod2.setOnClickListener(this::onClick);
-        mLnlMethod3.setOnClickListener(this::onClick);
-        mLnlMethod1.setBackgroundResource(R.drawable.radius_blue_color);
-    }
-    @Override
-    public void onClick(View view) {
-        int id = view.getId();
-            switch (id){
-                case R.id.lnl_method_1 :
-                    chooseMethod1();
-                break;
-                case R.id.lnl_method_2:
-                    chooseMethod2();
-                    break;
-                case R.id.lnl_method_3:
-                    chooseMethod3();
-                    break;
-            }
 
-    }
-    private void chooseMethod1(){
+    private void initialData(){
+        mLnlMethod1.setOnClickListener(new CustomClickListener(1));
+        mLnlMethod2.setOnClickListener(new CustomClickListener(2));
+        mLnlMethod3.setOnClickListener(new CustomClickListener(3));
         mLnlMethod1.setBackgroundResource(R.drawable.radius_blue_color);
-        mLnlMethod2.setBackgroundResource(R.drawable.radius_white_color);
-        mLnlMethod3.setBackgroundResource(R.drawable.radius_white_color);
-        index = 1;
-        secordFragmentListener.sendMethodPayment(index);
+        SharePreferenceUtils.saveIntSharedPreference(getActivity(),"METHOD",1);
     }
-    private void chooseMethod2(){
-        mLnlMethod2.setBackgroundResource(R.drawable.radius_blue_color);
-        mLnlMethod1.setBackgroundResource(R.drawable.radius_white_color);
-        mLnlMethod3.setBackgroundResource(R.drawable.radius_white_color);
-        index = 2;
-        secordFragmentListener.sendMethodPayment(index);
-    }
-    private void chooseMethod3(){
-        mLnlMethod3.setBackgroundResource(R.drawable.radius_blue_color);
-        mLnlMethod1.setBackgroundResource(R.drawable.radius_white_color);
-        mLnlMethod2.setBackgroundResource(R.drawable.radius_white_color);
-        index = 3;
-        secordFragmentListener.sendMethodPayment(index);
-    }
-    public interface SecordFragmentListener {
-        void sendMethodPayment(int index);
-    }
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        try {
-            secordFragmentListener = (SecordFragmentListener) context;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString()
-                    + " You must implement FirstFragmentListener");
+
+    private class CustomClickListener implements View.OnClickListener{
+        int number;
+        public CustomClickListener(int number){
+            this.number = number;
+        }
+        @Override
+        public void onClick(View view) {
+            mLnlMethod1.setBackgroundResource(R.drawable.edit_text_cus_background);
+            mLnlMethod2.setBackgroundResource(R.drawable.edit_text_cus_background);
+            mLnlMethod3.setBackgroundResource(R.drawable.edit_text_cus_background);
+            if(number == 1){
+                mLnlMethod1.setBackgroundResource(R.drawable.radius_blue_color);
+                SharePreferenceUtils.saveIntSharedPreference(getActivity(),"METHOD",1);
+            }
+            if(number == 2){
+                mLnlMethod2.setBackgroundResource(R.drawable.radius_blue_color);
+                SharePreferenceUtils.saveIntSharedPreference(getActivity(),"METHOD",2);
+            }
+            if(number == 3){
+                mLnlMethod3.setBackgroundResource(R.drawable.radius_blue_color);
+                SharePreferenceUtils.saveIntSharedPreference(getActivity(),"METHOD",3);
+            }
         }
     }
 }
