@@ -97,8 +97,7 @@ public class AugmentedFacesActivity extends BaseActivity implements View.OnClick
     private static final double MIN_OPENGL_VERSION = 3.0;
 
     private FaceArFragment arFragment;
-    private ModelRenderable renderable;
-    private final HashMap<AugmentedFace, AugmentedFaceNode> faceNodeMap = new HashMap<>();
+    private final HashMap<AugmentedFace, List<AugmentedFaceNode>> faceNodeMap = new HashMap<>();
     private HashMap<AugmentedFace, AugmentedFaceNode> faceNodeMapOld = new HashMap<>();
     private Product mProduct;
     private Button btnTakePhoto;
@@ -141,45 +140,8 @@ public class AugmentedFacesActivity extends BaseActivity implements View.OnClick
         initialDataProView();
         // Load the face regions renderable.
         // This is a skinned model that renders 3D objects mapped to the regions of the augmented face.
-    }
 
-    public void refreshModel() {
-        if (renderable != null) {
-            renderable = null;
-        }
-        if (faceNodeMap != null) {
-            faceNodeMap.clear();
-        }
-    }
-
-    public void destroyView() {
-        Iterator<Map.Entry<AugmentedFace, AugmentedFaceNode>> iter = faceNodeMap.entrySet().iterator();
-        while (iter.hasNext()) {
-            Map.Entry<AugmentedFace, AugmentedFaceNode> entry = iter.next();
-            AugmentedFaceNode faceNode = entry.getValue();
-            faceNode.setParent(null);
-            iter.remove();
-        }
-    }
-
-    public void generateModel(Product product) {
-        refreshModel();
-        String url = RefineImage.getUrlImage(product.getProductImageList(), "sfb");
-        String mGalleryPath = GetAbsolutePathFile.getRootDirPath(this);
-        //using file
-//        final File file = new File(mGalleryPath, UrlHelper.getFileNameFromUrl(URLSFB));
-        String fileUrl = mGalleryPath + "/" + UrlHelper.getFileNameFromUrl(url);
-        ModelRenderable.builder()
-                .setSource(this, Uri.parse(fileUrl))
-                .build()
-                .thenAccept(
-                        modelRenderable -> {
-                            renderable = modelRenderable;
-
-                            modelRenderable.setShadowCaster(false);
-                            modelRenderable.setShadowReceiver(false);
-                            hud.dismiss();
-                        });
+        //ARScene set up
         ArSceneView sceneView = arFragment.getArSceneView();
         // This is important to make sure that the camera stream renders first so that
         // the face mesh occlusion works correctly.
@@ -187,36 +149,114 @@ public class AugmentedFacesActivity extends BaseActivity implements View.OnClick
         Scene scene = sceneView.getScene();
         scene.addOnUpdateListener(
                 (FrameTime frameTime) -> {
-                    if (renderable == null) {
-                        return;
-                    }
+//                    if (renderable == null) {
+//                        return;
+//                    }
                     Collection<AugmentedFace> faceList =
                             sceneView.getSession().getAllTrackables(AugmentedFace.class);
 
                     // Make new AugmentedFaceNodes for any new faces.
                     for (AugmentedFace face : faceList) {
-                        for (ProductRender item : productRenders) {
-                            AugmentedFaceNode faceNode = new AugmentedFaceNode(face);
-                            faceNode.setParent(scene);
-                            faceNode.setFaceRegionsRenderable(item.getModelRenderable());
-                            faceNodeMap.put(face, faceNode);
+                        if (!faceNodeMap.containsKey(face)) {
+                            faceNodeMap.put(face, new ArrayList<>());
+                            productRenders.forEach(pro -> {
+                                AugmentedFaceNode faceNode = new AugmentedFaceNode(face);
+                                faceNode.setParent(scene);
+                                faceNode.setFaceRegionsRenderable(pro.getModelRenderable());
+                                faceNodeMap.get(face).add(faceNode);
+                            });
                         }
-
                     }
 
                     // Remove any AugmentedFaceNodes associated with an AugmentedFace that stopped tracking.
-                    Iterator<Map.Entry<AugmentedFace, AugmentedFaceNode>> iter = faceNodeMap.entrySet().iterator();
+                    Iterator<Map.Entry<AugmentedFace, List<AugmentedFaceNode>>> iter = faceNodeMap.entrySet().iterator();
                     while (iter.hasNext()) {
-                        Map.Entry<AugmentedFace, AugmentedFaceNode> entry = iter.next();
+                        Map.Entry<AugmentedFace, List<AugmentedFaceNode>> entry = iter.next();
                         AugmentedFace face = entry.getKey();
                         if (face.getTrackingState() == TrackingState.STOPPED) {
-                            AugmentedFaceNode faceNode = entry.getValue();
-                            faceNode.setParent(null);
+                            entry.getValue().forEach(faceNode -> {
+                                faceNode.setParent(null);
+                            });
                             iter.remove();
                         }
                     }
                 });
     }
+
+//    public void refreshModel() {
+//        if (renderable != null) {
+//            renderable = null;
+//        }
+//        if (faceNodeMap != null) {
+//            faceNodeMap.clear();
+//        }
+//    }
+
+    public void removeAllFaceNode() {
+        Iterator<Map.Entry<AugmentedFace, List<AugmentedFaceNode>>> iter = faceNodeMap.entrySet().iterator();
+        while (iter.hasNext()) {
+            Map.Entry<AugmentedFace, List<AugmentedFaceNode>> entry = iter.next();
+            entry.getValue().forEach(faceNode -> {
+                faceNode.setParent(null);
+            });
+            iter.remove();
+        }
+    }
+
+//    public void generateModel(Product product) {
+//        refreshModel();
+//        String url = RefineImage.getUrlImage(product.getProductImageList(), "sfb");
+//        String mGalleryPath = GetAbsolutePathFile.getRootDirPath(this);
+//        //using file
+////        final File file = new File(mGalleryPath, UrlHelper.getFileNameFromUrl(URLSFB));
+//        String fileUrl = mGalleryPath + "/" + UrlHelper.getFileNameFromUrl(url);
+//        ModelRenderable.builder()
+//                .setSource(this, Uri.parse(fileUrl))
+//                .build()
+//                .thenAccept(
+//                        modelRenderable -> {
+//                            renderable = modelRenderable;
+//
+//                            modelRenderable.setShadowCaster(false);
+//                            modelRenderable.setShadowReceiver(false);
+//                            hud.dismiss();
+//                        });
+//        ArSceneView sceneView = arFragment.getArSceneView();
+//        // This is important to make sure that the camera stream renders first so that
+//        // the face mesh occlusion works correctly.
+//        sceneView.setCameraStreamRenderPriority(Renderable.RENDER_PRIORITY_FIRST);
+//        Scene scene = sceneView.getScene();
+//        scene.addOnUpdateListener(
+//                (FrameTime frameTime) -> {
+//                    if (renderable == null) {
+//                        return;
+//                    }
+//                    Collection<AugmentedFace> faceList =
+//                            sceneView.getSession().getAllTrackables(AugmentedFace.class);
+//
+//                    // Make new AugmentedFaceNodes for any new faces.
+//                    for (AugmentedFace face : faceList) {
+//                        if (!faceNodeMap.containsKey(face)) {
+//                            AugmentedFaceNode faceNode = new AugmentedFaceNode(face);
+//                            faceNode.setParent(scene);
+//                            faceNode.setFaceRegionsRenderable(renderable);
+//                            faceNodeMap.put(face, faceNode);
+//                        }
+//                    }
+//
+//                    // Remove any AugmentedFaceNodes associated with an AugmentedFace that stopped tracking.
+//                    Iterator<Map.Entry<AugmentedFace, AugmentedFaceNode>> iter = faceNodeMap.entrySet().iterator();
+//                    while (iter.hasNext()) {
+//                        Map.Entry<AugmentedFace, AugmentedFaceNode> entry = iter.next();
+//                        AugmentedFace face = entry.getKey();
+//                        if (face.getTrackingState() == TrackingState.STOPPED) {
+//                            AugmentedFaceNode faceNode = entry.getValue();
+//                            faceNode.setParent(null);
+//                            iter.remove();
+//                        }
+//                    }
+//                });
+//    }
 
     public void getSpinner() {
         hud = SpinnerManagement.getSpinner(this);
@@ -288,7 +328,8 @@ public class AugmentedFacesActivity extends BaseActivity implements View.OnClick
         Bundle bundle = intent.getBundleExtra("BUNDLE");
         mProduct = (Product) bundle.getSerializable("PRODUCT");
         checkListTVProduct(mProduct);
-        generateModel(mProduct);
+//        generateModel(mProduct);
+        renderModel3D(mProduct);
         isUp = false;
         mCategoryPrsenter = new CategoryPresenter(this, this);
         mCategoryPrsenter.getListCategory();
@@ -419,7 +460,7 @@ public class AugmentedFacesActivity extends BaseActivity implements View.OnClick
                 showDialogBottom();
                 break;
             case R.id.lnl_edit_product_choose:
-                destroyView();
+                removeAllFaceNode();
 //                showPopUpEditProduct();
                 break;
         }
@@ -550,21 +591,37 @@ public class AugmentedFacesActivity extends BaseActivity implements View.OnClick
         }
     }
 
-    public void checkExistModel3D(Product product) {
-        ProductRender proTemp = null;
-        for (ProductRender proRender : productRenders) {
-            if (proRender.getProduct().getMasterCategoryId() == product.getMasterCategoryId()) {
-                Iterator<Map.Entry<AugmentedFace, AugmentedFaceNode>> iter = faceNodeMap.entrySet().iterator();
-                while (iter.hasNext()) {
-                    Map.Entry<AugmentedFace, AugmentedFaceNode> entry = iter.next();
-                    AugmentedFaceNode faceNode = entry.getValue();
-                    faceNode.setParent(null);
-                    iter.remove();
-                }
-                proTemp = proRender;
-            }
-        }
-        productRenders.remove(proTemp);
+    public void renderModel3D(Product product) {
+        String url = RefineImage.getUrlImage(product.getProductImageList(), "sfb");
+        String mGalleryPath = GetAbsolutePathFile.getRootDirPath(this);
+        //using file
+//        final File file = new File(mGalleryPath, UrlHelper.getFileNameFromUrl(URLSFB));
+        String fileUrl = mGalleryPath + "/" + UrlHelper.getFileNameFromUrl(url);
+        ModelRenderable.builder()
+                .setSource(this, Uri.parse(fileUrl))
+                .build()
+                .thenAccept(
+                        renderable -> {
+                            ModelRenderable modelRenderable = renderable;
+                            modelRenderable.setShadowCaster(false);
+                            modelRenderable.setShadowReceiver(false);
+
+                            boolean exist = false;
+                            for (ProductRender proRender : productRenders) {
+                                if (proRender.getProduct().getMasterCategoryId() == product.getMasterCategoryId()) {
+                                    proRender.setProduct(product);
+                                    proRender.setModelRenderable(modelRenderable);
+                                    exist = true;
+                                }
+                            }
+                            if(!exist) {
+                                productRenders.add(new ProductRender(product, modelRenderable));
+                            }
+
+                            removeAllFaceNode();
+                            hud.dismiss();
+                        });
+
     }
 
     private boolean checkExistProductView(Product product) {
@@ -576,12 +633,11 @@ public class AugmentedFacesActivity extends BaseActivity implements View.OnClick
         return false;
     }
 
-    public void renderModel3D(Product product) {
-        if (productRenders != null) {
-            checkExistModel3D(product);
-            generateModel(product);
-        }
-    }
+//    public void renderModel3D(Product product) {
+//        if (productRenders != null) {
+//            checkExistModel3D(product);
+//        }
+//    }
 
     @Override
     public void showError(String message) {
