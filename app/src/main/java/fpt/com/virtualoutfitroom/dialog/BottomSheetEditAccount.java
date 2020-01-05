@@ -8,6 +8,7 @@ import android.support.design.widget.BottomSheetDialogFragment;
 import android.view.View;
 import android.widget.LinearLayout;
 import fpt.com.virtualoutfitroom.R;
+import fpt.com.virtualoutfitroom.activities.ChangePasswordActivity;
 import fpt.com.virtualoutfitroom.activities.EditAccountActivity;
 import fpt.com.virtualoutfitroom.activities.HomeActivity;
 import fpt.com.virtualoutfitroom.activities.LoginActivity;
@@ -18,7 +19,7 @@ import fpt.com.virtualoutfitroom.views.DeleteToRomView;
 
 public class BottomSheetEditAccount extends BottomSheetDialogFragment implements View.OnClickListener, DeleteToRomView {
     private BottomSheetBehavior mBehavior;
-    private LinearLayout mLnlEditAccount,mLnlSignOut;
+    private LinearLayout mLnlEditAccount,mLnlSignOut, mLnlChangePassword;
     private DeleteAccountToRoomPresenter mDeleteAccountToRoomPresenter;
     @Override
     public void onStart() {
@@ -38,11 +39,13 @@ public class BottomSheetEditAccount extends BottomSheetDialogFragment implements
     public  void initialView(View view){
         mLnlEditAccount = view.findViewById(R.id.lnl_edit_account);
         mLnlSignOut = view.findViewById(R.id.lnl_sign_out);
+        mLnlChangePassword = view.findViewById(R.id.lnl_change_password);
 
     }
     public  void initialData(){
         mLnlEditAccount.setOnClickListener(this);
         mLnlSignOut.setOnClickListener(this);
+        mLnlChangePassword.setOnClickListener(this);
     }
     private void  dismissBottomSheet(){
         getDialog().cancel();
@@ -58,7 +61,14 @@ public class BottomSheetEditAccount extends BottomSheetDialogFragment implements
             case R.id.lnl_sign_out:
                 signOut();
                 break;
+            case R.id.lnl_change_password:
+                changePassword();
+                break;
         }
+    }
+    private void changePassword(){
+        Intent intent = new Intent(getActivity(), ChangePasswordActivity.class);
+        startActivity(intent);
     }
     private  void signOut(){
         SharePreferenceUtils.removeStringSharedPreference(getContext(),BundleString.USERID);

@@ -17,5 +17,7 @@ public class ConfigApi {
        String ORDERITEM = "order-item/order-item-history";
        String SEARCHPRODUCT = "product/search-product-by-name";
        String CREATUSER = "account/create-account";
+       String FORGOTPASSWORD = "account/forgot-password";
+       String CHANGEPASSWORD ="account/change-password";
     }
 }

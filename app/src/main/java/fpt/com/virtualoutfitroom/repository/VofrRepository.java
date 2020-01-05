@@ -31,4 +31,6 @@ public interface VofrRepository {
     void getOrderItem(Context context,String token, String orderId, CallBackData<List<OrderItem>> callBackData);
     void searchProduct(Context context, String productName, CallBackData<List<Product>> callBackData);
     void createUser(Context context, Account account, CallBackData<String> callBackData);
+    void forgotPassword(Context context, String username, String email, CallBackData<String> callBackData);
+    void changePassword(Context context, String id,String password, String passwordNew, CallBackData<Account> callBackData);
 }

@@ -58,7 +58,7 @@ public class AccountFragment extends Fragment implements UpdateAvataView, View.O
     private LinearLayout mLnlChooseEditAccout;
     private String token;
     private String userId;
-    private TextView mTxtNameAccount;
+    private TextView mTxtNameAccount, mTxtCountOrder;
     private InformationAccountPresenter mInformationAccountPresenter;
     private UpdateAccountToRoomPresenter updateAccountToRoomPresenter;
     private KProgressHUD hud;
@@ -128,6 +128,7 @@ public class AccountFragment extends Fragment implements UpdateAvataView, View.O
         mImageAvata = mView.findViewById(R.id.profile_image);
         mLnlChooseEditAccout = mView.findViewById(R.id.lnl_choose_edit_account);
         mTxtNameAccount = mView.findViewById(R.id.txt_name_title_account);
+        mTxtCountOrder = mView.findViewById(R.id.txt_count_order);
     }
 
     private void initialData() {
@@ -217,6 +218,10 @@ public class AccountFragment extends Fragment implements UpdateAvataView, View.O
         bottomSheetEditAccount.show(getFragmentManager(), "BottomSheetEditAccount");
     }
 
+    public void updateCountOrder(){
+        int count = SharePreferenceUtils.getIntSharedPreference(getActivity(), "COUNTORDER");
+        mTxtCountOrder.setText(count + "đơn hàng");
+    }
     public void accessImageLibrary() {
         shouldAskPermission();
         startActivityForResult(new Intent().setAction(Intent.ACTION_GET_CONTENT).setType("image/*"), BundleString.CODEIMGGALLERY);

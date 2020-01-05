@@ -64,4 +64,11 @@ public interface VofrService {
 
     @POST(ConfigApi.Api.CREATUSER)
     Call<ResponseBody> createUser(@Body RequestBody userJsonObject);
+
+    @PUT(ConfigApi.Api.FORGOTPASSWORD)
+    Call<ResponseBody> forgotPassword(@Query("username") String username, @Query("email") String email);
+
+    @PUT(ConfigApi.Api.CHANGEPASSWORD)
+    Call<ResponseBody> changePassword(@Query("id") String id, @Query("password") String password,@Query("passwordNew") String passwordNew);
+
 }

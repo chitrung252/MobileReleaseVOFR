@@ -142,7 +142,7 @@ public class VofrImpl implements VofrRepository {
                                     callBackData.onSuccess(account);
                                 }
                                 else{
-                                    callBackData.onFail("Not Found User");
+                                    callBackData.onFail("Không tìm thấy tài khoản");
                                 }
                             }
 
@@ -619,6 +619,77 @@ public class VofrImpl implements VofrRepository {
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 callBackData.onFail("Create user fail");
+            }
+        });
+    }
+
+    @Override
+    public void forgotPassword(Context context, String username, String email, CallBackData<String> callBackData) {
+        ClientApi  clientApi = new ClientApi();
+        Call<ResponseBody> serviceCall = clientApi.rmapService().forgotPassword(username,email);
+        serviceCall.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if(response != null && response.body() != null){
+                    if(response.code() == 200){
+                        try{
+                            String result = response.body().string();
+                            Type type = new TypeToken<ResponseResult>() {
+                            }.getType();
+                            ResponseResult responseResult =
+                                    new Gson().fromJson(result, type);
+                            callBackData.onSuccess(responseResult.getMessage());
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+                    }
+                }
+                else{
+                    Toast.makeText(context, "Error", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                callBackData.onFail("update data fail");
+            }
+        });
+    }
+
+    @Override
+    public void changePassword(Context context, String id, String password, String passwordNew, CallBackData<Account> callBackData) {
+        ClientApi  clientApi = new ClientApi();
+        Call<ResponseBody> serviceCall = clientApi.rmapService().changePassword(id,password,passwordNew);
+        serviceCall.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if(response != null && response.body() != null){
+                    if(response.code() == 200){
+                        try{
+                            String result = response.body().string();
+                            Type type = new TypeToken<ResponseResult>() {
+                            }.getType();
+                            ResponseResult<Account> responseResult =
+                                    new Gson().fromJson(result, type);
+                            if (responseResult == null) {
+                                callBackData.onFail("Không có user trả về");
+                            } else {
+                                Account account = responseResult.getData();
+                                callBackData.onSuccess(account);
+                            }
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+                    }
+                }
+                else{
+                    Toast.makeText(context, "Error", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                callBackData.onFail("Lỗi");
             }
         });
     }

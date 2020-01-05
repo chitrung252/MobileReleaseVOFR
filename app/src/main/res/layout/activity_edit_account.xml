@@ -88,10 +88,9 @@
             android:layout_width="match_parent"
             android:layout_height="42dp"
             android:background="@drawable/edit_text_background"
-            android:drawableLeft="@drawable/ic_phone_gray"
+            android:drawableLeft="@drawable/ic_phone_black"
             android:drawablePadding="@dimen/dp20"
             android:inputType="phone"
-            android:enabled="false"
             android:maxLines="1"/>
         <TextView
             android:layout_width="match_parent"

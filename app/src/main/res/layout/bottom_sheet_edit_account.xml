@@ -29,6 +29,25 @@
         </TextView>
     </LinearLayout>
     <LinearLayout
+        android:id="@+id/lnl_change_password"
+        android:background="@drawable/button_background"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="43dp"
+        android:layout_marginBottom="@dimen/dp20">
+        <TextView
+            android:text="Đổi mật khẩu"
+            android:textSize="@dimen/sp20"
+            android:textColor="@color/color_white"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </TextView>
+    </LinearLayout>
+    <LinearLayout
         android:id="@+id/lnl_sign_out"
         android:background="@drawable/radius_button_red"
         android:layout_marginRight="20dp"

@@ -82,7 +82,6 @@ public class HistoryFragment extends Fragment implements OrderView {
                 startActivity(intent);
             }
         });
-
     }
 
     @Override
@@ -92,6 +91,9 @@ public class HistoryFragment extends Fragment implements OrderView {
             mLnlNoHistory.setVisibility(View.GONE);
             mListOrder = orderHistory;
             updateUI();
+            SharePreferenceUtils.saveIntSharedPreference(getActivity(),"COUNTORDER",orderHistory.size());
+            AccountFragment accountFragment = (AccountFragment)HistoryFragment.this.getParentFragment();
+            accountFragment.updateCountOrder();
         }else{
             mLnlHasHistory.setVisibility(View.GONE);
             mLnlNoHistory.setVisibility(View.VISIBLE);
