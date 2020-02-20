@@ -26,11 +26,11 @@ public interface VofrRepository {
     void getInforAccount (Context context,String accountID,CallBackData<Account>callBackData);
     void updateInforAccount(Context context,String token, Account account,CallBackData<String>callBackData);
     void updateImage(Context context,String token,String userId,Uri imageUri,CallBackData<String>callBackData);
-    void createOrder(Context context,String fullname,double finalTotal,String token,AccountItemEntities accountItemEntities, List<OrderItemEntities> orderItemEntities,CallBackData<String> callBackData);
+    void createOrder(Context context,OrderHistory order,String token, List<OrderItemEntities> orderItemEntities,CallBackData<String> callBackData);
     void getOrder(Context context, String token, String accountId, CallBackData<List<OrderHistory>> callBackData);
     void getOrderItem(Context context,String token, String orderId, CallBackData<List<OrderItem>> callBackData);
     void searchProduct(Context context, String productName, CallBackData<List<Product>> callBackData);
     void createUser(Context context, Account account, CallBackData<String> callBackData);
     void forgotPassword(Context context, String username, String email, CallBackData<String> callBackData);
-    void changePassword(Context context, String id,String password, String passwordNew, CallBackData<Account> callBackData);
+    void changePassword(Context context,String password, String passwordNew, CallBackData<Account> callBackData);
 }

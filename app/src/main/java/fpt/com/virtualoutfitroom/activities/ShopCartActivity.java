@@ -163,7 +163,7 @@ public class ShopCartActivity extends BaseActivity implements ShoppingCartView, 
                 if(mListOrder.size() == 0){
                     setLayoutEmpty();
                     SharePreferenceUtils.saveIntSharedPreference(getApplication(),BundleString.COUNTSHOPCART, 0);
-                    HomeActivity.updateUI();
+//                    HomeActivity.updateUI();
                 }else{
                     costTotal(mListOrder);
                     countShopCart(mListOrder);
@@ -188,7 +188,7 @@ public class ShopCartActivity extends BaseActivity implements ShoppingCartView, 
         }
         SharePreferenceUtils.saveIntSharedPreference(this,BundleString.COUNTSHOPCART, totalCount);
         //update quantity
-        HomeActivity.updateUI();
+//        HomeActivity.updateUI();
 
     }
 }

@@ -23,6 +23,26 @@ public class OrderHistory  implements Serializable {
     private String address;
     @SerializedName("phone_number")
     private String phone_number;
+    @SerializedName("method")
+    private int method;
+    @SerializedName("description")
+    private String description;
+
+    public int getMethod() {
+        return method;
+    }
+
+    public void setMethod(int method) {
+        this.method = method;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
     public String getOrderId() {
         return orderId;

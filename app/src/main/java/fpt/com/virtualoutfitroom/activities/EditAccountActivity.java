@@ -139,6 +139,11 @@ public class EditAccountActivity extends BaseActivity implements GetInforAccount
             mEdtLastname.setError("Tên không chứa các kí tự và số");
             check = false;
         }
+        String phone = mEdtPhone.getText().toString().trim();
+        if(phone.length() > 10){
+            mEdtPhone.setError("Số điện thoại không quá 10 số");
+            check = false;
+        }
         return check;
     }
 

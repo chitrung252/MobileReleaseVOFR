@@ -220,7 +220,7 @@ public class AccountFragment extends Fragment implements UpdateAvataView, View.O
 
     public void updateCountOrder(){
         int count = SharePreferenceUtils.getIntSharedPreference(getActivity(), "COUNTORDER");
-        mTxtCountOrder.setText(count + "đơn hàng");
+        mTxtCountOrder.setText(count + " đơn hàng");
     }
     public void accessImageLibrary() {
         shouldAskPermission();

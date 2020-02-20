@@ -24,6 +24,7 @@ import java.util.Objects;
 import fpt.com.virtualoutfitroom.R;
 import fpt.com.virtualoutfitroom.activities.PaymentActivity;
 import fpt.com.virtualoutfitroom.model.Account;
+import fpt.com.virtualoutfitroom.model.OrderHistory;
 import fpt.com.virtualoutfitroom.presenter.accounts.InformationAccountPresenter;
 import fpt.com.virtualoutfitroom.room.AccountItemEntities;
 import fpt.com.virtualoutfitroom.utils.RegexHelper;
@@ -31,11 +32,12 @@ import fpt.com.virtualoutfitroom.views.GetInforAccountView;
 
 public class AddressFragment extends Fragment implements GetInforAccountView {
     private View mView;
-    private EditText mEdtName, mEdtPhone, mEdtEmail, mEdtAddress;
+    private EditText mEdtName, mEdtPhone, mEdtEmail, mEdtAddress, mEdtDescription;
     private AccountItemEntities mAccount;
     private String name, email, phone, address;
     private InformationAccountPresenter informationAccountPresenter;
     private FirstFragmentListener mFragmentSentData;
+    private OrderHistory order;
 
     @Nullable
     @Override
@@ -74,6 +76,9 @@ public class AddressFragment extends Fragment implements GetInforAccountView {
         mEdtAddress = mView.findViewById(R.id.edt_address_payment);
         mEdtAddress.addTextChangedListener(new CustomTextWatcher(mEdtAddress,"address"));
         mEdtAddress.setOnTouchListener(new CustomTextWatcher(mEdtAddress));
+        mEdtDescription = mView.findViewById(R.id.edt_description_payment);
+        mEdtDescription.setOnTouchListener(new CustomTextWatcher(mEdtDescription));
+        order = new OrderHistory();
     }
 
     public void initialData() {
@@ -106,7 +111,12 @@ public class AddressFragment extends Fragment implements GetInforAccountView {
     }
 
     public void getData() {
-        mFragmentSentData.sendData(mEdtName.getText().toString(), mEdtEmail.getText().toString(), mEdtPhone.getText().toString(), mEdtAddress.getText().toString());
+        order.setFull_name(mEdtName.getText().toString());
+        order.setEmail(mEdtEmail.getText().toString());
+        order.setPhone_number(mEdtPhone.getText().toString());
+        order.setAddress(mEdtAddress.getText().toString());
+        order.setDescription(mEdtDescription.getText().toString().trim());
+        mFragmentSentData.sendData(order);
     }
 
     @Override
@@ -121,7 +131,7 @@ public class AddressFragment extends Fragment implements GetInforAccountView {
     }
 
     public interface FirstFragmentListener {
-        void sendData(String name, String email, String phone, String address);
+        void sendData(OrderHistory order);
     }
 
     private class CustomTextWatcher implements TextWatcher,View.OnTouchListener {
@@ -190,6 +200,9 @@ public class AddressFragment extends Fragment implements GetInforAccountView {
             }
             if (!mEdtPhone.getBackground().getConstantState().equals(getActivity().getResources().getDrawable(R.drawable.edit_text_cus_border).getConstantState())) {
                 mEdtPhone.setBackgroundResource(R.drawable.edit_text_cus_background);
+            }
+            if (!mEdtDescription.getBackground().getConstantState().equals(getActivity().getResources().getDrawable(R.drawable.edit_text_cus_border).getConstantState())) {
+                mEdtDescription.setBackgroundResource(R.drawable.edit_text_cus_background);
             }
         }
 

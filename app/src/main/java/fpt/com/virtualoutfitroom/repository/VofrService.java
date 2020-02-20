@@ -69,6 +69,6 @@ public interface VofrService {
     Call<ResponseBody> forgotPassword(@Query("username") String username, @Query("email") String email);
 
     @PUT(ConfigApi.Api.CHANGEPASSWORD)
-    Call<ResponseBody> changePassword(@Query("id") String id, @Query("password") String password,@Query("passwordNew") String passwordNew);
+    Call<ResponseBody> changePassword(@HeaderMap Map<String, String> header,@Query("password") String password,@Query("passwordNew") String passwordNew);
 
 }

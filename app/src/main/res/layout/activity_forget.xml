@@ -140,7 +140,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="xin đừng lo lắng, chúng tôi sẽ giúp bạn"
+                            android:text="xin đừng lo lắng"
                             android:textSize="20sp"
                             android:textColor="@color/color_white"/>
                     </LinearLayout>

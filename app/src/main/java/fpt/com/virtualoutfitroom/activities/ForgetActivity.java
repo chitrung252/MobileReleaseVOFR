@@ -90,8 +90,8 @@ public class ForgetActivity extends BaseActivity implements View.OnClickListener
     @Override
     public void sendMailSuccess(String message) {
         hud.dismiss();
-        finish();
         Toast.makeText(this,"Vui lòng kiểm tra email", Toast.LENGTH_LONG).show();
+        finish();
     }
 
     @Override

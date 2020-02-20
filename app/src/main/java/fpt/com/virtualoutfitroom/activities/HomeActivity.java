@@ -65,7 +65,14 @@ public class HomeActivity extends BaseActivity {
         }
     }
 
-    public static void updateUI(){
+//    public static void updateUI(){
+//        HomeFragment homeFragment = (HomeFragment) fragmentList.get(0);
+//        homeFragment.setCountShopCart();
+//    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
         HomeFragment homeFragment = (HomeFragment) fragmentList.get(0);
         homeFragment.setCountShopCart();
     }

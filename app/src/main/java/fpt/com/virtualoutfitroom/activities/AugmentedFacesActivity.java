@@ -34,6 +34,7 @@ import android.support.v4.content.FileProvider;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.PixelCopy;
 import android.view.View;
@@ -72,57 +73,61 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import fpt.com.virtualoutfitroom.R;
+import fpt.com.virtualoutfitroom.adapter.ProductArTextViewAdapter;
 import fpt.com.virtualoutfitroom.dialog.BottomSheetCateAr;
 import fpt.com.virtualoutfitroom.fragments.ArProductFragment;
 import fpt.com.virtualoutfitroom.fragments.FaceArFragment;
 import fpt.com.virtualoutfitroom.model.Category;
 import fpt.com.virtualoutfitroom.model.Product;
 import fpt.com.virtualoutfitroom.model.ProductRender;
+import fpt.com.virtualoutfitroom.presenter.CartPresenter;
 import fpt.com.virtualoutfitroom.presenter.category.CategoryPresenter;
+import fpt.com.virtualoutfitroom.room.OrderItemEntities;
+import fpt.com.virtualoutfitroom.utils.BundleString;
 import fpt.com.virtualoutfitroom.utils.GetAbsolutePathFile;
 import fpt.com.virtualoutfitroom.utils.RefineImage;
+import fpt.com.virtualoutfitroom.utils.SharePreferenceUtils;
 import fpt.com.virtualoutfitroom.utils.SpinnerManagement;
 import fpt.com.virtualoutfitroom.utils.UrlHelper;
+import fpt.com.virtualoutfitroom.views.AddToCartView;
 import fpt.com.virtualoutfitroom.views.CategoryView;
+import fpt.com.virtualoutfitroom.views.UpdateCardView;
 
 /**
  * This is an example activity that uses the Sceneform UX package to make common Augmented Faces
  * tasks easier.
  */
-public class AugmentedFacesActivity extends BaseActivity implements View.OnClickListener, CategoryView, ArProductFragment.FragmentListener, BottomSheetCateAr.FragmentCateListener {
+public class AugmentedFacesActivity extends BaseActivity implements View.OnClickListener, CategoryView, ArProductFragment.FragmentListener, BottomSheetCateAr.FragmentCateListener, AddToCartView, UpdateCardView {
     private static final String TAG = AugmentedFacesActivity.class.getSimpleName();
 
     private static final double MIN_OPENGL_VERSION = 3.0;
 
     private FaceArFragment arFragment;
     private final HashMap<AugmentedFace, List<AugmentedFaceNode>> faceNodeMap = new HashMap<>();
-    private HashMap<AugmentedFace, AugmentedFaceNode> faceNodeMapOld = new HashMap<>();
     private Product mProduct;
-    private Button btnTakePhoto;
-    private ImageView mImgBack;
+    private Button btnTakePhoto, mBtnAddToCart;
     private TextView mTxtProductName;
     private KProgressHUD hud;
-    private ImageView mImgArrow;
-    private ImageView mImgAddToCart;
-    boolean isUp;
-    boolean isUpPro;
-    private LinearLayout mLnlFunction;
+    private ImageView mImgArrow, mImgAddToCart, mImgBack;
+    boolean isUp, isUpPro;
     private ViewPager mViewPager;
     private SmartTabLayout mSmartTabLayout;
     private CategoryPresenter mCategoryPrsenter;
     private List<Category> mListCate;
     private boolean isCheckAll = true;
     private ImageView mImgCate;
-    private TextView mTxtCateName;
-    private LinearLayout mLnlProduct;
-    private LinearLayout mLnlDynamic;
-    private LinearLayout mLnlEditProChoose;
-    private LinearLayout mLnlEditPro;
+    private TextView mTxtCateName, mTxtCount;
+    private LinearLayout mLnlProduct, mLnlDynamic, mLnlEditProChoose, mLnlEditPro, mLnlFunction, mLnlDimiss;
     private List<Product> mListProduct;
     private BottomSheetCateAr bottomSheet;
     private List<ProductRender> productRenders;
+    private RecyclerView mRcvProduct;
+    private ProductArTextViewAdapter mRcvAdapter;
+    private CartPresenter cartPresenter;
+    private double mTotal;
 
     @Override
     @SuppressWarnings({"AndroidApiChecker", "FutureReturnValueIgnored"})
@@ -137,7 +142,6 @@ public class AugmentedFacesActivity extends BaseActivity implements View.OnClick
         initialView();
         getSpinner();
         initialData();
-        initialDataProView();
         // Load the face regions renderable.
         // This is a skinned model that renders 3D objects mapped to the regions of the augmented face.
 
@@ -183,14 +187,6 @@ public class AugmentedFacesActivity extends BaseActivity implements View.OnClick
                 });
     }
 
-//    public void refreshModel() {
-//        if (renderable != null) {
-//            renderable = null;
-//        }
-//        if (faceNodeMap != null) {
-//            faceNodeMap.clear();
-//        }
-//    }
 
     public void removeAllFaceNode() {
         Iterator<Map.Entry<AugmentedFace, List<AugmentedFaceNode>>> iter = faceNodeMap.entrySet().iterator();
@@ -202,61 +198,6 @@ public class AugmentedFacesActivity extends BaseActivity implements View.OnClick
             iter.remove();
         }
     }
-
-//    public void generateModel(Product product) {
-//        refreshModel();
-//        String url = RefineImage.getUrlImage(product.getProductImageList(), "sfb");
-//        String mGalleryPath = GetAbsolutePathFile.getRootDirPath(this);
-//        //using file
-////        final File file = new File(mGalleryPath, UrlHelper.getFileNameFromUrl(URLSFB));
-//        String fileUrl = mGalleryPath + "/" + UrlHelper.getFileNameFromUrl(url);
-//        ModelRenderable.builder()
-//                .setSource(this, Uri.parse(fileUrl))
-//                .build()
-//                .thenAccept(
-//                        modelRenderable -> {
-//                            renderable = modelRenderable;
-//
-//                            modelRenderable.setShadowCaster(false);
-//                            modelRenderable.setShadowReceiver(false);
-//                            hud.dismiss();
-//                        });
-//        ArSceneView sceneView = arFragment.getArSceneView();
-//        // This is important to make sure that the camera stream renders first so that
-//        // the face mesh occlusion works correctly.
-//        sceneView.setCameraStreamRenderPriority(Renderable.RENDER_PRIORITY_FIRST);
-//        Scene scene = sceneView.getScene();
-//        scene.addOnUpdateListener(
-//                (FrameTime frameTime) -> {
-//                    if (renderable == null) {
-//                        return;
-//                    }
-//                    Collection<AugmentedFace> faceList =
-//                            sceneView.getSession().getAllTrackables(AugmentedFace.class);
-//
-//                    // Make new AugmentedFaceNodes for any new faces.
-//                    for (AugmentedFace face : faceList) {
-//                        if (!faceNodeMap.containsKey(face)) {
-//                            AugmentedFaceNode faceNode = new AugmentedFaceNode(face);
-//                            faceNode.setParent(scene);
-//                            faceNode.setFaceRegionsRenderable(renderable);
-//                            faceNodeMap.put(face, faceNode);
-//                        }
-//                    }
-//
-//                    // Remove any AugmentedFaceNodes associated with an AugmentedFace that stopped tracking.
-//                    Iterator<Map.Entry<AugmentedFace, AugmentedFaceNode>> iter = faceNodeMap.entrySet().iterator();
-//                    while (iter.hasNext()) {
-//                        Map.Entry<AugmentedFace, AugmentedFaceNode> entry = iter.next();
-//                        AugmentedFace face = entry.getKey();
-//                        if (face.getTrackingState() == TrackingState.STOPPED) {
-//                            AugmentedFaceNode faceNode = entry.getValue();
-//                            faceNode.setParent(null);
-//                            iter.remove();
-//                        }
-//                    }
-//                });
-//    }
 
     public void getSpinner() {
         hud = SpinnerManagement.getSpinner(this);
@@ -289,6 +230,14 @@ public class AugmentedFacesActivity extends BaseActivity implements View.OnClick
         mLnlEditPro = findViewById(R.id.lnl_edit_product);
         mLnlEditPro.setVisibility(View.GONE);
         productRenders = new ArrayList<>();
+        mTxtCount = findViewById(R.id.txt_count_shop_cart);
+        mRcvProduct = findViewById(R.id.rcv_product_ar);
+        final LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        mRcvProduct.setLayoutManager(layoutManager);
+        mLnlDimiss = findViewById(R.id.lnl_dismiss);
+        mLnlDimiss.setOnClickListener(this);
+        mBtnAddToCart = findViewById(R.id.btn_add_to_cart);
+        mBtnAddToCart.setOnClickListener(this);
     }
 
     public void checkListTVProduct(Product product) {
@@ -302,6 +251,7 @@ public class AugmentedFacesActivity extends BaseActivity implements View.OnClick
             i++;
         }
         mListProduct.add(product);
+        updateUI();
         genrateImageView(mListProduct);
     }
 
@@ -335,8 +285,19 @@ public class AugmentedFacesActivity extends BaseActivity implements View.OnClick
         mCategoryPrsenter.getListCategory();
     }
 
-    private void initialDataProView() {
-        final LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+    private void updateUI() {
+        mRcvAdapter = new ProductArTextViewAdapter(this, mListProduct);
+        mRcvProduct.setAdapter(mRcvAdapter);
+        mRcvAdapter.setOnItemClickedListener(new ProductArTextViewAdapter.OnItemClickedListener() {
+            @Override
+            public void onItemClicked(int position) {
+                mRcvAdapter.removeItem(position);
+                mRcvAdapter.notifyDataSetChanged();
+                genrateImageView(mListProduct);
+                productRenders.remove(productRenders.get(position));
+                removeAllFaceNode();
+            }
+        });
 
     }
 
@@ -381,69 +342,6 @@ public class AugmentedFacesActivity extends BaseActivity implements View.OnClick
         return true;
     }
 
-    private String generateFilename() {
-        String date = new SimpleDateFormat("yyyyMMddHHMMmmss", java.util.Locale.getDefault()).format(new Date());
-        return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-                + File.separator + "vofr/" + date + "_photo.png";
-    }
-
-    private void saveBitmapToDisk(Bitmap bitmap, String filename) throws IOException {
-        File out = new File(filename);
-        if (!out.getParentFile().exists()) {
-            out.getParentFile().mkdirs();
-        }
-
-        try (
-                FileOutputStream outputStream = new FileOutputStream(filename);
-                ByteArrayOutputStream outputData = new ByteArrayOutputStream()) {
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputData);
-            outputData.writeTo(outputStream);
-            outputStream.flush();
-        } catch (IOException ex) {
-            throw new IOException("Failed to save bitmap to disk", ex);
-        }
-    }
-
-    private void takePhoto() {
-        final String filename = generateFilename();
-        ArSceneView view = arFragment.getArSceneView();
-
-        final Bitmap bitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
-        final HandlerThread handlerThread = new HandlerThread("PixelCopier");
-
-        handlerThread.start();
-        PixelCopy.request(view, bitmap, (copyResult) -> {
-            if (copyResult == PixelCopy.SUCCESS) {
-                try {
-                    saveBitmapToDisk(bitmap, filename);
-                } catch (IOException ex) {
-                    Toast toast = Toast.makeText(this, ex.toString(), Toast.LENGTH_LONG);
-                    toast.show();
-                    return;
-                }
-
-                Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "Photo saved", Snackbar.LENGTH_LONG);
-                File photoFile = new File(filename);
-                Uri photoURI = FileProvider.getUriForFile(this, this.getPackageName() + ".fileprovider", photoFile);
-
-                snackbar.setAction("Open in photo", v -> {
-                    Intent intent = new Intent(Intent.ACTION_VIEW);
-                    intent.setDataAndType(photoURI, "image/*");
-                    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                    startActivity(intent);
-                });
-                snackbar.setActionTextColor(Color.parseColor("#3F51B5"));
-                snackbar.show();
-                Uri scannerUri = Uri.fromFile(photoFile);
-                sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, scannerUri));
-            } else {
-                Toast toast = Toast.makeText(this, "Failed to copy pixels: " + copyResult, Toast.LENGTH_LONG);
-                toast.show();
-            }
-            handlerThread.quitSafely();
-        }, new Handler(handlerThread.getLooper()));
-    }
-
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -454,16 +352,32 @@ public class AugmentedFacesActivity extends BaseActivity implements View.OnClick
                 changeLayout();
                 break;
             case R.id.img_add_to_cart:
-                addToCart();
+                openShoppingCart();
                 break;
             case R.id.img_category:
                 showDialogBottom();
                 break;
             case R.id.lnl_edit_product_choose:
-                removeAllFaceNode();
-//                showPopUpEditProduct();
+                showPopUpEditProduct();
+                break;
+            case R.id.lnl_dismiss:
+                showPopUpEditProduct();
+                break;
+            case R.id.btn_add_to_cart:
+                addToCart();
                 break;
         }
+    }
+
+    private void addToCart() {
+        cartPresenter = new CartPresenter(this, getApplication(), this, this);
+        cartPresenter.getListOrder();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        setCountShopCart();
     }
 
     private void showPopUpEditProduct() {
@@ -495,22 +409,9 @@ public class AugmentedFacesActivity extends BaseActivity implements View.OnClick
         isUp = !isUp;
     }
 
-    private void addToCart() {
-
-    }
-
-    private void slideDown() {
-        ObjectAnimator animation = ObjectAnimator.ofFloat(mLnlFunction, "translationY", 0f);
-        animation.setDuration(200);
-        animation.start();
-        mImgArrow.setImageResource(R.drawable.ic_up_arrow);
-    }
-
-    private void slideUp() {
-        ObjectAnimator animation = ObjectAnimator.ofFloat(mLnlFunction, "translationY", -300f);
-        animation.setDuration(200);
-        animation.start();
-        mImgArrow.setImageResource(R.drawable.ic_down_arrow);
+    private void openShoppingCart() {
+        Intent intent = new Intent(this, ShopCartActivity.class);
+        startActivity(intent);
     }
 
     private void getCurrentCategory(List<Category> list, int curCateId) {
@@ -614,14 +515,34 @@ public class AugmentedFacesActivity extends BaseActivity implements View.OnClick
                                     exist = true;
                                 }
                             }
-                            if(!exist) {
+                            if (!exist) {
                                 productRenders.add(new ProductRender(product, modelRenderable));
                             }
-
                             removeAllFaceNode();
                             hud.dismiss();
                         });
+    }
 
+
+    @Override
+    public void sendData(Product product) {
+        if (!checkExistProductView(product)) {
+            getSpinner();
+            renderModel3D(product);
+            if (isUpPro == true) {
+                mLnlEditPro.setVisibility(View.GONE);
+                isUpPro = false;
+            }
+            updateUI();
+        }
+        checkListTVProduct(product);
+    }
+
+    @Override
+    public void sendDataCate(List<Category> listCate, Category category) {
+        getCurrentCategory(listCate, category.getCategoryId());
+        mCategoryPrsenter.getListSubCategory(category.getCategoryId());
+        isCheckAll = false;
     }
 
     private boolean checkExistProductView(Product product) {
@@ -633,31 +554,158 @@ public class AugmentedFacesActivity extends BaseActivity implements View.OnClick
         return false;
     }
 
-//    public void renderModel3D(Product product) {
-//        if (productRenders != null) {
-//            checkExistModel3D(product);
-//        }
-//    }
-
     @Override
     public void showError(String message) {
 
     }
 
-    //chu y ham nay
-    @Override
-    public void sendData(Product product) {
-        if (!checkExistProductView(product)) {
-            getSpinner();
-            renderModel3D(product);
+    public void setCountShopCart() {
+        int count = SharePreferenceUtils.getIntSharedPreference(this, BundleString.COUNTSHOPCART);
+        if (count == 0) {
+            mTxtCount.setText("0");
+        } else {
+            mTxtCount.setText(count + "");
         }
-        checkListTVProduct(product);
+    }
+
+    private void slideDown() {
+        ObjectAnimator animation = ObjectAnimator.ofFloat(mLnlFunction, "translationY", 0f);
+        animation.setDuration(200);
+        animation.start();
+        mImgArrow.setImageResource(R.drawable.ic_up_arrow);
+    }
+
+    private void slideUp() {
+        ObjectAnimator animation = ObjectAnimator.ofFloat(mLnlFunction, "translationY", -300f);
+        animation.setDuration(200);
+        animation.start();
+        mImgArrow.setImageResource(R.drawable.ic_down_arrow);
+    }
+
+    private String generateFilename() {
+        String date = new SimpleDateFormat("yyyyMMddHHMMmmss", java.util.Locale.getDefault()).format(new Date());
+        return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+                + File.separator + "vofr/" + date + "_photo.png";
+    }
+
+    private void saveBitmapToDisk(Bitmap bitmap, String filename) throws IOException {
+        File out = new File(filename);
+        if (!out.getParentFile().exists()) {
+            out.getParentFile().mkdirs();
+        }
+
+        try (
+                FileOutputStream outputStream = new FileOutputStream(filename);
+                ByteArrayOutputStream outputData = new ByteArrayOutputStream()) {
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputData);
+            outputData.writeTo(outputStream);
+            outputStream.flush();
+        } catch (IOException ex) {
+            throw new IOException("Failed to save bitmap to disk", ex);
+        }
+    }
+
+    private void takePhoto() {
+        final String filename = generateFilename();
+        ArSceneView view = arFragment.getArSceneView();
+
+        final Bitmap bitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
+        final HandlerThread handlerThread = new HandlerThread("PixelCopier");
+
+        handlerThread.start();
+        PixelCopy.request(view, bitmap, (copyResult) -> {
+            if (copyResult == PixelCopy.SUCCESS) {
+                try {
+                    saveBitmapToDisk(bitmap, filename);
+                } catch (IOException ex) {
+                    Toast toast = Toast.makeText(this, ex.toString(), Toast.LENGTH_LONG);
+                    toast.show();
+                    return;
+                }
+
+                Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "Photo saved", Snackbar.LENGTH_LONG);
+                File photoFile = new File(filename);
+                Uri photoURI = FileProvider.getUriForFile(this, this.getPackageName() + ".fileprovider", photoFile);
+
+                snackbar.setAction("Open in photo", v -> {
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setDataAndType(photoURI, "image/*");
+                    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                    startActivity(intent);
+                });
+                snackbar.setActionTextColor(Color.parseColor("#3F51B5"));
+                snackbar.show();
+                Uri scannerUri = Uri.fromFile(photoFile);
+                sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, scannerUri));
+            } else {
+                Toast toast = Toast.makeText(this, "Failed to copy pixels: " + copyResult, Toast.LENGTH_LONG);
+                toast.show();
+            }
+            handlerThread.quitSafely();
+        }, new Handler(handlerThread.getLooper()));
     }
 
     @Override
-    public void sendDataCate(List<Category> listCate, Category category) {
-        getCurrentCategory(listCate, category.getCategoryId());
-        mCategoryPrsenter.getListSubCategory(category.getCategoryId());
-        isCheckAll = false;
+    public void onSuccess() {
+        if (isUpPro) {
+            mLnlEditPro.setVisibility(View.GONE);
+            isUpPro = false;
+        }
+        updateCount();
+    }
+
+    @Override
+    public void showListOrderItem(List<OrderItemEntities> items) {
+        if (items.size() > 0) {
+            boolean check = false;
+            for (Product product : mListProduct) {
+                for (OrderItemEntities order : items) {
+                    if (order.getProduct().getId() == product.getId()) {
+                        order.setQuality(order.getQuality() + 1);
+                        order.setTotal(order.getTotal() + order.getProduct().getProductPrice() * 1);
+                        cartPresenter = new CartPresenter(this, getApplication(), this, this);
+                        cartPresenter.updateToCart(order);
+                        check = true;
+                    }
+                }
+                if (!check) {
+                    createOrderItem(product);
+                }
+                check = false;
+            }
+        } else {
+            for (Product product : mListProduct) {
+                createOrderItem(product);
+            }
+        }
+    }
+
+    private void createOrderItem(Product product) {
+        OrderItemEntities o = new OrderItemEntities();
+        String orderId = UUID.randomUUID().toString();
+        o.setOrderItemId(orderId);
+        o.setTotal(product.getProductPrice());
+        o.setQuality(1);
+        o.setProduct(product);
+        cartPresenter.addToCart(o);
+    }
+
+    private void updateCount() {
+        int count = SharePreferenceUtils.getIntSharedPreference(this, BundleString.COUNTSHOPCART);
+        if (count == 0) {
+            SharePreferenceUtils.saveIntSharedPreference(this, BundleString.COUNTSHOPCART, 1);
+        } else {
+            SharePreferenceUtils.saveIntSharedPreference(this, BundleString.COUNTSHOPCART, 1 + count);
+        }
+        setCountShopCart();
+    }
+
+    @Override
+    public void updateCardSuccess() {
+        if (isUpPro) {
+            mLnlEditPro.setVisibility(View.GONE);
+            isUpPro = false;
+        }
+        updateCount();
     }
 }

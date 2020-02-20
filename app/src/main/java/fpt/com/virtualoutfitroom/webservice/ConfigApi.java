@@ -18,6 +18,6 @@ public class ConfigApi {
        String SEARCHPRODUCT = "product/search-product-by-name";
        String CREATUSER = "account/create-account";
        String FORGOTPASSWORD = "account/forgot-password";
-       String CHANGEPASSWORD ="account/change-password";
+       String CHANGEPASSWORD ="account/change-password-mobile";
     }
 }

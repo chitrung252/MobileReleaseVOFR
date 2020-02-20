@@ -19,8 +19,8 @@
                         <option name="values">
                           <map>
                             <entry key="assetSourceType" value="FILE" />
-                            <entry key="outputName" value="ic_ban" />
-                            <entry key="sourceFile" value="C:\Users\Trung\Desktop\ban.svg" />
+                            <entry key="outputName" value="ic_note" />
+                            <entry key="sourceFile" value="C:\Users\Trung\Desktop\note.svg" />
                           </map>
                         </option>
                       </PersistentState>

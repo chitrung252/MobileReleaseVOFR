@@ -22,6 +22,7 @@ import java.util.List;
 import fpt.com.virtualoutfitroom.R;
 import fpt.com.virtualoutfitroom.adapter.FinishPaymentAdapter;
 import fpt.com.virtualoutfitroom.model.Account;
+import fpt.com.virtualoutfitroom.model.OrderHistory;
 import fpt.com.virtualoutfitroom.model.ProductPayment;
 import fpt.com.virtualoutfitroom.presenter.ShoppingCartPresenter;
 import fpt.com.virtualoutfitroom.presenter.accounts.InformationAccountPresenter;
@@ -43,6 +44,7 @@ public class FinishFragment extends Fragment implements ShoppingCartView {
     private TextView mTxtEmail;
     private TextView mTxtPhone;
     private TextView mTxtNameMethod;
+    private TextView mTxtDescription;
     private ShoppingCartPresenter mShoppingCartPresenter;
     private List<OrderItemEntities> mOrderItemEntities;
     @Nullable
@@ -74,6 +76,7 @@ public class FinishFragment extends Fragment implements ShoppingCartView {
         mTxtPhone = mView.findViewById(R.id.txt_phone_finish);
         mTxtAddres = mView.findViewById(R.id.txt_address_finish);
         mTxtNameMethod = mView.findViewById(R.id.txt_method_finish);
+        mTxtDescription = mView.findViewById(R.id.txt_description_finish);
         final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRcvPayemnt3.setLayoutManager(layoutManager);
@@ -92,11 +95,16 @@ public class FinishFragment extends Fragment implements ShoppingCartView {
             mAdapter.notifyDataSetChanged();
         }
     }
-    public void getData(String name,String email,String phone,String address){
-        mTxtUserName.setText("Tên người nhận: " + name);
-        mTxtEmail.setText("Email: " + email);
-        mTxtPhone.setText("Phone: " + phone);
-        mTxtAddres.setText("Địa chỉ: " + address);
+    public void getData(OrderHistory order){
+        mTxtUserName.setText("Tên người nhận: " + order.getFull_name());
+        mTxtEmail.setText("Email: " + order.getEmail());
+        mTxtPhone.setText("Phone: " + order.getPhone_number());
+        mTxtAddres.setText("Địa chỉ: " + order.getAddress());
+        if(order.getDescription().length() > 0){
+            mTxtDescription.setText("Ghi chú: " + order.getDescription());
+        }else{
+            mTxtDescription.setText("Ghi chú: Không có ghi chú");
+        }
     }
     public void getMethod(){
         int position = SharePreferenceUtils.getIntSharedPreference(getActivity(),"METHOD");

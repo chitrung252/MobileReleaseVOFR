@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.kaopiz.kprogresshud.KProgressHUD;
 
@@ -60,15 +61,14 @@ public class ChangePasswordActivity extends BaseActivity implements View.OnClick
             check = false;
             mEdtPasswordConfirm.setError("Xác nhận mật khẩu không được để trống");
         }else{
-            if (passwordConfirm != passwordNew) {
+            if (!passwordConfirm.equals(passwordNew)) {
                 check = false;
                 mEdtPasswordConfirm.setError("Mật khẩu không trùng khớp");
             }
         }
         if (check) {
             getSpinner();
-            String id = SharePreferenceUtils.getStringSharedPreference(this, BundleString.USERID);
-            mPresenter.changePassword(id, password, passwordNew);
+            mPresenter.changePassword(password, passwordNew);
         }
     }
 
@@ -89,11 +89,18 @@ public class ChangePasswordActivity extends BaseActivity implements View.OnClick
         hud.dismiss();
         if(account != null){
             SharePreferenceUtils.saveStringSharedPreference(this,BundleString.TOKEN,account.getAccessToken());
+            Toast.makeText(this, "Đổi mật khẩu thành công", Toast.LENGTH_LONG).show();
+            mEdtPassword.setText("");
+            mEdtPasswordNew.setText("");
+            mEdtPasswordConfirm.setText("");
+        }else {
+            Toast.makeText(this, "Không có tài khoản được trả về", Toast.LENGTH_LONG).show();
         }
     }
 
     @Override
     public void showError(String message) {
-
+        hud.dismiss();
+        Toast.makeText(this, message,Toast.LENGTH_LONG).show();
     }
 }

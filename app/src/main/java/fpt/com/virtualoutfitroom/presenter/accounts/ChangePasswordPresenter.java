@@ -20,8 +20,8 @@ public class ChangePasswordPresenter {
         this.mView = mView;
     }
 
-    public void changePassword(String id, String password, String passwordNew){
-        mRepository.changePassword(mContext, id, password, passwordNew, new CallBackData<Account>() {
+    public void changePassword(String password, String passwordNew){
+        mRepository.changePassword(mContext, password, passwordNew, new CallBackData<Account>() {
             @Override
             public void onSuccess(Account account) {
                 mView.changePasswordSuccess(account);

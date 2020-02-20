@@ -27,8 +27,10 @@ import fpt.com.virtualoutfitroom.model.ProductImage;
 import fpt.com.virtualoutfitroom.model.ResponseResult;
 import fpt.com.virtualoutfitroom.room.AccountItemEntities;
 import fpt.com.virtualoutfitroom.room.OrderItemEntities;
+import fpt.com.virtualoutfitroom.utils.BundleString;
 import fpt.com.virtualoutfitroom.utils.GetPathFile;
 import fpt.com.virtualoutfitroom.utils.RealPathUtils;
+import fpt.com.virtualoutfitroom.utils.SharePreferenceUtils;
 import fpt.com.virtualoutfitroom.webservice.CallBackData;
 import fpt.com.virtualoutfitroom.webservice.ClientApi;
 import okhttp3.MediaType;
@@ -412,20 +414,22 @@ public class VofrImpl implements VofrRepository {
         });
     }
     @Override
-    public void createOrder(Context context,String fullname,double finalTotal,String token, AccountItemEntities accountItemEntities, List<OrderItemEntities> orderItemEntities, CallBackData<String> callBackData) {
+    public void createOrder(Context context,OrderHistory order,String token, List<OrderItemEntities> orderItemEntities, CallBackData<String> callBackData) {
         ClientApi  clientApi = new ClientApi();
         String hearder = "Bearer " + token;
         Map<String, String> map = new HashMap<>();
         map.put("Authorization", hearder);
         JSONObject jsonObject = new JSONObject();
         try {
-            Account account = accountItemEntities.getAccount();
-            jsonObject.put("total",finalTotal);
-            jsonObject.put("account_id",account.getAccountId());
-            jsonObject.put("full_name",fullname);
-            jsonObject.put("email",account.getEmail());
-            jsonObject.put("address",account.getAddress());
-            jsonObject.put("phone_number",account.getPhoneNumber());
+            String accountId = SharePreferenceUtils.getStringSharedPreference(context, BundleString.USERID);
+            jsonObject.put("total",order.getTotal());
+            jsonObject.put("account_id",accountId);
+            jsonObject.put("full_name",order.getFull_name());
+            jsonObject.put("email",order.getEmail());
+            jsonObject.put("address",order.getAddress());
+            jsonObject.put("phone_number",order.getPhone_number());
+            jsonObject.put("method",order.getMethod());
+            jsonObject.put("description",order.getDescription());
             JSONArray  jsonArray = new JSONArray();
             for (int i = 0; i <orderItemEntities.size() ; i++) {
                 JSONObject jsonObject1 = new JSONObject();
@@ -657,9 +661,13 @@ public class VofrImpl implements VofrRepository {
     }
 
     @Override
-    public void changePassword(Context context, String id, String password, String passwordNew, CallBackData<Account> callBackData) {
+    public void changePassword(Context context, String password, String passwordNew, CallBackData<Account> callBackData) {
+        String token = SharePreferenceUtils.getStringSharedPreference(context, BundleString.TOKEN);
         ClientApi  clientApi = new ClientApi();
-        Call<ResponseBody> serviceCall = clientApi.rmapService().changePassword(id,password,passwordNew);
+        String hearder = "Bearer " + token;
+        Map<String, String> map = new HashMap<>();
+        map.put("Authorization", hearder);
+        Call<ResponseBody> serviceCall = clientApi.rmapService().changePassword(map,password,passwordNew);
         serviceCall.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -667,7 +675,7 @@ public class VofrImpl implements VofrRepository {
                     if(response.code() == 200){
                         try{
                             String result = response.body().string();
-                            Type type = new TypeToken<ResponseResult>() {
+                            Type type = new TypeToken<ResponseResult<Account>>() {
                             }.getType();
                             ResponseResult<Account> responseResult =
                                     new Gson().fromJson(result, type);

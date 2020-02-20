@@ -134,7 +134,7 @@ public class BottomSheetDialog extends BottomSheetDialogFragment implements View
         }else{
             SharePreferenceUtils.saveIntSharedPreference(getActivity(),BundleString.COUNTSHOPCART, mQuantity + count);
         }
-        HomeActivity.updateUI();
+//        HomeActivity.updateUI();
     }
     private void  dismissBottomSheet(){
         getDialog().cancel();

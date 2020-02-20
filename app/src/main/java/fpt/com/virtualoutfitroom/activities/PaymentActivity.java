@@ -27,6 +27,7 @@ import fpt.com.virtualoutfitroom.fragments.AddressFragment;
 import fpt.com.virtualoutfitroom.fragments.FinishFragment;
 import fpt.com.virtualoutfitroom.fragments.MethodFragment;
 import fpt.com.virtualoutfitroom.model.Account;
+import fpt.com.virtualoutfitroom.model.OrderHistory;
 import fpt.com.virtualoutfitroom.presenter.ShoppingCartPresenter;
 import fpt.com.virtualoutfitroom.presenter.accounts.InformationAccountPresenter;
 import fpt.com.virtualoutfitroom.presenter.orders.CreateOrderPresenter;
@@ -49,14 +50,14 @@ public class PaymentActivity extends BaseActivity implements GetInforAccountView
     private Account mAccount;
     private AccountItemEntities mAccountItemEntities;
     private CreateOrderPresenter mCreateOrderPresenter;
-    private String mFullname,mEmail,mPhone,mAddress;
+    private String mFullname,mEmail,mPhone,mAddress,mDescription;
     private int ischeck =-1 ;
     private List<OrderItemEntities> mOrderItemEntities;
     private ShoppingCartPresenter mShoppingCartPresenter;
-    private float finalTotal = 0;
     private String token ;
     private InformationAccountPresenter  informationAccountPresenter;
-    int PAGE = 0;
+    private int PAGE = 0;
+    private OrderHistory order;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,6 +72,7 @@ public class PaymentActivity extends BaseActivity implements GetInforAccountView
         mBtnBack = findViewById(R.id.lnl_back_arrow);
         mTxtNext = findViewById(R.id.text_view_next);
         mBtnNext.setBackgroundResource(R.drawable.button_background);
+        order = new OrderHistory();
     }
     public void getData(){
         informationAccountPresenter = new InformationAccountPresenter(getApplication(),this);
@@ -183,11 +185,10 @@ public class PaymentActivity extends BaseActivity implements GetInforAccountView
     }
 
     private void payment(){
-        mAccountItemEntities.getAccount().setAddress(mAddress);
-        mAccountItemEntities.getAccount().setEmail(mEmail);
-        mAccountItemEntities.getAccount().setPhoneNumber(mPhone);
+        order.setTotal(SharePreferenceUtils.getFloatSharedPreference(PaymentActivity.this, BundleString.TOTAL));
+        order.setMethod(SharePreferenceUtils.getIntSharedPreference(PaymentActivity.this,"METHOD"));
         mCreateOrderPresenter = new CreateOrderPresenter(PaymentActivity.this,this);
-        mCreateOrderPresenter.createOrder(mFullname,finalTotal,token,mAccountItemEntities,mOrderItemEntities);
+        mCreateOrderPresenter.createOrder(order,token,mOrderItemEntities);
     }
     private void disableTab()
     {
@@ -218,7 +219,6 @@ public class PaymentActivity extends BaseActivity implements GetInforAccountView
     @Override
     public void getAccountFromRoom(AccountItemEntities accountItemEntities) {
         mAccountItemEntities =  accountItemEntities;
-        finalTotal = SharePreferenceUtils.getFloatSharedPreference(PaymentActivity.this, BundleString.TOTAL);
         mFullname = accountItemEntities.getAccount().getFirstName() + " " + accountItemEntities.getAccount().getLastName();
         mPhone = accountItemEntities.getAccount().getPhoneNumber();
         mEmail = accountItemEntities.getAccount().getEmail();
@@ -228,9 +228,10 @@ public class PaymentActivity extends BaseActivity implements GetInforAccountView
         mShoppingCartPresenter.getAllOrderItem();
     }
     @Override
-    public void sendData(String name, String email, String phone, String address) {
+    public void sendData(OrderHistory order) {
         FinishFragment fragment = (FinishFragment) getSupportFragmentManager().getFragments().get(2);
-        fragment.getData(name,email,phone,address);
+        fragment.getData(order);
+        this.order = order;
     }
     @Override
     public void showListOrderItem(List<OrderItemEntities> orderItemEntities) {
@@ -258,7 +259,7 @@ public class PaymentActivity extends BaseActivity implements GetInforAccountView
     @Override
     public void deleteOrderSuccess(String success) {
         SharePreferenceUtils.saveIntSharedPreference(this,BundleString.COUNTSHOPCART,0);
-        HomeActivity.updateUI();
+//        HomeActivity.updateUI();
         Intent intent = new Intent(PaymentActivity.this,HomeActivity.class);
         startActivity(intent);
     }

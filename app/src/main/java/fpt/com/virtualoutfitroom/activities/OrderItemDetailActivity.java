@@ -1,7 +1,6 @@
 package fpt.com.virtualoutfitroom.activities;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -28,6 +27,7 @@ public class OrderItemDetailActivity extends BaseActivity implements View.OnClic
     private TextView mTxtEmail;
     private TextView mTxtPhone;
     private TextView mTxtAddress;
+    private TextView mTxtDescription;
     private OrderHistory mOrder;
     private RecyclerView mRcvOrderItem;
     private OrderItemAdapter mRcvOrderItemAdapter;
@@ -49,6 +49,7 @@ public class OrderItemDetailActivity extends BaseActivity implements View.OnClic
         mTxtEmail = findViewById(R.id.txt_email_account);
         mTxtPhone = findViewById(R.id.txt_phone_account);
         mTxtAddress = findViewById(R.id.txt_address_account);
+        mTxtDescription = findViewById(R.id.txt_description_account);
         mRcvOrderItem = findViewById(R.id.rcv_order_item);
         mBtnBack = findViewById(R.id.btn_back);
         mBtnBack.setOnClickListener(this);
@@ -65,6 +66,11 @@ public class OrderItemDetailActivity extends BaseActivity implements View.OnClic
         mTxtEmail.setText(mOrder.getEmail());
         mTxtPhone.setText(mOrder.getPhone_number());
         mTxtAddress.setText(mOrder.getAddress());
+        if(mOrder.getDescription() != null){
+            mTxtDescription.setText(mOrder.getDescription());
+        }else {
+            mTxtDescription.setText("Không có ghi chú");
+        }
         mOrderItemPresenter = new OrderItemPresenter(this,this);
         String token = SharePreferenceUtils.getStringSharedPreference(this, BundleString.TOKEN);
         mOrderItemPresenter.getListOrderItem(token,mOrder.getOrderId());
@@ -77,7 +83,9 @@ public class OrderItemDetailActivity extends BaseActivity implements View.OnClic
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.img_back_to_previous : finish();
+            break;
             case R.id.btn_back: finish();
+            break;
         }
     }
 

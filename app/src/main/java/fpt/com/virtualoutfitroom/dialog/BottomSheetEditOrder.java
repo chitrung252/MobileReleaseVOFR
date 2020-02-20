@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.kaopiz.kprogresshud.KProgressHUD;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -27,6 +28,7 @@ import fpt.com.virtualoutfitroom.room.OrderItemEntities;
 import fpt.com.virtualoutfitroom.utils.BundleString;
 import fpt.com.virtualoutfitroom.utils.ChangeValue;
 import fpt.com.virtualoutfitroom.utils.CurrencyManagement;
+import fpt.com.virtualoutfitroom.utils.RefineImage;
 import fpt.com.virtualoutfitroom.utils.SharePreferenceUtils;
 import fpt.com.virtualoutfitroom.utils.SpinnerManagement;
 import fpt.com.virtualoutfitroom.views.DeleteToRomView;
@@ -39,13 +41,13 @@ public class BottomSheetEditOrder extends BottomSheetDialogFragment implements V
     private CartPresenter cartPresenter;
     private LinearLayout mLnlDismiss;
     private OrderItemEntities orderItemEntities;
-    private ImageView mImgProduct;
     private double mTotal = 0;
     private int mQuantity = 1;
     private int mOldQuantity;
     private EditText mEdtQuantity;
     private ImageView mImgIncrease;
     private ImageView mImgDecrease;
+    private ImageView mProductImg;
     private TextView mProductName;
     private TextView mProductPrice;
     private OnUpdateSuccess mOnUpdateSuccess;
@@ -72,9 +74,9 @@ public class BottomSheetEditOrder extends BottomSheetDialogFragment implements V
         mBtnUpdateToCart.setOnClickListener(this);
         mLnlDismiss = view.findViewById(R.id.lnl_dismiss_update);
         mLnlDismiss.setOnClickListener(this);
-        mImgProduct = view.findViewById(R.id.img_product_image_update);
         mProductName = view.findViewById(R.id.txt_product_name_update);
         mProductPrice = view.findViewById(R.id.txt_product_price_update);
+        mProductImg = view.findViewById(R.id.img_product_image);
         mEdtQuantity = view.findViewById(R.id.edit_text_quantity_order);
         mEdtQuantity.setEnabled(false);
         mImgDecrease = view.findViewById(R.id.image_decrease_setting_order_update);
@@ -93,6 +95,7 @@ public class BottomSheetEditOrder extends BottomSheetDialogFragment implements V
         mTotal = orderItemEntities.getTotal();
         mProductName.setText(orderItemEntities.getProduct().getProductName());
         mProductPrice.setText(ChangeValue.formatDecimalPrice(orderItemEntities.getTotal()));
+        Picasso.get().load(RefineImage.getUrlImage(orderItemEntities.getProduct().getProductImageList(),"img")).into(mProductImg);
         mEdtQuantity.setText(orderItemEntities.getQuality() +"");
     }
     @Override
@@ -144,7 +147,7 @@ public class BottomSheetEditOrder extends BottomSheetDialogFragment implements V
         if(num != 0){
             SharePreferenceUtils.saveIntSharedPreference(getActivity(),BundleString.COUNTSHOPCART, count - num);
         }
-        HomeActivity.updateUI();
+//        HomeActivity.updateUI();
     }
     @Override
     public void updateCardSuccess() {
