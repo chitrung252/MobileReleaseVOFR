@@ -27,6 +27,7 @@ import fpt.com.virtualoutfitroom.model.ProductImage;
 import fpt.com.virtualoutfitroom.model.ResponseResult;
 import fpt.com.virtualoutfitroom.room.AccountItemEntities;
 import fpt.com.virtualoutfitroom.room.OrderItemEntities;
+import fpt.com.virtualoutfitroom.sockets.SocketServer;
 import fpt.com.virtualoutfitroom.utils.BundleString;
 import fpt.com.virtualoutfitroom.utils.GetPathFile;
 import fpt.com.virtualoutfitroom.utils.RealPathUtils;
@@ -42,6 +43,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class VofrImpl implements VofrRepository {
+    private SocketServer socketServer;
+
+
     @Override
     public void getListProduct(Context context,final CallBackData<List<Product>> callBackData) {
         ClientApi clientApi = new ClientApi();
@@ -415,6 +419,8 @@ public class VofrImpl implements VofrRepository {
     }
     @Override
     public void createOrder(Context context,OrderHistory order,String token, List<OrderItemEntities> orderItemEntities, CallBackData<String> callBackData) {
+
+
         ClientApi  clientApi = new ClientApi();
         String hearder = "Bearer " + token;
         Map<String, String> map = new HashMap<>();
@@ -457,6 +463,9 @@ public class VofrImpl implements VofrRepository {
                             ResponseResult responseResult =
                                     new Gson().fromJson(result, type);
                             callBackData.onSuccess(responseResult.getMessage());
+                            socketServer = new SocketServer();
+                            socketServer.connect();
+                            socketServer.emitOrder(jsonObject);
                         }catch (Exception e){
                             e.printStackTrace();
                         }

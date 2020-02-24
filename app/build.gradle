@@ -76,4 +76,7 @@ dependencies {
     //PRdownload
     implementation 'com.mindorks.android:prdownloader:0.5.0'
 
+    //Socket
+    implementation 'com.github.nkzawa:socket.io-client:0.3.0'
+
 }
