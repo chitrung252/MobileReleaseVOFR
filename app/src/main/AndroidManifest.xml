@@ -37,7 +37,7 @@
             android:name=".activities.EditAccountActivity"
             android:windowSoftInputMode="stateHidden" />
         <activity android:name=".activities.ShopCartActivity" />
-        <activity android:name=".activities.PaymentActivity" />
+        <activity android:name=".activities.PaymentActivitys" />
         <activity android:name=".activities.DetailProductActivity" />
         <activity
             android:name=".activities.HomeActivity"

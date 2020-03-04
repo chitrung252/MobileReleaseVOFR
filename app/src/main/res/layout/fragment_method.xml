@@ -53,7 +53,7 @@
                 android:textStyle="bold"
                 android:gravity="center|center_horizontal"
                 android:textColor="@color/color_black"
-                android:text="Thanh toán khi nhận hàng"
+                android:text="Thanh toán tại cửa hàng"
                 android:textSize="15sp"
                 android:layout_weight="10"
                 android:layout_width="0dp"
@@ -96,7 +96,7 @@
                 android:textStyle="bold"
                 android:gravity="center|center_horizontal"
                 android:textColor="@color/color_black"
-                android:text="Thanh toán tại cửa hàng"
+                android:text="Thanh toán bằng Paypal"
                 android:textSize="15sp"
                 android:layout_weight="10"
                 android:layout_width="0dp"
@@ -115,14 +115,14 @@
         android:layout_width="match_parent"
         android:orientation="horizontal"
         android:weightSum="10"
-        android:layout_height="60dp">
+        android:layout_height="60dp"
+        android:visibility="gone">
         <LinearLayout
             android:layout_gravity="center"
             android:gravity="center"
             android:layout_weight="2"
             android:layout_width="0dp"
             android:layout_height="match_parent">
-
             <ImageView
                 android:layout_width="@dimen/dp20"
                 android:layout_height="@dimen/dp20"

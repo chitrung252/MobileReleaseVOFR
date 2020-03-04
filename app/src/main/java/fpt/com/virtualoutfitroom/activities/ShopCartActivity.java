@@ -3,11 +3,9 @@ package fpt.com.virtualoutfitroom.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -23,9 +21,6 @@ import fpt.com.virtualoutfitroom.adapter.RecyclerViewApdapter;
 import fpt.com.virtualoutfitroom.adapter.ShopCartAdapter;
 import fpt.com.virtualoutfitroom.adapter.SwipeToDeleteCallback;
 import fpt.com.virtualoutfitroom.dialog.BottomSheetEditOrder;
-import fpt.com.virtualoutfitroom.fragments.AccountFragment;
-import fpt.com.virtualoutfitroom.fragments.CategoryFragment;
-import fpt.com.virtualoutfitroom.fragments.HomeFragment;
 import fpt.com.virtualoutfitroom.presenter.ShoppingCartPresenter;
 import fpt.com.virtualoutfitroom.room.OrderItemEntities;
 import fpt.com.virtualoutfitroom.utils.BundleString;
@@ -145,7 +140,7 @@ public class ShopCartActivity extends BaseActivity implements ShoppingCartView, 
         String token = SharePreferenceUtils.getStringSharedPreference(this,BundleString.TOKEN);
         if(token.length() > 0){
             SharePreferenceUtils.saveFloatSharedPreference(ShopCartActivity.this, BundleString.TOTAL, (float) mTotal);
-            Intent intent = new Intent(this, PaymentActivity.class);
+            Intent intent = new Intent(this, PaymentActivitys.class);
             startActivity(intent);
         }else{
             Intent intent = new Intent(this, LoginActivity.class);
