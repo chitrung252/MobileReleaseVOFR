@@ -71,4 +71,6 @@ public interface VofrService {
     @PUT(ConfigApi.Api.CHANGEPASSWORD)
     Call<ResponseBody> changePassword(@HeaderMap Map<String, String> header,@Query("password") String password,@Query("passwordNew") String passwordNew);
 
+    @GET(ConfigApi.Api.PRODUCTSIZE)
+    Call<ResponseBody> getProductSize( @Query("id") int productId);
 }

@@ -32,19 +32,23 @@ import java.util.List;
 import fpt.com.virtualoutfitroom.R;
 import fpt.com.virtualoutfitroom.activities.DetailProductActivity;
 import fpt.com.virtualoutfitroom.activities.HomeActivity;
+import fpt.com.virtualoutfitroom.activities.ProductCategoryActivity;
 import fpt.com.virtualoutfitroom.activities.SearchProductActivity;
 import fpt.com.virtualoutfitroom.activities.ShopCartActivity;
 import fpt.com.virtualoutfitroom.adapter.RecyclerViewApdapter;
+import fpt.com.virtualoutfitroom.model.Category;
 import fpt.com.virtualoutfitroom.model.Product;
 import fpt.com.virtualoutfitroom.model.ProductImage;
 import fpt.com.virtualoutfitroom.presenter.HomePresenter;
+import fpt.com.virtualoutfitroom.presenter.category.CategoryPresenter;
 import fpt.com.virtualoutfitroom.utils.BundleString;
 import fpt.com.virtualoutfitroom.utils.InternetHelper;
 import fpt.com.virtualoutfitroom.utils.SharePreferenceUtils;
 import fpt.com.virtualoutfitroom.utils.SpinnerManagement;
+import fpt.com.virtualoutfitroom.views.CategoryView;
 import fpt.com.virtualoutfitroom.views.HomeView;
 
-public class HomeFragment extends Fragment implements HomeView, View.OnClickListener {
+public class HomeFragment extends Fragment implements HomeView, View.OnClickListener, CategoryView {
     private RecyclerView mRrvEaring, mRrvGlasses, mRrvHat, mRrvShoes ;
     private List<Product> mListGlasses, mListHat, mListEaring, mListShoes, mListSearch;
     private RecyclerViewApdapter mRrvAdapterGlasses, mRrvAdapterHat, mRrvAdapterEaring, mRrvAdapterShoes;
@@ -54,7 +58,9 @@ public class HomeFragment extends Fragment implements HomeView, View.OnClickList
     private List<Integer> listImageHeader;
     private KProgressHUD hud;
     private EditText mEdtSearch;
-    private TextView mTxtCount;
+    private TextView mTxtCount, mTxtFindAllGlasses,mTxtFindAllHat,mTxtFindAllEaring;
+    private CategoryPresenter mCategoryPresenter;
+    private List<Category> mListCate;
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -88,11 +94,13 @@ public class HomeFragment extends Fragment implements HomeView, View.OnClickList
     }
     public void initialData() {
         mPresenter = new HomePresenter(getActivity(), this);
+        mCategoryPresenter = new CategoryPresenter(getActivity(),this);
+
         if (InternetHelper.isOnline(getActivity()) == false) {
             Toast.makeText(getActivity(), "No Connection", Toast.LENGTH_LONG).show();
         } else {
             mPresenter.getListProduct();
-
+            mCategoryPresenter.getListCategory();
         }
         setCountShopCart();
     }
@@ -142,6 +150,13 @@ public class HomeFragment extends Fragment implements HomeView, View.OnClickList
                 return false;
             }
         });
+        mListCate = new ArrayList<>();
+        mTxtFindAllGlasses = rootView.findViewById(R.id.txt_find_all_glasses);
+        mTxtFindAllGlasses.setOnClickListener(this);
+        mTxtFindAllHat = rootView.findViewById(R.id.txt_find_all_hat);
+        mTxtFindAllHat.setOnClickListener(this);
+        mTxtFindAllEaring = rootView.findViewById(R.id.txt_find_all_earing);
+        mTxtFindAllEaring.setOnClickListener(this);
     }
     public void updateUIGlasses() {
         mRrvAdapterGlasses = new RecyclerViewApdapter(getActivity(), mListGlasses);
@@ -250,9 +265,28 @@ public class HomeFragment extends Fragment implements HomeView, View.OnClickList
             case R.id.img_shop_cart:
                 moveToShopCart();
                 break;
+            case R.id.txt_find_all_glasses:
+                moveToCategory(1);
+                break;
+            case R.id.txt_find_all_hat:
+                moveToCategory(2);
+                break;
+            case R.id.txt_find_all_earing:
+                moveToCategory(3);
+                break;
         }
     }
-
+    void moveToCategory(int cateId){
+        for (Category item: mListCate) {
+            if(item.getCategoryId() == cateId){
+                Intent intent= new Intent(getActivity(), ProductCategoryActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("CATEGORY", item);
+                intent.putExtra("BUNDLE", bundle);
+                startActivity(intent);
+            }
+        }
+    }
     void moveToShopCart(){
         Intent intent = new Intent(getActivity(), ShopCartActivity.class);
         startActivity(intent);
@@ -275,4 +309,14 @@ public class HomeFragment extends Fragment implements HomeView, View.OnClickList
         mCarouselView.setPageCount(listImageHeader.size());
     }
 
+    @Override
+    public void showListCategory(List<Category> categoryList) {
+        if(categoryList != null){
+            for (Category cate: categoryList) {
+                if(cate.isActive() == true){
+                    mListCate.add(cate);
+                }
+            }
+        }
+    }
 }

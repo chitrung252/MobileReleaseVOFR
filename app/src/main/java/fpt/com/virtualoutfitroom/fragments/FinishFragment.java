@@ -109,12 +109,9 @@ public class FinishFragment extends Fragment implements ShoppingCartView {
     public void getMethod(){
         int position = SharePreferenceUtils.getIntSharedPreference(getActivity(),"METHOD");
         if(position == 1 ){
-            mTxtNameMethod.setText("Thanh toán khi nhận hàng");
-        }
-        else if(position == 2 ){
             mTxtNameMethod.setText("Thanh toán tại cửa hàng");
         }
-        else if(position == 3){
+        else if(position == 2 ){
             mTxtNameMethod.setText("Thanh toán bằng Paypal");
         }
         else

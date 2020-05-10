@@ -5,22 +5,22 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 
 public class ProductSize implements Serializable {
-    @SerializedName("SizeID")
-    private int sizeId;
-    @SerializedName("SizeName")
+    @SerializedName("id")
+    private int id;
+    @SerializedName("name")
     private String sizeName;
-    @SerializedName("ProductID")
+    @SerializedName("product_id")
     private int productId;
 
     public ProductSize() {
     }
 
-    public int getSizeId() {
-        return sizeId;
+    public int getId() {
+        return id;
     }
 
-    public void setSizeId(int sizeId) {
-        this.sizeId = sizeId;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getSizeName() {

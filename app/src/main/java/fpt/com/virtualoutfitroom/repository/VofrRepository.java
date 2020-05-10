@@ -11,6 +11,7 @@ import fpt.com.virtualoutfitroom.model.OrderHistory;
 import fpt.com.virtualoutfitroom.model.OrderItem;
 import fpt.com.virtualoutfitroom.model.Product;
 import fpt.com.virtualoutfitroom.model.ProductImage;
+import fpt.com.virtualoutfitroom.model.ProductSize;
 import fpt.com.virtualoutfitroom.room.AccountItemEntities;
 import fpt.com.virtualoutfitroom.room.OrderItemEntities;
 import fpt.com.virtualoutfitroom.webservice.CallBackData;
@@ -33,4 +34,5 @@ public interface VofrRepository {
     void createUser(Context context, Account account, CallBackData<String> callBackData);
     void forgotPassword(Context context, String username, String email, CallBackData<String> callBackData);
     void changePassword(Context context,String password, String passwordNew, CallBackData<Account> callBackData);
+    void getProductSize(Context context, int productId, CallBackData<List<ProductSize>> callBackData);
 }

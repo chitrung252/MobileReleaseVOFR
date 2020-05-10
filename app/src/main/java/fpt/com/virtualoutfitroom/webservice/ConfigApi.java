@@ -21,5 +21,6 @@ public class ConfigApi {
         String CREATUSER = "account/create-account";
         String FORGOTPASSWORD = "account/forgot-password";
         String CHANGEPASSWORD = "account/change-password-mobile";
+        String PRODUCTSIZE = "product-size/get-list-size";
     }
 }

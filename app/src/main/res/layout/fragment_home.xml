@@ -131,6 +131,7 @@
                         android:textSize="18sp" />
 
                     <TextView
+                        android:id="@+id/txt_find_all_glasses"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
@@ -162,6 +163,7 @@
                         android:textSize="18sp" />
 
                     <TextView
+                        android:id="@+id/txt_find_all_hat"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
@@ -193,6 +195,7 @@
                         android:textSize="18sp" />
 
                     <TextView
+                        android:id="@+id/txt_find_all_earing"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
@@ -206,13 +209,15 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dp10"
-                    android:paddingBottom="@dimen/dp15"></android.support.v7.widget.RecyclerView>
+                    android:paddingBottom="@dimen/dp15"
+                    ></android.support.v7.widget.RecyclerView>
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:paddingTop="@dimen/dp15"
-                    android:weightSum="10">
+                    android:weightSum="10"
+                    android:visibility="gone">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -223,6 +228,7 @@
                         android:textSize="18sp" />
 
                     <TextView
+                        android:id="@+id/txt_find_all_shoes"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
@@ -235,7 +241,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dp10"
-                    android:paddingBottom="@dimen/dp15"></android.support.v7.widget.RecyclerView>
+                    android:paddingBottom="@dimen/dp15"
+                    android:visibility="gone"></android.support.v7.widget.RecyclerView>
             </LinearLayout>
         </android.support.v4.widget.NestedScrollView>
     </LinearLayout>

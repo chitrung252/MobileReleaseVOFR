@@ -23,8 +23,10 @@ import fpt.com.virtualoutfitroom.model.Account;
 import fpt.com.virtualoutfitroom.model.Category;
 import fpt.com.virtualoutfitroom.model.OrderHistory;
 import fpt.com.virtualoutfitroom.model.OrderItem;
+import fpt.com.virtualoutfitroom.model.OrderNotify;
 import fpt.com.virtualoutfitroom.model.Product;
 import fpt.com.virtualoutfitroom.model.ProductImage;
+import fpt.com.virtualoutfitroom.model.ProductSize;
 import fpt.com.virtualoutfitroom.model.ResponseResult;
 import fpt.com.virtualoutfitroom.room.AccountItemEntities;
 import fpt.com.virtualoutfitroom.room.OrderItemEntities;
@@ -458,14 +460,16 @@ public class VofrImpl implements VofrRepository {
                     if(response.code() == 200){
                         try {
                             String result = response.body().string();
-                            Type type = new TypeToken<ResponseResult>() {
+                            Type type = new TypeToken<ResponseResult<OrderNotify>>() {
                             }.getType();
-                            ResponseResult responseResult =
+                            ResponseResult<OrderNotify> responseResult =
                                     new Gson().fromJson(result, type);
+                            OrderNotify orderNotifies =  responseResult.getData();
                             callBackData.onSuccess(responseResult.getMessage());
+                            Gson gson = new Gson();
                             socketServer = new SocketServer();
                             socketServer.connect();
-                            socketServer.emitOrder(jsonObject);
+                            socketServer.emitOrder(new JSONObject(gson.toJson(orderNotifies)));
                         }catch (Exception e){
                             e.printStackTrace();
                         }
@@ -708,6 +712,43 @@ public class VofrImpl implements VofrRepository {
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 callBackData.onFail("Lỗi");
+            }
+        });
+    }
+
+    @Override
+    public void getProductSize(Context context, int productId, CallBackData<List<ProductSize>> callBackData) {
+        ClientApi  clientApi = new ClientApi();
+        Call<ResponseBody> serviceCall = clientApi.rmapService().getProductSize(productId);
+        serviceCall.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if(response != null && response.body() != null){
+                    if(response.code() == 200){
+                        try {
+                            String result = response.body().string();
+                            Type type = new TypeToken<ResponseResult<List<ProductSize>>>() {
+                            }.getType();
+                            ResponseResult<List<ProductSize>> responseResult = new Gson().fromJson(result,type);
+                            if(responseResult == null){
+                                callBackData.onFail("Không có user trả về");
+                            }else{
+                                List<ProductSize> productSizes =  responseResult.getData();
+                                callBackData.onSuccess(productSizes);
+                            }
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+                    }
+                }
+                else{
+                    Toast.makeText(context, "Error", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
             }
         });
     }

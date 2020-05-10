@@ -38,6 +38,7 @@ import fpt.com.virtualoutfitroom.R;
 import fpt.com.virtualoutfitroom.adapter.ProductSeenApdater;
 import fpt.com.virtualoutfitroom.dialog.BottomSheetDialog;
 import fpt.com.virtualoutfitroom.model.Product;
+import fpt.com.virtualoutfitroom.model.ProductSize;
 import fpt.com.virtualoutfitroom.presenter.detail_product.DetailProductPresenter;
 import fpt.com.virtualoutfitroom.utils.CurrencyManagement;
 import fpt.com.virtualoutfitroom.utils.GetAbsolutePathFile;
@@ -46,6 +47,7 @@ import fpt.com.virtualoutfitroom.utils.SharePreferenceUtils;
 import fpt.com.virtualoutfitroom.utils.SpinnerManagement;
 import fpt.com.virtualoutfitroom.utils.UrlHelper;
 import fpt.com.virtualoutfitroom.views.DetailProductView;
+import fpt.com.virtualoutfitroom.views.ProductSizeView;
 import pl.droidsonroids.gif.GifImageView;
 
 
@@ -351,4 +353,5 @@ public class DetailProductActivity extends BaseActivity implements View.OnClickL
     public void showError(String message) {
         Toast.makeText(this, "Tải sản phẩm thất bại", Toast.LENGTH_LONG).show();
     }
+
 }
